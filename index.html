@@ -16,10 +16,9 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #e2e8f0; /* Darker background for desktop to highlight the mobile frame */
+            background-color: #e2e8f0;
             overscroll-behavior-y: none;
         }
-        /* Mobile App Frame (for Desktop viewing) */
         .app-container {
             max-width: 480px;
             margin: 0 auto;
@@ -30,50 +29,31 @@
             display: flex;
             flex-direction: column;
         }
-        
         .view-section {
             display: none;
             animation: fadeIn 0.3s ease-in-out;
-            padding-bottom: 90px; /* Space for bottom nav */
+            padding-bottom: 90px;
         }
         .view-section.active {
             display: block;
         }
-
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background-color: #cbd5e1;
-            border-radius: 10px;
-        }
-
-        /* Toast Animation */
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
         @keyframes slideDown {
             from { transform: translate(-50%, -100%); opacity: 0; }
             to { transform: translate(-50%, 0); opacity: 1; }
         }
-        .toast-animate {
-            animation: slideDown 0.3s ease-out forwards;
-        }
-        
-        /* Modal Animation */
+        .toast-animate { animation: slideDown 0.3s ease-out forwards; }
         @keyframes scaleIn {
             from { transform: scale(0.95); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
-        .modal-animate {
-            animation: scaleIn 0.2s ease-out forwards;
-        }
-        
+        .modal-animate { animation: scaleIn 0.2s ease-out forwards; }
         .loader {
             border: 3px solid rgba(255,255,255,0.3);
             border-top: 3px solid white;
@@ -131,22 +111,19 @@
         <!-- Main Content Area -->
         <main class="flex-grow relative overflow-y-auto custom-scrollbar">
             
-            <!-- ================= VIEW: DASHBOARD ================= -->
+            <!-- VIEW: DASHBOARD -->
             <section id="view-dashboard" class="view-section active p-5">
-                
-                <!-- Setup Warning (Hidden by default) -->
                 <div id="setup-warning" class="hidden mb-6 bg-amber-50 border border-amber-200 rounded-2xl p-4">
                     <div class="flex items-start gap-3">
                         <i class="ph-fill ph-warning-circle text-amber-500 text-xl mt-0.5"></i>
                         <div>
                             <h3 class="font-semibold text-amber-900 text-sm">Database Belum Terhubung</h3>
-                            <p class="text-xs text-amber-700 mt-1 mb-2">Buka tab Pengaturan untuk memasukkan kredensial Supabase Anda agar data tersimpan.</p>
+                            <p class="text-xs text-amber-700 mt-1 mb-2">Buka tab Pengaturan untuk memasukkan kredensial Supabase Anda.</p>
                             <button onclick="switchTab('settings')" class="text-xs font-semibold bg-amber-200 text-amber-900 px-3 py-1.5 rounded-lg">Buka Pengaturan</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Main Balance Card -->
                 <div class="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-3xl p-6 text-white shadow-lg shadow-indigo-200 mb-6 relative overflow-hidden">
                     <i class="ph-fill ph-coins absolute -right-4 -bottom-4 text-8xl opacity-10"></i>
                     <p class="text-indigo-100 text-sm font-medium mb-1">Total Saldo Saat Ini</p>
@@ -168,7 +145,6 @@
                     </div>
                 </div>
 
-                <!-- Recent Transactions Summary -->
                 <div class="mt-8">
                     <div class="flex justify-between items-end mb-4">
                         <h3 class="font-bold text-slate-800">Transaksi Terakhir</h3>
@@ -176,36 +152,26 @@
                     </div>
                     
                     <div id="dash-recent-list" class="space-y-3">
-                        <!-- Populated by JS -->
-                        <div class="text-center py-8 text-slate-400 text-sm" id="dash-empty">
-                            Belum ada transaksi
-                        </div>
+                        <div class="text-center py-8 text-slate-400 text-sm" id="dash-empty">Belum ada transaksi</div>
                     </div>
                 </div>
             </section>
 
-            <!-- ================= VIEW: ADD TRANSACTION ================= -->
+            <!-- VIEW: ADD TRANSACTION -->
             <section id="view-add" class="view-section p-5">
                 <h2 class="text-xl font-bold text-slate-800 mb-6">Tambah Transaksi</h2>
-                
                 <form id="add-form" class="space-y-5 bg-white p-5 rounded-3xl shadow-sm border border-slate-100">
-                    <!-- Type Selector (Pills) -->
                     <div class="bg-slate-100 p-1 rounded-xl flex gap-1">
                         <label class="flex-1 cursor-pointer">
                             <input type="radio" name="tx-type" value="expense" class="peer hidden" checked>
-                            <div class="text-center py-2 rounded-lg text-sm font-medium peer-checked:bg-white peer-checked:text-rose-600 peer-checked:shadow-sm text-slate-500 transition-all">
-                                Pengeluaran
-                            </div>
+                            <div class="text-center py-2 rounded-lg text-sm font-medium peer-checked:bg-white peer-checked:text-rose-600 peer-checked:shadow-sm text-slate-500 transition-all">Pengeluaran</div>
                         </label>
                         <label class="flex-1 cursor-pointer">
                             <input type="radio" name="tx-type" value="income" class="peer hidden">
-                            <div class="text-center py-2 rounded-lg text-sm font-medium peer-checked:bg-white peer-checked:text-emerald-600 peer-checked:shadow-sm text-slate-500 transition-all">
-                                Pemasukan
-                            </div>
+                            <div class="text-center py-2 rounded-lg text-sm font-medium peer-checked:bg-white peer-checked:text-emerald-600 peer-checked:shadow-sm text-slate-500 transition-all">Pemasukan</div>
                         </label>
                     </div>
 
-                    <!-- Amount -->
                     <div>
                         <label class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wider">Jumlah (Rp)</label>
                         <div class="relative">
@@ -216,7 +182,6 @@
                         </div>
                     </div>
 
-                    <!-- Category & Date Grid -->
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wider">Kategori</label>
@@ -240,13 +205,11 @@
                         </div>
                     </div>
 
-                    <!-- Description -->
                     <div>
                         <label class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wider">Catatan</label>
                         <input type="text" id="input-desc" placeholder="Cth: Makan siang bareng teman" required class="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
                     </div>
 
-                    <!-- Submit -->
                     <button type="submit" id="btn-submit-tx" class="w-full bg-indigo-600 text-white font-semibold rounded-xl py-4 mt-2 hover:bg-indigo-700 active:scale-[0.98] transition-all flex justify-center items-center gap-2">
                         <span id="txt-submit-tx">Simpan Transaksi</span>
                         <div id="loader-submit-tx" class="loader hidden"></div>
@@ -254,7 +217,7 @@
                 </form>
             </section>
 
-            <!-- ================= VIEW: HISTORY ================= -->
+            <!-- VIEW: HISTORY -->
             <section id="view-history" class="view-section p-5 h-full flex-col">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-xl font-bold text-slate-800">Riwayat</h2>
@@ -274,27 +237,14 @@
                         <p class="text-sm">Belum ada riwayat transaksi.</p>
                     </div>
 
-                    <ul id="history-list" class="divide-y divide-slate-100 flex-grow">
-                        <!-- Populated by JS -->
-                    </ul>
+                    <ul id="history-list" class="divide-y divide-slate-100 flex-grow"></ul>
                 </div>
             </section>
 
-            <!-- ================= VIEW: SETTINGS ================= -->
+            <!-- VIEW: SETTINGS -->
             <section id="view-settings" class="view-section p-5">
                 <h2 class="text-xl font-bold text-slate-800 mb-6">Pengaturan Database</h2>
-                
                 <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
-                    <div class="flex items-center gap-3 mb-4 pb-4 border-b border-slate-100">
-                        <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                            <i class="ph-fill ph-database text-xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-slate-800">Koneksi Supabase</h3>
-                            <p class="text-xs text-slate-500">Hubungkan ke database cloud Anda sendiri.</p>
-                        </div>
-                    </div>
-
                     <form id="settings-form" class="space-y-4">
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 mb-1.5">Project URL</label>
@@ -304,11 +254,6 @@
                             <label class="block text-xs font-semibold text-slate-500 mb-1.5">Anon Key</label>
                             <input type="password" id="input-supabase-key" placeholder="eyJhbGciOiJIUzI1NiIsIn..." class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
                         </div>
-                        
-                        <div class="bg-blue-50 text-blue-800 text-xs p-3 rounded-xl border border-blue-100 mt-2">
-                            <strong>Note:</strong> Pastikan Anda telah membuat tabel <code>transactions</code> dengan kolom: id, description, amount, type, category, date.
-                        </div>
-
                         <button type="submit" id="btn-save-settings" class="w-full bg-slate-900 text-white font-semibold rounded-xl py-3.5 mt-2 hover:bg-slate-800 transition-all flex justify-center items-center gap-2">
                             <span id="txt-save-settings">Simpan & Hubungkan</span>
                             <div id="loader-save-settings" class="loader hidden"></div>
@@ -316,34 +261,26 @@
                     </form>
                 </div>
             </section>
-
         </main>
 
         <!-- Bottom Navigation Bar -->
         <nav class="bg-white border-t border-slate-200 fixed bottom-0 w-full max-w-[480px] z-50 px-2 pb-safe">
             <div class="flex justify-around items-center h-16">
-                <!-- Dashboard Tab -->
                 <button onclick="switchTab('dashboard')" id="tab-dashboard" class="nav-tab active flex flex-col items-center justify-center w-16 text-slate-400 hover:text-indigo-600 transition-colors">
                     <i class="ph ph-house text-2xl mb-1 icon-outline"></i>
                     <i class="ph-fill ph-house text-2xl mb-1 icon-fill hidden"></i>
                     <span class="text-[10px] font-medium">Beranda</span>
                 </button>
-                
-                <!-- History Tab -->
                 <button onclick="switchTab('history')" id="tab-history" class="nav-tab flex flex-col items-center justify-center w-16 text-slate-400 hover:text-indigo-600 transition-colors">
                     <i class="ph ph-list-dashes text-2xl mb-1 icon-outline"></i>
                     <i class="ph-fill ph-list-dashes text-2xl mb-1 icon-fill hidden"></i>
                     <span class="text-[10px] font-medium">Riwayat</span>
                 </button>
-
-                <!-- Add Button (Floating Style) -->
                 <div class="relative -top-5">
                     <button onclick="switchTab('add')" id="tab-add" class="w-14 h-14 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-indigo-300 hover:bg-indigo-700 hover:scale-105 transition-all transform active:scale-95">
                         <i class="ph-bold ph-plus text-2xl"></i>
                     </button>
                 </div>
-
-                <!-- Settings Tab -->
                 <button onclick="switchTab('settings')" id="tab-settings" class="nav-tab flex flex-col items-center justify-center w-16 text-slate-400 hover:text-indigo-600 transition-colors">
                     <i class="ph ph-gear text-2xl mb-1 icon-outline"></i>
                     <i class="ph-fill ph-gear text-2xl mb-1 icon-fill hidden"></i>
@@ -351,60 +288,44 @@
                 </button>
             </div>
         </nav>
-        
         <style>
-            /* Support for iOS Safe Area */
             .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
-            /* Active tab styling */
             .nav-tab.active { color: #4f46e5; }
             .nav-tab.active .icon-outline { display: none; }
             .nav-tab.active .icon-fill { display: block; }
         </style>
-
     </div>
 
     <script>
-        // ==========================================
-        // STATE & GLOBALS
-        // ==========================================
         let supabaseClient = null;
         let transactions = [];
         let isConnected = false;
         
-        // DOM Elements - Settings
         const inputUrl = document.getElementById('input-supabase-url');
         const inputKey = document.getElementById('input-supabase-key');
         const settingsForm = document.getElementById('settings-form');
         const headerStatus = document.getElementById('header-status');
         const setupWarning = document.getElementById('setup-warning');
         
-        // DOM Elements - Add Form
         const addForm = document.getElementById('add-form');
         const inputAmount = document.getElementById('input-amount');
         const inputCategory = document.getElementById('input-category');
         const inputDesc = document.getElementById('input-desc');
         const inputDate = document.getElementById('input-date');
         
-        // Set default date to today
         inputDate.value = new Date().toISOString().split('T')[0];
 
-        // ==========================================
-        // CUSTOM NOTIFICATIONS (No Alert/Confirm)
-        // ==========================================
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            
             const isSuccess = type === 'success';
             const bgColor = isSuccess ? 'bg-slate-800' : 'bg-rose-600';
             const icon = isSuccess ? 'ph-check-circle text-emerald-400' : 'ph-warning-circle text-white';
             
             toast.className = `${bgColor} text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 text-sm font-medium toast-animate pointer-events-auto`;
             toast.innerHTML = `<i class="ph-fill ${icon} text-lg"></i> ${message}`;
-            
             container.appendChild(toast);
             
-            // Remove after 3 seconds
             setTimeout(() => {
                 toast.style.opacity = '0';
                 toast.style.transform = 'translate(-50%, -20px)';
@@ -413,11 +334,17 @@
             }, 3000);
         }
 
-        // Custom Modal Logic
         let confirmAction = null;
         const confirmModal = document.getElementById('confirm-modal');
-        const btnModalCancel = document.getElementById('modal-cancel');
-        const btnModalConfirm = document.getElementById('modal-confirm');
+        document.getElementById('modal-cancel').addEventListener('click', () => {
+            confirmModal.classList.add('hidden');
+            confirmModal.classList.remove('flex');
+        });
+        document.getElementById('modal-confirm').addEventListener('click', () => {
+            if(confirmAction) confirmAction();
+            confirmModal.classList.add('hidden');
+            confirmModal.classList.remove('flex');
+        });
 
         function showConfirm(action) {
             confirmAction = action;
@@ -425,45 +352,14 @@
             confirmModal.classList.add('flex');
         }
 
-        function hideConfirm() {
-            confirmModal.classList.add('hidden');
-            confirmModal.classList.remove('flex');
-            confirmAction = null;
-        }
-
-        btnModalCancel.addEventListener('click', hideConfirm);
-        btnModalConfirm.addEventListener('click', () => {
-            if(confirmAction) confirmAction();
-            hideConfirm();
-        });
-
-
-        // ==========================================
-        // NAVIGATION LOGIC (SPA)
-        // ==========================================
         function switchTab(tabId) {
-            // Hide all views
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-            // Remove active state from tabs
             document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
-            
-            // Show selected view
             document.getElementById(`view-${tabId}`).classList.add('active');
-            
-            // Highlight selected tab (except add button which is standalone)
-            if(tabId !== 'add') {
-                document.getElementById(`tab-${tabId}`).classList.add('active');
-            }
-            
-            // Specific logic when entering a tab
-            if(tabId === 'dashboard' || tabId === 'history') {
-                renderUI(); // Refresh UI in case data changed
-            }
+            if(tabId !== 'add') document.getElementById(`tab-${tabId}`).classList.add('active');
+            if(tabId === 'dashboard' || tabId === 'history') renderUI();
         }
 
-        // ==========================================
-        // SUPABASE SETUP & LOCALSTORAGE
-        // ==========================================
         async function initDatabase() {
             const url = localStorage.getItem('sb_url');
             const key = localStorage.getItem('sb_key');
@@ -471,95 +367,63 @@
             if (url && key) {
                 inputUrl.value = url;
                 inputKey.value = key;
-                
                 try {
                     supabaseClient = window.supabase.createClient(url, key);
                     isConnected = true;
                     setupWarning.classList.add('hidden');
-                    updateStatus(true);
+                    headerStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span> Online';
                     await fetchData();
                 } catch (err) {
                     isConnected = false;
-                    updateStatus(false);
-                    showToast('Format URL/Key tidak valid', 'error');
+                    headerStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-slate-400"></span> Offline';
                 }
             } else {
                 isConnected = false;
                 setupWarning.classList.remove('hidden');
-                updateStatus(false);
-            }
-        }
-
-        function updateStatus(connected) {
-            if(connected) {
-                headerStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span> Online';
-            } else {
                 headerStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-slate-400"></span> Offline';
             }
         }
 
-        // Save Settings Form
         settingsForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const url = inputUrl.value.trim();
             const key = inputKey.value.trim();
 
-            if(!url || !key) {
-                showToast('URL dan Key wajib diisi!', 'error');
-                return;
-            }
+            if(!url || !key) return showToast('URL dan Key wajib diisi!', 'error');
 
-            // UI Loading
             const btnTxt = document.getElementById('txt-save-settings');
             const loader = document.getElementById('loader-save-settings');
-            btnTxt.classList.add('hidden');
-            loader.classList.remove('hidden');
+            btnTxt.classList.add('hidden'); loader.classList.remove('hidden');
 
             try {
-                // Test connection
                 const testClient = window.supabase.createClient(url, key);
                 const { error } = await testClient.from('transactions').select('id').limit(1);
-                
                 if (error) throw error;
 
-                // Save to local storage
                 localStorage.setItem('sb_url', url);
                 localStorage.setItem('sb_key', key);
-                
                 showToast('Database berhasil dihubungkan!');
-                
-                // Re-init
                 await initDatabase();
                 switchTab('dashboard');
-
             } catch (err) {
                 showToast('Koneksi gagal. Periksa URL, Key, atau Tabel.', 'error');
-                console.error(err);
             } finally {
-                btnTxt.classList.remove('hidden');
-                loader.classList.add('hidden');
+                btnTxt.classList.remove('hidden'); loader.classList.add('hidden');
             }
         });
 
-
-        // ==========================================
-        // DATABASE CRUD OPERATIONS
-        // ==========================================
         async function fetchData() {
             if(!isConnected) return;
-
-            // Show loading in history
             document.getElementById('history-loading').classList.remove('hidden');
             document.getElementById('history-loading').classList.add('flex');
-            document.getElementById('history-list').innerHTML = '';
             document.getElementById('history-empty').classList.add('hidden');
-
+            
             try {
                 const { data, error } = await supabaseClient
                     .from('transactions')
                     .select('*')
                     .order('date', { ascending: false })
-                    .order('id', { ascending: false }); // secondary sort
+                    .order('id', { ascending: false });
 
                 if (error) throw error;
                 transactions = data || [];
@@ -573,14 +437,11 @@
             }
         }
 
-        // Add Transaction
         addForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             if(!isConnected) {
                 showToast('Harap hubungkan database di Pengaturan dulu!', 'error');
-                switchTab('settings');
-                return;
+                return switchTab('settings');
             }
 
             const type = document.querySelector('input[name="tx-type"]:checked').value;
@@ -589,94 +450,59 @@
             const date = inputDate.value;
             const desc = inputDesc.value;
 
-            // UI Loading
             const btnSubmit = document.getElementById('btn-submit-tx');
             const btnTxt = document.getElementById('txt-submit-tx');
             const loader = document.getElementById('loader-submit-tx');
-            
-            btnSubmit.disabled = true;
-            btnTxt.classList.add('hidden');
-            loader.classList.remove('hidden');
-
-            const newTx = { type, amount, category, date, description: desc };
+            btnSubmit.disabled = true; btnTxt.classList.add('hidden'); loader.classList.remove('hidden');
 
             try {
                 const { data, error } = await supabaseClient
                     .from('transactions')
-                    .insert([newTx])
+                    .insert([{ type, amount, category, date, description: desc }])
                     .select();
 
                 if(error) throw error;
-
-                transactions.unshift(data[0]); // Add to top locally
-                // Re-sort locally just in case
+                transactions.unshift(data[0]);
                 transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
-
                 showToast('Transaksi berhasil disimpan!');
                 
-                // Reset form fields
-                inputAmount.value = '';
-                inputDesc.value = '';
-                
-                // Redirect to Dashboard
+                inputAmount.value = ''; inputDesc.value = '';
                 renderUI();
                 switchTab('dashboard');
-
             } catch (err) {
-                console.error(err);
                 showToast('Gagal menyimpan transaksi.', 'error');
             } finally {
-                btnSubmit.disabled = false;
-                btnTxt.classList.remove('hidden');
-                loader.classList.add('hidden');
+                btnSubmit.disabled = false; btnTxt.classList.remove('hidden'); loader.classList.add('hidden');
             }
         });
 
-        // Delete Transaction
         async function deleteTransaction(id) {
             if(!isConnected) return;
-
             try {
-                const { error } = await supabaseClient
-                    .from('transactions')
-                    .delete()
-                    .eq('id', id);
-
+                const { error } = await supabaseClient.from('transactions').delete().eq('id', id);
                 if (error) throw error;
-
-                // Remove locally
                 transactions = transactions.filter(t => t.id !== id);
                 renderUI();
                 showToast('Transaksi dihapus.');
-
-            } catch (err) {
-                console.error(err);
-                showToast('Gagal menghapus transaksi.', 'error');
-            }
+            } catch (err) { showToast('Gagal menghapus.', 'error'); }
         }
 
-        // Wrapper for delete button to trigger Custom Modal
         function triggerDelete(id) {
             showConfirm(() => deleteTransaction(id));
         }
 
-        // ==========================================
-        // UI RENDERING LOGIC
-        // ==========================================
         const formatIDR = (num) => {
-        // Tambahkan Number() agar teks pasti diubah jadi angka dulu
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(Number(num));
+            const safeNum = Number(num) || 0;
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(safeNum);
         };
 
         const formatDate = (dateString) => {
-            const options = { day: 'numeric', month: 'short', year: 'numeric' };
-            return new Date(dateString).toLocaleDateString('id-ID', options);
+            if (!dateString) return '-';
+            return new Date(dateString).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
         };
 
-        // Icon Mapping based on Category
         const getCategoryIcon = (cat, type) => {
             if(type === 'income') return { icon: 'ph-trend-up', bg: 'bg-emerald-100', text: 'text-emerald-600' };
-            
             const map = {
                 'Makanan': { icon: 'ph-hamburger', bg: 'bg-orange-100', text: 'text-orange-600' },
                 'Transport': { icon: 'ph-car', bg: 'bg-blue-100', text: 'text-blue-600' },
@@ -689,109 +515,92 @@
         };
 
         function renderUI() {
-            // 1. Calculate Totals
-            let income = 0;
-            let expense = 0;
-        
-            transactions.forEach(tx => {
-                const nominal = Number(tx.amount); // Konversi teks jadi angka murni
-                if (tx.type === 'income') income += nominal;
-                if (tx.type === 'expense') expense += nominal;
-            });
+            try {
+                let income = 0; let expense = 0;
+                transactions.forEach(tx => {
+                    const nominal = Number(tx.amount) || 0;
+                    if (tx.type === 'income') income += nominal;
+                    if (tx.type === 'expense') expense += nominal;
+                });
 
-            const balance = income - expense;
+                document.getElementById('dash-balance').innerText = formatIDR(income - expense);
+                document.getElementById('dash-income').innerText = formatIDR(income);
+                document.getElementById('dash-expense').innerText = formatIDR(expense);
 
-            // 2. Update Dashboard Cards
-            document.getElementById('dash-balance').innerText = formatIDR(balance);
-            document.getElementById('dash-income').innerText = formatIDR(income);
-            document.getElementById('dash-expense').innerText = formatIDR(expense);
+                const historyList = document.getElementById('history-list');
+                const dashRecent = document.getElementById('dash-recent-list');
+                const emptyHistory = document.getElementById('history-empty');
+                const emptyDash = document.getElementById('dash-empty');
+                
+                document.getElementById('history-count').innerText = `${transactions.length} Data`;
+                historyList.innerHTML = ''; dashRecent.innerHTML = '';
 
-            // 3. Update History List & Dash Recent List
-            const historyList = document.getElementById('history-list');
-            const dashRecent = document.getElementById('dash-recent-list');
-            const emptyHistory = document.getElementById('history-empty');
-            const emptyDash = document.getElementById('dash-empty');
-            
-            document.getElementById('history-count').innerText = `${transactions.length} Data`;
-            
-            historyList.innerHTML = '';
-            dashRecent.innerHTML = '';
+                if (transactions.length === 0) {
+                    emptyHistory.classList.remove('hidden'); emptyHistory.classList.add('flex');
+                    emptyDash.style.display = 'block';
+                } else {
+                    emptyHistory.classList.add('hidden'); emptyHistory.classList.remove('flex');
+                    emptyDash.style.display = 'none';
 
-            if (transactions.length === 0) {
-                emptyHistory.classList.remove('hidden');
-                emptyHistory.classList.add('flex');
-                emptyDash.style.display = 'block';
-            } else {
-                emptyHistory.classList.add('hidden');
-                emptyHistory.classList.remove('flex');
-                emptyDash.style.display = 'none';
-
-                transactions.forEach((tx, index) => {
-                    const style = getCategoryIcon(tx.category || 'Lainnya', tx.type);
-                    const sign = tx.type === 'income' ? '+' : '-';
-                    const amountClass = tx.type === 'income' ? 'text-emerald-600' : 'text-slate-800';
-                    
-                    // Generate HTML string for item
-                    const itemHTML = `
-                        <div class="flex items-center gap-4 py-4 px-5">
-                            <div class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">
-                                <i class="ph-fill ${style.icon} text-2xl"></i>
-                            </div>
-                            <div class="flex-grow min-w-0">
-                                <p class="text-sm font-bold text-slate-800 truncate">${tx.description}</p>
-                                <div class="flex items-center gap-2 mt-0.5">
-                                    <span class="text-[10px] font-medium bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded">${tx.category || 'Lainnya'}</span>
-                                    <span class="text-[11px] text-slate-400">${formatDate(tx.date)}</span>
+                    transactions.forEach((tx, index) => {
+                        const style = getCategoryIcon(tx.category || 'Lainnya', tx.type);
+                        const sign = tx.type === 'income' ? '+' : '-';
+                        const amountClass = tx.type === 'income' ? 'text-emerald-600' : 'text-slate-800';
+                        const safeAmount = Number(tx.amount) || 0;
+                        const formattedText = formatIDR(safeAmount).replace(/Rp/g, '').trim();
+                        
+                        const itemHTML = `
+                            <div class="flex items-center gap-4 py-4 px-5">
+                                <div class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">
+                                    <i class="ph-fill ${style.icon} text-2xl"></i>
+                                </div>
+                                <div class="flex-grow min-w-0">
+                                    <p class="text-sm font-bold text-slate-800 truncate">${tx.description || '-'}</p>
+                                    <div class="flex items-center gap-2 mt-0.5">
+                                        <span class="text-[10px] font-medium bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded">${tx.category || 'Lainnya'}</span>
+                                        <span class="text-[11px] text-slate-400">${formatDate(tx.date)}</span>
+                                    </div>
+                                </div>
+                                <div class="text-right shrink-0">
+                                    <p class="text-sm font-bold ${amountClass}">${sign}${formattedText}</p>
+                                    <button onclick="triggerDelete(${tx.id})" class="mt-1 text-xs text-rose-500 hover:underline">Hapus</button>
                                 </div>
                             </div>
-                            <div class="text-right shrink-0">
-                                <p class="text-sm font-bold ${amountClass}">${sign}${formatIDR(tx.amount).replace('Rp', '')}</p>
-                                <!-- Delete Button (Only in History) -->
-                                <button onclick="triggerDelete(${tx.id})" class="delete-btn mt-1 text-xs text-rose-500 hidden hover:underline">Hapus</button>
-                            </div>
-                        </div>
-                    `;
-
-                    // Add to History
-                    const li = document.createElement('li');
-                    li.className = "group hover:bg-slate-50 transition-colors";
-                    li.innerHTML = itemHTML;
-                    // Show delete button in history view
-                    li.querySelector('.delete-btn').classList.remove('hidden');
-                    historyList.appendChild(li);
-
-                    // Add to Dash Recent (Max 3)
-                    if (index < 3) {
-                        const div = document.createElement('div');
-                        div.className = "bg-white p-3 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-3";
-                        
-                        div.innerHTML = `
-                            <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">
-                                <i class="ph-fill ${style.icon} text-xl"></i>
-                            </div>
-                            <div class="flex-grow min-w-0">
-                                <p class="text-xs font-bold text-slate-800 truncate">${tx.description}</p>
-                                <p class="text-[10px] text-slate-400">${formatDate(tx.date)}</p>
-                            </div>
-                            <div class="text-right shrink-0">
-                                <p class="text-xs font-bold ${amountClass}">${sign}${formatIDR(tx.amount).replace('Rp', '')}</p>
-                            </div>
                         `;
-                        dashRecent.appendChild(div);
-                    }
-                });
+
+                        const li = document.createElement('li');
+                        li.className = "group hover:bg-slate-50 transition-colors";
+                        li.innerHTML = itemHTML;
+                        historyList.appendChild(li);
+
+                        if (index < 3) {
+                            const div = document.createElement('div');
+                            div.className = "bg-white p-3 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-3";
+                            div.innerHTML = `
+                                <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">
+                                    <i class="ph-fill ${style.icon} text-xl"></i>
+                                </div>
+                                <div class="flex-grow min-w-0">
+                                    <p class="text-xs font-bold text-slate-800 truncate">${tx.description || '-'}</p>
+                                    <p class="text-[10px] text-slate-400">${formatDate(tx.date)}</p>
+                                </div>
+                                <div class="text-right shrink-0">
+                                    <p class="text-xs font-bold ${amountClass}">${sign}${formattedText}</p>
+                                </div>
+                            `;
+                            dashRecent.appendChild(div);
+                        }
+                    });
+                }
+            } catch (err) {
+                console.error("Render Error:", err);
             }
         }
 
-        // ==========================================
-        // INITIALIZATION
-        // ==========================================
         window.addEventListener('DOMContentLoaded', () => {
             initDatabase();
-            // Start at dashboard
             switchTab('dashboard');
         });
-
     </script>
 </body>
 </html>
