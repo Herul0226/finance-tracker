@@ -61,7 +61,8 @@
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold text-slate-500 mb-2 uppercase">Total Harga (Rp)</label>
-                    <input type="number" id="input-goal-target" placeholder="5000000" required min="1" class="w-full bg-slate-50 border border-slate-200 text-slate-900 font-bold rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500">
+                    <!-- Menggunakan text & inputmode numeric untuk format titik otomatis -->
+                    <input type="text" inputmode="numeric" id="input-goal-target" placeholder="5.000.000" required class="w-full bg-slate-50 border border-slate-200 text-slate-900 font-bold rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500">
                 </div>
                 <div class="flex gap-3 pt-2">
                     <button type="button" onclick="closeModal('modal-set-goal')" class="flex-1 bg-slate-100 text-slate-600 font-bold rounded-xl py-3 hover:bg-slate-200 transition-all text-sm">Batal</button>
@@ -80,7 +81,7 @@
             <form id="form-add-savings" class="space-y-4">
                 <div>
                     <label class="block text-[10px] font-bold text-slate-500 mb-2 uppercase">Nominal Ditabung (Rp)</label>
-                    <input type="number" id="input-add-savings" placeholder="100000" required min="1" class="w-full bg-slate-50 border border-slate-200 text-slate-900 font-bold rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-lg">
+                    <input type="text" inputmode="numeric" id="input-add-savings" placeholder="100.000" required class="w-full bg-slate-50 border border-slate-200 text-slate-900 font-bold rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-lg">
                 </div>
                 <div class="flex gap-3 pt-2">
                     <button type="button" onclick="closeModal('modal-add-savings')" class="flex-1 bg-slate-100 text-slate-600 font-bold rounded-xl py-3 hover:bg-slate-200 transition-all text-sm">Batal</button>
@@ -190,7 +191,7 @@
                             </div>
                         </div>
 
-                        <!-- FITUR BARU: Target Tabungan -->
+                        <!-- Fitur Target Tabungan -->
                         <div>
                             <div class="flex justify-between items-end mb-4">
                                 <div>
@@ -200,7 +201,6 @@
                                 <button onclick="resetGoal()" id="btn-reset-goal" class="text-[10px] font-bold text-rose-500 hover:bg-rose-50 px-2 py-1 rounded hidden uppercase">Reset Target</button>
                             </div>
 
-                            <!-- State 1: Belum Ada Target -->
                             <div id="goal-empty-state" class="bg-white p-6 rounded-3xl border border-slate-200 border-dashed text-center">
                                 <div class="w-14 h-14 bg-amber-50 rounded-full flex items-center justify-center text-amber-500 mx-auto mb-3">
                                     <i class="ph-fill ph-target text-3xl"></i>
@@ -210,7 +210,6 @@
                                 <button onclick="document.getElementById('modal-set-goal').classList.remove('hidden')" class="bg-slate-900 text-white text-xs font-bold px-5 py-2.5 rounded-xl hover:bg-slate-800 transition-all shadow-md shadow-slate-300">Buat Target Baru</button>
                             </div>
 
-                            <!-- State 2: Sudah Ada Target -->
                             <div id="goal-active-state" class="bg-gradient-to-tr from-amber-500 to-orange-400 rounded-3xl p-5 md:p-6 text-white shadow-xl shadow-amber-200 hidden relative overflow-hidden">
                                 <i class="ph-fill ph-star absolute -right-6 -top-6 text-9xl text-white opacity-10 rotate-12"></i>
                                 <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
@@ -219,12 +218,9 @@
                                             <div class="bg-white/20 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide">Impian Saya</div>
                                         </div>
                                         <h3 class="text-2xl font-bold mb-3" id="goal-title-display">Beli Laptop</h3>
-                                        
-                                        <!-- Progress Bar -->
                                         <div class="w-full bg-black/10 rounded-full h-2.5 mb-2 overflow-hidden backdrop-blur-sm">
                                             <div id="goal-progress-bar" class="bg-white h-2.5 rounded-full" style="width: 0%"></div>
                                         </div>
-                                        
                                         <div class="flex justify-between items-center text-xs">
                                             <span class="font-semibold text-amber-50" id="goal-saved-display">Terkumpul: Rp 0</span>
                                             <span class="font-bold text-white" id="goal-target-display">Target: Rp 0</span>
@@ -237,15 +233,13 @@
                             </div>
                         </div>
 
-                        <!-- KONTEN BAWAH: Grid 2 Kolom untuk Desktop -->
+                        <!-- Grid 2 Kolom untuk Desktop -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                             
-                            <!-- FITUR BARU: Pengeluaran Per Kategori -->
+                            <!-- Pengeluaran Per Kategori -->
                             <div>
                                 <h3 class="font-bold text-slate-800 text-lg mb-4">Pengeluaran Kategori <span class="text-[10px] text-slate-400 font-normal ml-1">(Bln Ini)</span></h3>
-                                <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)] flex flex-col gap-4" id="category-breakdown-list">
-                                    <!-- Terisi otomatis oleh JS -->
-                                </div>
+                                <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)] flex flex-col gap-4" id="category-breakdown-list"></div>
                             </div>
 
                             <!-- Transaksi Terakhir -->
@@ -282,7 +276,7 @@
                                 <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Jumlah (Rp)</label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none"><span class="text-slate-400 font-bold text-lg md:text-xl">Rp</span></div>
-                                    <input type="number" id="input-amount" placeholder="0" required min="1" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-2xl font-bold rounded-2xl pl-14 pr-5 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
+                                    <input type="text" inputmode="numeric" id="input-amount" placeholder="0" required class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-2xl font-bold rounded-2xl pl-14 pr-5 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
                                 </div>
                             </div>
 
@@ -421,10 +415,24 @@
         let currentPage = 1;
         const itemsPerPage = 10;
         
-        // Data Target Tabungan (Disimpan Secara Lokal)
         let savingsGoal = JSON.parse(localStorage.getItem('keuanganku_goal')) || { name: '', target: 0, saved: 0 };
-        
         document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
+
+        // LOGIKA PENAMBAHAN TITIK OTOMATIS SAAT MENGETIK ANGKA
+        function formatCurrencyInput(e) {
+            let value = e.target.value.replace(/[^0-9]/g, ''); // Buang semua huruf & titik
+            if (value) {
+                e.target.value = new Intl.NumberFormat('id-ID').format(value); // Format pakai titik (contoh: 1.000.000)
+            } else {
+                e.target.value = '';
+            }
+        }
+
+        // Terapkan ke 3 form yang butuh input uang
+        ['input-amount', 'input-goal-target', 'input-add-savings'].forEach(id => {
+            document.getElementById(id).addEventListener('input', formatCurrencyInput);
+        });
+
 
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
@@ -445,7 +453,6 @@
             }, 3000);
         }
 
-        // FIX: Scroll sekarang murni memakai window.scrollTo yang jauh lebih stabil untuk HP
         const pageTitles = { 'dashboard': 'Beranda', 'history': 'Riwayat Transaksi', 'add': 'Catat Transaksi', 'recap': 'Rekap Bulanan', 'settings': 'Pengaturan' };
 
         function switchTab(tabId) {
@@ -465,28 +472,28 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         
-        // FIX: Logika Pindah Halaman Riwayat Tanpa scrollIntoView
         function changePage(delta) {
             const totalPages = Math.ceil(transactions.length / itemsPerPage) || 1;
             currentPage += delta;
             if(currentPage < 1) currentPage = 1;
             if(currentPage > totalPages) currentPage = totalPages;
             renderUI();
-            
-            // Gulung halaman ke atas (tanpa merusak posisi header)
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Fitur Target Tabungan
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
         
         document.getElementById('form-set-goal').addEventListener('submit', (e) => {
             e.preventDefault();
+            // Ambil angka asli tanpa titik
+            const rawTarget = document.getElementById('input-goal-target').value.replace(/[^0-9]/g, '');
             savingsGoal = { 
                 name: document.getElementById('input-goal-name').value, 
-                target: parseFloat(document.getElementById('input-goal-target').value), 
+                target: parseFloat(rawTarget) || 0, 
                 saved: 0 
             };
+            if(savingsGoal.target <= 0) return showToast("Total harga tidak valid", 'error');
+
             localStorage.setItem('keuanganku_goal', JSON.stringify(savingsGoal));
             closeModal('modal-set-goal');
             renderGoalUI();
@@ -495,7 +502,11 @@
 
         document.getElementById('form-add-savings').addEventListener('submit', (e) => {
             e.preventDefault();
-            const added = parseFloat(document.getElementById('input-add-savings').value);
+            const rawAdded = document.getElementById('input-add-savings').value.replace(/[^0-9]/g, '');
+            const added = parseFloat(rawAdded) || 0;
+            
+            if(added <= 0) return showToast("Nominal tidak valid", "error");
+
             savingsGoal.saved += added;
             localStorage.setItem('keuanganku_goal', JSON.stringify(savingsGoal));
             document.getElementById('input-add-savings').value = '';
@@ -535,7 +546,6 @@
             }
         }
 
-        // Supabase Database Config
         async function initDatabase() {
             const url = localStorage.getItem('sb_url');
             const key = localStorage.getItem('sb_key');
@@ -582,7 +592,13 @@
             e.preventDefault();
             if(!isConnected) { showToast('Hubungkan database di Pengaturan!', 'error'); return switchTab('settings'); }
             const type = document.querySelector('input[name="tx-type"]:checked').value;
-            const amount = parseFloat(document.getElementById('input-amount').value);
+            
+            // Ambil angka mentah tanpa titik untuk disimpan ke database
+            const rawAmount = document.getElementById('input-amount').value.replace(/[^0-9]/g, '');
+            const amount = parseFloat(rawAmount) || 0;
+            
+            if(amount <= 0) return showToast("Jumlah nominal tidak valid!", "error");
+
             const category = document.getElementById('input-category').value;
             const date = document.getElementById('input-date').value;
             const desc = document.getElementById('input-desc').value;
@@ -627,7 +643,7 @@
                 let totalIncome = 0; let totalExpense = 0;
                 let currentMonthIncome = 0; let currentMonthExpense = 0;
                 const monthlyData = {};
-                const categoryData = {}; // Untuk Grafik Pengeluaran Kategori
+                const categoryData = {};
                 
                 const now = new Date();
                 const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
@@ -642,7 +658,6 @@
                         if (tx.type === 'income') currentMonthIncome += nominal;
                         if (tx.type === 'expense') {
                             currentMonthExpense += nominal;
-                            // Tambah ke data kategori pengeluaran bulan ini
                             const cat = tx.category || 'Lainnya';
                             categoryData[cat] = (categoryData[cat] || 0) + nominal;
                         }
@@ -661,18 +676,15 @@
                     }
                 });
 
-                // Tulis angka ke Kartu
                 document.getElementById('dash-balance').innerText = formatIDR(totalIncome - totalExpense);
                 document.getElementById('dash-income').innerText = formatIDR(currentMonthIncome);
                 document.getElementById('dash-expense').innerText = formatIDR(currentMonthExpense);
 
-                // Render Rincian Kategori Pengeluaran Bulan ini
                 const catListEl = document.getElementById('category-breakdown-list');
                 catListEl.innerHTML = '';
                 if(Object.keys(categoryData).length === 0) {
                     catListEl.innerHTML = `<p class="text-center text-xs text-slate-400 py-4 font-medium">Belum ada pengeluaran bulan ini.</p>`;
                 } else {
-                    // Sort dari pengeluaran terbesar
                     const sortedCat = Object.keys(categoryData).sort((a,b) => categoryData[b] - categoryData[a]);
                     sortedCat.forEach(cat => {
                         const amt = categoryData[cat];
@@ -698,7 +710,6 @@
                     });
                 }
 
-                // Setup DOM Elemen List Transaksi
                 const historyList = document.getElementById('history-list');
                 const dashRecent = document.getElementById('dash-recent-list');
                 const recapList = document.getElementById('recap-list');
@@ -763,7 +774,6 @@
                         historyList.appendChild(li);
                     });
 
-                    // 4 Transaksi Terakhir di Beranda
                     transactions.slice(0, 4).forEach((tx) => {
                         const style = getIcon(tx.category || 'Lainnya', tx.type);
                         const sign = tx.type === 'income' ? '+' : '-';
@@ -818,7 +828,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             initDatabase();
-            renderGoalUI(); // Panggil Target Tabungan
+            renderGoalUI();
             switchTab('dashboard');
         });
     </script>
