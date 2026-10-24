@@ -4,8 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Keuanganku - Dashboard Finansial</title>
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS with Custom Config for Dark Mode -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: {} }
+        }
+    </script>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Phosphor Icons -->
@@ -15,7 +21,7 @@
 
     <style>
         /* ==================== GLOBAL STYLES ==================== */
-        html, body { font-family: 'Inter', sans-serif; background-color: #f8fafc; scroll-behavior: smooth; }
+        html, body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
         
         /* ==================== ANIMATIONS ==================== */
         .view-section { display: none; animation: fadeIn 0.3s ease-in-out; }
@@ -32,12 +38,15 @@
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
         
         .nav-btn.active .icon-outline { display: none; }
         .nav-btn.active .icon-fill { display: block; }
         .nav-btn:not(.active) .icon-fill { display: none; }
         .nav-btn.active.mobile-nav { color: #4f46e5; }
+        .dark .nav-btn.active.mobile-nav { color: #818cf8; }
         .nav-btn.desktop-nav.active { background-color: #eef2ff; color: #4f46e5; font-weight: 600; }
+        .dark .nav-btn.desktop-nav.active { background-color: #3730a3; color: #e0e7ff; }
         .nav-btn.desktop-nav.active .icon-outline { display: none; }
         .nav-btn.desktop-nav.active .icon-fill { display: block; }
         .pb-safe { padding-bottom: calc(env(safe-area-inset-bottom) + 20px); }
@@ -47,35 +56,62 @@
             transition: all 0.2s ease;
             opacity: 0; pointer-events: none; transform: translateY(-10px);
         }
-        .custom-select.open .custom-select-options {
-            opacity: 1; pointer-events: auto; transform: translateY(0);
-        }
+        .custom-select.open .custom-select-options { opacity: 1; pointer-events: auto; transform: translateY(0); }
         .custom-select.open .caret-icon { transform: rotate(180deg); }
     </style>
 </head>
-<body class="text-slate-800 antialiased">
+<body class="text-slate-800 bg-slate-50 dark:bg-slate-900 dark:text-slate-100 antialiased transition-colors duration-300">
+
+    <!-- Script Tema Otomatis Sebelum Render (Mencegah Flash Putih) -->
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
 
     <!-- TOAST NOTIFICATION -->
     <div id="toast-container" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 w-11/12 max-w-sm pointer-events-none"></div>
 
-    <!-- MODAL: BUAT TARGET TABUNGAN BARU -->
+    <!-- MODAL: KALENDER KUSTOM (DATEPICKER) -->
+    <div id="modal-datepicker" class="fixed inset-0 z-[70] flex items-center justify-center hidden">
+        <div class="absolute inset-0 bg-slate-900/40 modal-overlay" onclick="AppUI.closeModal('modal-datepicker')"></div>
+        <div class="bg-white dark:bg-slate-800 w-11/12 max-w-sm rounded-3xl p-5 relative z-10 modal-content shadow-2xl border border-slate-100 dark:border-slate-700">
+            <div class="flex justify-between items-center mb-4">
+                <button onclick="CalendarManager.changeMonth(-1)" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300"><i class="ph-bold ph-caret-left"></i></button>
+                <h3 id="cal-month-year" class="font-bold text-slate-800 dark:text-white text-sm">Bulan Tahun</h3>
+                <button onclick="CalendarManager.changeMonth(1)" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300"><i class="ph-bold ph-caret-right"></i></button>
+            </div>
+            <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-slate-400 dark:text-slate-500 mb-2">
+                <div>MIN</div><div>SEN</div><div>SEL</div><div>RAB</div><div>KAM</div><div>JUM</div><div>SAB</div>
+            </div>
+            <div id="cal-days" class="grid grid-cols-7 gap-1 text-center">
+                <!-- Diisi oleh JS -->
+            </div>
+            <div class="mt-4 flex gap-2">
+                <button onclick="AppUI.closeModal('modal-datepicker')" class="flex-1 py-2.5 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl font-bold text-xs">Batal</button>
+                <button onclick="CalendarManager.setToday()" class="flex-1 py-2.5 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 rounded-xl font-bold text-xs">Hari Ini</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: BUAT TARGET TABUNGAN -->
     <div id="modal-set-goal" class="fixed inset-0 z-[60] flex items-center justify-center hidden">
         <div class="absolute inset-0 bg-slate-900/40 modal-overlay" onclick="AppUI.closeModal('modal-set-goal')"></div>
-        <div class="bg-white w-11/12 max-w-md rounded-3xl p-6 relative z-10 modal-content shadow-2xl">
-            <h3 class="font-bold text-lg text-slate-800 mb-1">Buat Target Tabungan</h3>
-            <p class="text-xs text-slate-500 mb-5">Tambahkan impian baru yang ingin Anda capai.</p>
+        <div class="bg-white dark:bg-slate-800 w-11/12 max-w-md rounded-3xl p-6 relative z-10 modal-content shadow-2xl border border-slate-100 dark:border-slate-700">
+            <h3 class="font-bold text-lg text-slate-800 dark:text-white mb-1">Buat Target Tabungan</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-5">Tambahkan impian baru yang ingin dicapai.</p>
             <form id="form-set-goal" class="space-y-4">
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-500 mb-2 uppercase">Nama Target</label>
-                    <input type="text" id="input-goal-name" placeholder="Cth: Beli Motor Baru" required class="w-full bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500">
+                    <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Nama Target</label>
+                    <input type="text" id="input-goal-name" placeholder="Cth: Beli Motor Baru" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white font-medium rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-500 mb-2 uppercase">Total Harga (Rp)</label>
-                    <input type="text" inputmode="numeric" id="input-goal-target" placeholder="10.000.000" required class="currency-input w-full bg-slate-50 border border-slate-200 text-slate-900 font-bold rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500">
+                    <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Total Harga (Rp)</label>
+                    <input type="text" inputmode="numeric" id="input-goal-target" placeholder="10.000.000" required class="currency-input w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500">
                 </div>
                 <div class="flex gap-3 pt-2">
-                    <button type="button" onclick="AppUI.closeModal('modal-set-goal')" class="flex-1 bg-slate-100 text-slate-600 font-bold rounded-xl py-3 hover:bg-slate-200 transition-all text-sm">Batal</button>
-                    <button type="submit" class="flex-1 bg-amber-500 text-white font-bold rounded-xl py-3 shadow-lg shadow-amber-200 hover:bg-amber-600 transition-all text-sm">Buat Target</button>
+                    <button type="button" onclick="AppUI.closeModal('modal-set-goal')" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold rounded-xl py-3 text-sm">Batal</button>
+                    <button type="submit" class="flex-1 bg-amber-500 text-white font-bold rounded-xl py-3 shadow-lg shadow-amber-200/50 dark:shadow-none hover:bg-amber-600 transition-all text-sm">Simpan Target</button>
                 </div>
             </form>
         </div>
@@ -84,18 +120,59 @@
     <!-- MODAL: ISI TABUNGAN (TOP UP) -->
     <div id="modal-add-savings" class="fixed inset-0 z-[60] flex items-center justify-center hidden">
         <div class="absolute inset-0 bg-slate-900/40 modal-overlay" onclick="AppUI.closeModal('modal-add-savings')"></div>
-        <div class="bg-white w-11/12 max-w-md rounded-3xl p-6 relative z-10 modal-content shadow-2xl">
-            <h3 class="font-bold text-lg text-slate-800 mb-1" id="modal-add-savings-title">Isi Tabungan</h3>
-            <p class="text-xs text-slate-500 mb-5">Masukkan nominal uang yang disisihkan.</p>
+        <div class="bg-white dark:bg-slate-800 w-11/12 max-w-md rounded-3xl p-6 relative z-10 modal-content shadow-2xl border border-slate-100 dark:border-slate-700">
+            <h3 class="font-bold text-lg text-slate-800 dark:text-white mb-1" id="modal-add-savings-title">Isi Tabungan</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-5">Masukkan nominal uang yang disisihkan.</p>
             <form id="form-add-savings" class="space-y-4">
                 <input type="hidden" id="input-savings-id">
                 <div>
-                    <label class="block text-[10px] font-bold text-slate-500 mb-2 uppercase">Nominal Ditabung (Rp)</label>
-                    <input type="text" inputmode="numeric" id="input-add-savings" placeholder="100.000" required class="currency-input w-full bg-slate-50 border border-slate-200 text-slate-900 font-bold rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-lg">
+                    <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Nominal Ditabung (Rp)</label>
+                    <input type="text" inputmode="numeric" id="input-add-savings" placeholder="100.000" required class="currency-input w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold rounded-2xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-lg">
                 </div>
                 <div class="flex gap-3 pt-2">
-                    <button type="button" onclick="AppUI.closeModal('modal-add-savings')" class="flex-1 bg-slate-100 text-slate-600 font-bold rounded-xl py-3 hover:bg-slate-200 transition-all text-sm">Batal</button>
-                    <button type="submit" class="flex-1 bg-emerald-500 text-white font-bold rounded-xl py-3 shadow-lg shadow-emerald-200 hover:bg-emerald-600 transition-all text-sm">Simpan Uang</button>
+                    <button type="button" onclick="AppUI.closeModal('modal-add-savings')" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold rounded-xl py-3 text-sm">Batal</button>
+                    <button type="submit" class="flex-1 bg-emerald-500 text-white font-bold rounded-xl py-3 shadow-lg shadow-emerald-200/50 dark:shadow-none hover:bg-emerald-600 transition-all text-sm">Simpan Uang</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: TAMBAH TAGIHAN RUTIN -->
+    <div id="modal-add-bill" class="fixed inset-0 z-[60] flex items-center justify-center hidden">
+        <div class="absolute inset-0 bg-slate-900/40 modal-overlay" onclick="AppUI.closeModal('modal-add-bill')"></div>
+        <div class="bg-white dark:bg-slate-800 w-11/12 max-w-md rounded-3xl p-6 relative z-10 modal-content shadow-2xl border border-slate-100 dark:border-slate-700">
+            <h3 class="font-bold text-lg text-slate-800 dark:text-white mb-1">Tambah Tagihan Rutin</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-5">Sistem akan mengingatkan Anda setiap bulan pada tanggal yang ditentukan.</p>
+            <form id="add-bill-form" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Nama Tagihan</label>
+                        <input type="text" id="bill-name" placeholder="Cth: Kos, WiFi" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white text-sm font-medium rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Nominal (Rp)</label>
+                        <input type="text" inputmode="numeric" id="bill-amount" placeholder="0" required class="currency-input w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white text-sm font-medium rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                    
+                    <!-- Combobox Kategori Tagihan -->
+                    <div class="relative custom-select z-20" id="bill-category-select">
+                        <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Kategori</label>
+                        <div class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white text-sm font-medium rounded-xl px-4 py-3 flex items-center justify-between cursor-pointer focus:ring-2 focus:ring-indigo-500" onclick="Utils.toggleDropdown('bill-category-select')">
+                            <div class="flex items-center gap-2" id="bill-category-display"><i class="ph-fill ph-invoice text-rose-500 text-lg"></i> <span>Tagihan</span></div>
+                            <i class="ph-bold ph-caret-down text-slate-400 caret-icon transition-transform"></i>
+                        </div>
+                        <div class="custom-select-options absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden z-30"></div>
+                        <input type="hidden" id="bill-category-value" value="Tagihan">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Jatuh Tempo</label>
+                        <input type="number" id="bill-date" placeholder="Tgl (1-31)" min="1" max="31" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white text-sm font-medium rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button type="button" onclick="AppUI.closeModal('modal-add-bill')" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold rounded-xl py-3 text-sm">Batal</button>
+                    <button type="submit" class="flex-1 bg-indigo-600 text-white font-bold rounded-xl py-3 hover:bg-indigo-700 transition-all text-sm shadow-md">Simpan Tagihan</button>
                 </div>
             </form>
         </div>
@@ -104,44 +181,44 @@
     <!-- MODAL: KONFIRMASI BAYAR TAGIHAN -->
     <div id="modal-pay-bill" class="fixed inset-0 z-[60] flex items-center justify-center hidden">
         <div class="absolute inset-0 bg-slate-900/40 modal-overlay" onclick="AppUI.closeModal('modal-pay-bill')"></div>
-        <div class="bg-white w-11/12 max-w-sm rounded-3xl p-6 relative z-10 modal-content shadow-2xl text-center">
-            <div class="w-16 h-16 bg-rose-100 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4"><i class="ph-bold ph-invoice text-3xl"></i></div>
-            <h3 class="font-bold text-lg text-slate-800 mb-1" id="pay-bill-name">Bayar Tagihan</h3>
+        <div class="bg-white dark:bg-slate-800 w-11/12 max-w-sm rounded-3xl p-6 relative z-10 modal-content shadow-2xl text-center border border-slate-100 dark:border-slate-700">
+            <div class="w-16 h-16 bg-rose-100 dark:bg-rose-900/30 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4"><i class="ph-bold ph-invoice text-3xl"></i></div>
+            <h3 class="font-bold text-lg text-slate-800 dark:text-white mb-1" id="pay-bill-name">Bayar Tagihan?</h3>
             <p class="text-2xl font-black text-rose-600 mb-5" id="pay-bill-amount">Rp 0</p>
-            <p class="text-xs text-slate-500 mb-6">Uang ini akan dicatat sebagai pengeluaran bulan ini secara otomatis.</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">Uang ini akan dicatat sebagai pengeluaran bulan ini secara otomatis.</p>
             <div class="flex gap-3">
-                <button onclick="AppUI.closeModal('modal-pay-bill')" class="flex-1 bg-slate-100 text-slate-600 font-bold rounded-xl py-3 hover:bg-slate-200 transition-all text-sm">Batal</button>
-                <button id="btn-confirm-pay" class="flex-1 bg-rose-500 text-white font-bold rounded-xl py-3 shadow-lg shadow-rose-200 hover:bg-rose-600 transition-all text-sm">Bayar Sekarang</button>
+                <button onclick="AppUI.closeModal('modal-pay-bill')" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold rounded-xl py-3 text-sm">Batal</button>
+                <button id="btn-confirm-pay" class="flex-1 bg-rose-500 text-white font-bold rounded-xl py-3 shadow-lg shadow-rose-200/50 dark:shadow-none hover:bg-rose-600 transition-all text-sm">Catat & Bayar</button>
             </div>
         </div>
     </div>
 
-    <div class="flex min-h-screen w-full bg-slate-50 relative">
+    <div class="flex min-h-screen w-full relative">
         
         <!-- SIDEBAR (DESKTOP) -->
-        <aside class="hidden md:flex flex-col w-72 bg-white border-r border-slate-200 shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-30 fixed left-0 top-0 h-[100dvh]">
-            <div class="px-6 py-8 flex items-center gap-3 border-b border-slate-100">
-                <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-200"><i class="ph-bold ph-wallet text-xl"></i></div>
-                <div><h1 class="text-xl font-bold tracking-tight text-slate-900 leading-tight">Keuanganku</h1><p class="text-xs text-slate-500 font-medium">Dashboard Finansial</p></div>
+        <aside class="hidden md:flex flex-col w-72 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-30 fixed left-0 top-0 h-[100dvh]">
+            <div class="px-6 py-8 flex items-center gap-3 border-b border-slate-100 dark:border-slate-700">
+                <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-200 dark:shadow-none"><i class="ph-bold ph-wallet text-xl"></i></div>
+                <div><h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">Keuanganku</h1><p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Dashboard Finansial</p></div>
             </div>
             
             <nav class="flex-grow px-4 py-6 space-y-2 overflow-y-auto custom-scrollbar">
-                <button onclick="AppUI.switchTab('dashboard')" class="nav-btn nav-btn-dashboard desktop-nav w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 transition-all text-sm font-medium active">
+                <button onclick="AppUI.switchTab('dashboard')" class="nav-btn nav-btn-dashboard desktop-nav w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all text-sm font-medium active">
                     <i class="ph ph-house text-xl icon-outline"></i> <i class="ph-fill ph-house text-xl icon-fill"></i> Beranda
                 </button>
-                <button onclick="AppUI.switchTab('history')" class="nav-btn nav-btn-history desktop-nav w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 transition-all text-sm font-medium">
+                <button onclick="AppUI.switchTab('history')" class="nav-btn nav-btn-history desktop-nav w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all text-sm font-medium">
                     <i class="ph ph-list-dashes text-xl icon-outline"></i> <i class="ph-fill ph-list-dashes text-xl icon-fill"></i> Riwayat Transaksi
                 </button>
-                <button onclick="AppUI.switchTab('goals')" class="nav-btn nav-btn-goals desktop-nav w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 transition-all text-sm font-medium">
+                <button onclick="AppUI.switchTab('goals')" class="nav-btn nav-btn-goals desktop-nav w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all text-sm font-medium">
                     <i class="ph ph-target text-xl icon-outline"></i> <i class="ph-fill ph-target text-xl icon-fill"></i> Target Tabungan
                 </button>
-                <button onclick="AppUI.switchTab('bills')" class="nav-btn nav-btn-bills desktop-nav w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 transition-all text-sm font-medium">
+                <button onclick="AppUI.switchTab('bills')" class="nav-btn nav-btn-bills desktop-nav w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all text-sm font-medium">
                     <i class="ph ph-invoice text-xl icon-outline"></i> <i class="ph-fill ph-invoice text-xl icon-fill"></i> Tagihan Rutin
                 </button>
             </nav>
             
-            <div class="p-4 border-t border-slate-100 bg-white">
-                <button onclick="AppUI.switchTab('add')" class="w-full bg-indigo-600 text-white font-bold rounded-xl py-3.5 shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all flex justify-center items-center gap-2">
+            <div class="p-4 border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800">
+                <button onclick="AppUI.switchTab('add')" class="w-full bg-indigo-600 text-white font-bold rounded-xl py-3.5 shadow-lg shadow-indigo-200 dark:shadow-none hover:bg-indigo-700 active:scale-95 transition-all flex justify-center items-center gap-2">
                     <i class="ph-bold ph-plus text-lg"></i> Catat Transaksi
                 </button>
             </div>
@@ -150,58 +227,51 @@
         <!-- MAIN CONTENT -->
         <div class="md:ml-72 flex flex-col w-full min-h-[100dvh]">
             
-            <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md px-5 py-4 flex items-center justify-between shadow-sm border-b border-slate-100 md:px-10 md:py-6">
+            <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-5 py-4 flex items-center justify-between shadow-sm border-b border-slate-100 dark:border-slate-800 md:px-10 md:py-6">
                 <div class="flex items-center gap-2 md:hidden">
                     <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white"><i class="ph-bold ph-wallet"></i></div>
-                    <h1 class="text-lg font-bold tracking-tight">Keuanganku</h1>
+                    <h1 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white">Keuanganku</h1>
                 </div>
                 <div class="hidden md:block">
-                    <h2 id="desktop-page-title" class="text-2xl font-bold text-slate-800">Beranda</h2>
+                    <h2 id="desktop-page-title" class="text-2xl font-bold text-slate-800 dark:text-white">Beranda</h2>
                 </div>
                 <div class="flex items-center gap-3">
-                    <div id="header-status" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 text-[10px] font-bold text-slate-500 tracking-wide uppercase">
-                        <span class="w-2 h-2 rounded-full bg-slate-400"></span> Offline
+                    <div id="header-status" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[10px] font-bold text-slate-500 dark:text-slate-400 tracking-wide uppercase">
+                        <span class="w-2 h-2 rounded-full bg-slate-400"></span> Mode Offline
                     </div>
-                    <!-- Setting Icon dipindah ke header -->
-                    <button onclick="AppUI.switchTab('settings')" class="w-9 h-9 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-slate-200 transition-colors">
-                        <i class="ph-bold ph-gear text-lg"></i>
-                    </button>
+                    <!-- Tombol Dark Mode & Settings -->
+                    <div class="flex gap-1.5">
+                        <button onclick="ThemeManager.toggle()" id="btn-theme-toggle" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                            <i class="ph-bold ph-moon text-lg dark:hidden"></i>
+                            <i class="ph-bold ph-sun text-lg hidden dark:block"></i>
+                        </button>
+                        <button onclick="AppUI.switchTab('settings')" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                            <i class="ph-bold ph-gear text-lg"></i>
+                        </button>
+                    </div>
                 </div>
             </header>
 
             <main class="flex-1 p-5 md:p-10 pb-[100px] md:pb-10 w-full">
                 <div class="max-w-4xl mx-auto w-full">
                     
-                    <!-- Peringatan DB -->
-                    <div id="setup-warning" class="hidden mb-6 bg-rose-50 border border-rose-200 rounded-2xl p-4 md:p-5 shadow-sm">
-                        <div class="flex items-start gap-3">
-                            <div class="w-8 h-8 rounded-full bg-rose-200 text-rose-600 flex items-center justify-center shrink-0"><i class="ph-bold ph-plugs-connected text-lg"></i></div>
-                            <div>
-                                <h3 class="font-bold text-rose-900 md:text-lg">Belum Terhubung ke Database</h3>
-                                <p class="text-xs md:text-sm text-rose-700 mt-1 mb-3">Data Anda tidak akan tersimpan secara online.</p>
-                                <button onclick="AppUI.switchTab('settings')" class="text-xs font-bold bg-rose-600 text-white px-4 py-2 rounded-xl hover:bg-rose-700 shadow-md">Hubungkan Sekarang</button>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- ==================== VIEW: BERANDA ==================== -->
                     <section id="view-dashboard" class="view-section active space-y-6">
                         
-                        <!-- Banner Tagihan Jatuh Tempo (Hanya Info) -->
+                        <!-- Banner Tagihan (Hanya Info) -->
                         <div id="reminder-banner" class="hidden bg-gradient-to-r from-rose-500 to-rose-600 rounded-2xl p-4 md:p-5 text-white shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div class="flex items-start gap-3">
                                 <i class="ph-fill ph-warning-circle text-2xl md:text-3xl text-rose-200"></i>
                                 <div>
-                                    <h4 class="font-bold text-sm md:text-base">Perhatian: Tagihan Menunggu</h4>
-                                    <p class="text-xs text-rose-100 mt-0.5" id="reminder-text">Ada 1 tagihan rutin yang jatuh tempo bulan ini.</p>
+                                    <h4 class="font-bold text-sm md:text-base">Tagihan Jatuh Tempo</h4>
+                                    <p class="text-xs text-rose-100 mt-0.5" id="reminder-text">Ada 1 tagihan rutin yang harus dibayar bulan ini.</p>
                                 </div>
                             </div>
-                            <!-- Arahkan ke halaman Tagihan, bukan langsung bayar -->
-                            <button onclick="AppUI.switchTab('bills')" class="shrink-0 bg-white text-rose-600 font-bold text-xs md:text-sm px-4 py-2.5 rounded-xl hover:bg-rose-50 transition-all shadow-md">Lihat Tagihan</button>
+                            <button onclick="AppUI.switchTab('bills')" class="shrink-0 bg-white text-rose-600 font-bold text-xs md:text-sm px-4 py-2.5 rounded-xl hover:bg-rose-50 shadow-md">Bayar Tagihan</button>
                         </div>
 
                         <!-- Kartu Saldo Cerdas -->
-                        <div class="bg-slate-900 rounded-[2rem] p-6 md:p-8 text-white shadow-xl shadow-slate-300 relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div class="bg-slate-900 rounded-[2rem] p-6 md:p-8 text-white shadow-xl shadow-slate-300 dark:shadow-none relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6 border border-slate-800">
                             <div class="absolute -right-20 -top-20 w-64 h-64 bg-indigo-500 rounded-full mix-blend-overlay opacity-20 blur-3xl"></div>
                             <div class="absolute -left-10 -bottom-10 w-48 h-48 bg-emerald-500 rounded-full mix-blend-overlay opacity-20 blur-3xl"></div>
                             
@@ -213,14 +283,13 @@
 
                             <div class="relative z-10 w-full md:w-56 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10">
                                 <div class="flex justify-between items-center mb-1">
-                                    <span class="text-[10px] font-bold text-emerald-400 uppercase"><i class="ph-bold ph-arrow-down-left"></i> Masuk</span>
+                                    <span class="text-[10px] font-bold text-emerald-400 uppercase"><i class="ph-bold ph-arrow-down-left"></i> Masuk Bln Ini</span>
                                     <span class="text-xs font-bold text-white" id="dash-income">Rp 0</span>
                                 </div>
                                 <div class="flex justify-between items-center mb-3">
-                                    <span class="text-[10px] font-bold text-rose-400 uppercase"><i class="ph-bold ph-arrow-up-right"></i> Keluar</span>
+                                    <span class="text-[10px] font-bold text-rose-400 uppercase"><i class="ph-bold ph-arrow-up-right"></i> Keluar Bln Ini</span>
                                     <span class="text-xs font-bold text-white" id="dash-expense">Rp 0</span>
                                 </div>
-                                <!-- Mini Progress Bar Rasio Keluar Masuk -->
                                 <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden flex">
                                     <div id="dash-ratio-bar" class="bg-rose-500 h-1.5" style="width: 0%"></div>
                                     <div class="bg-emerald-500 h-1.5 flex-grow"></div>
@@ -228,38 +297,33 @@
                             </div>
                         </div>
 
-                        <!-- Insight AI Ringan & Target Aktif -->
+                        <!-- Grid Info -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Insight -->
-                            <div class="bg-indigo-50 rounded-3xl p-5 border border-indigo-100 flex gap-4 items-start">
-                                <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shrink-0 shadow-sm text-indigo-600 text-2xl"><i class="ph-fill ph-lightbulb"></i></div>
-                                <div>
-                                    <h4 class="font-bold text-indigo-900 text-sm mb-1">Insight Keuangan</h4>
-                                    <p class="text-xs text-indigo-700 leading-relaxed" id="dash-insight-text">Belum ada cukup data transaksi bulan ini untuk dianalisis.</p>
-                                </div>
+                            <!-- Kategori Pengeluaran -->
+                            <div class="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-[0_4px_20px_rgb(0,0,0,0.03)] flex flex-col gap-4">
+                                <h3 class="font-bold text-slate-800 dark:text-white text-sm"><i class="ph-fill ph-pie-chart text-indigo-500 mr-1"></i> Pengeluaran (Bulan Ini)</h3>
+                                <div id="category-breakdown-list" class="space-y-4"></div>
                             </div>
                             
                             <!-- Target Tabungan (Ringkasan) -->
-                            <div class="bg-white rounded-3xl p-5 border border-slate-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)]" onclick="AppUI.switchTab('goals')">
-                                <div class="flex justify-between items-center mb-3">
-                                    <h3 class="font-bold text-slate-800 text-sm"><i class="ph-fill ph-target text-amber-500 mr-1"></i> Target Tabungan</h3>
-                                    <span class="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded">Lihat Semua</span>
+                            <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 border border-slate-100 dark:border-slate-700 shadow-[0_4px_20px_rgb(0,0,0,0.03)] cursor-pointer" onclick="AppUI.switchTab('goals')">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="font-bold text-slate-800 dark:text-white text-sm"><i class="ph-fill ph-target text-amber-500 mr-1"></i> Progres Target</h3>
+                                    <span class="text-[10px] font-bold text-slate-400 bg-slate-50 dark:bg-slate-700 px-2 py-1 rounded">Lihat Semua</span>
                                 </div>
-                                <div id="dash-goals-summary">
-                                    <!-- Diisi oleh JS -->
-                                </div>
+                                <div id="dash-goals-summary"></div>
                             </div>
                         </div>
 
                         <!-- Transaksi Terakhir -->
                         <div>
                             <div class="flex justify-between items-end mb-4">
-                                <h3 class="font-bold text-slate-800 text-lg">Transaksi Terakhir</h3>
-                                <button onclick="AppUI.switchTab('history')" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-lg hover:bg-indigo-100 transition-colors">Lihat Semua</button>
+                                <h3 class="font-bold text-slate-800 dark:text-white text-lg">Transaksi Terakhir</h3>
+                                <button onclick="AppUI.switchTab('history')" class="text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-3 py-1 rounded-lg">Lihat Semua</button>
                             </div>
-                            <div class="text-center py-10 bg-white rounded-3xl border border-slate-200 border-dashed hidden" id="dash-empty">
-                                <i class="ph-fill ph-receipt text-4xl text-slate-300 mb-2 block"></i>
-                                <p class="text-sm font-medium text-slate-500">Belum ada transaksi</p>
+                            <div class="text-center py-10 bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 border-dashed hidden" id="dash-empty">
+                                <i class="ph-fill ph-receipt text-4xl text-slate-300 dark:text-slate-600 mb-2 block"></i>
+                                <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Belum ada transaksi</p>
                             </div>
                             <div id="dash-recent-list" class="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0"></div>
                         </div>
@@ -268,178 +332,151 @@
                     <!-- ==================== VIEW: MULTI TARGET TABUNGAN ==================== -->
                     <section id="view-goals" class="view-section space-y-6">
                         <div class="md:hidden mb-2">
-                            <h2 class="text-2xl font-bold text-slate-800">Target Tabungan</h2>
-                            <p class="text-xs text-slate-500 mt-1">Uang ini tidak bercampur dengan saldo utama.</p>
+                            <h2 class="text-2xl font-bold text-slate-800 dark:text-white">Target Tabungan</h2>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Uang ini tidak bercampur dengan saldo utama.</p>
                         </div>
 
-                        <div class="flex justify-between items-center bg-white p-5 rounded-3xl border border-slate-100 shadow-sm">
+                        <div class="flex justify-between items-center bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm">
                             <div>
-                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Total Terkumpul</p>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Total Uang Terkumpul</p>
                                 <h3 class="text-2xl font-black text-amber-500" id="goals-total-saved">Rp 0</h3>
                             </div>
-                            <button onclick="AppUI.openModal('modal-set-goal')" class="bg-slate-900 text-white font-bold text-xs px-4 py-2.5 rounded-xl hover:bg-slate-800 shadow-md flex items-center gap-2">
-                                <i class="ph-bold ph-plus"></i> Buat Target
+                            <button onclick="AppUI.openModal('modal-set-goal')" class="bg-slate-900 dark:bg-slate-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl hover:bg-slate-800 shadow-md flex items-center gap-2">
+                                <i class="ph-bold ph-plus"></i> Target Baru
                             </button>
                         </div>
 
-                        <div id="goals-list-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <!-- Render via JS -->
-                        </div>
+                        <!-- List Kategori Tabungan -->
+                        <div id="goals-list-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                     </section>
 
                     <!-- ==================== VIEW: TAGIHAN RUTIN ==================== -->
                     <section id="view-bills" class="view-section space-y-6">
-                        <div class="md:hidden mb-2">
-                            <h2 class="text-2xl font-bold text-slate-800">Tagihan Bulanan</h2>
-                            <p class="text-xs text-slate-500 mt-1">Kelola dan bayar pengeluaran rutin Anda.</p>
+                        <div class="flex justify-between items-center mb-2">
+                            <div>
+                                <h2 class="text-2xl font-bold text-slate-800 dark:text-white">Tagihan Bulanan</h2>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Sistem mereset tagihan otomatis tiap awal bulan.</p>
+                            </div>
+                            <button onclick="AppUI.openModal('modal-add-bill')" class="bg-indigo-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl hover:bg-indigo-700 shadow-md flex items-center gap-2">
+                                <i class="ph-bold ph-plus"></i> Tambah Tagihan
+                            </button>
                         </div>
 
-                        <!-- Form Tambah Tagihan Rutin -->
-                        <div class="bg-white p-5 rounded-3xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 mb-6">
-                            <h4 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="ph-fill ph-plus-circle text-indigo-500 text-lg"></i> Tambah Tagihan Rutin</h4>
-                            <form id="add-bill-form" class="space-y-4">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <input type="text" id="bill-name" placeholder="Nama Tagihan (Misal: Kos, WiFi)" required class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-sm font-medium rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                    <input type="text" inputmode="numeric" id="bill-amount" placeholder="Nominal (Rp)" required class="currency-input w-full bg-slate-50 border border-slate-200 text-slate-700 text-sm font-medium rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                    
-                                    <!-- Custom Combobox Kategori Tagihan -->
-                                    <div class="relative custom-select z-20" id="bill-category-select">
-                                        <div class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-sm font-medium rounded-xl px-4 py-3 flex items-center justify-between cursor-pointer focus:ring-2 focus:ring-indigo-500" onclick="Utils.toggleDropdown('bill-category-select')">
-                                            <div class="flex items-center gap-2" id="bill-category-display">
-                                                <i class="ph-fill ph-invoice text-rose-500 text-lg"></i> <span>Tagihan</span>
-                                            </div>
-                                            <i class="ph-bold ph-caret-down text-slate-400 caret-icon transition-transform"></i>
-                                        </div>
-                                        <div class="custom-select-options absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-xl shadow-xl overflow-hidden z-30">
-                                            <!-- Diisi oleh JS -->
-                                        </div>
-                                        <input type="hidden" id="bill-category-value" value="Tagihan">
-                                    </div>
-
-                                    <input type="number" id="bill-date" placeholder="Jatuh Tempo (Tgl 1-31)" min="1" max="31" required class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-sm font-medium rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                </div>
-                                <button type="submit" class="w-full bg-indigo-600 text-white font-bold rounded-xl py-3 hover:bg-indigo-700 transition-all text-sm mt-2 shadow-md">Simpan Tagihan</button>
-                            </form>
-                        </div>
-
-                        <h3 class="font-bold text-slate-800 text-lg mb-2">Daftar Tagihan Anda</h3>
-                        <div id="bills-list-container" class="space-y-3">
-                            <!-- Render via JS -->
-                        </div>
+                        <div id="bills-list-container" class="space-y-3"></div>
                     </section>
 
                     <!-- ==================== VIEW: TAMBAH TRANSAKSI ==================== -->
                     <section id="view-add" class="view-section">
-                        <div class="md:hidden mb-6"><h2 class="text-2xl font-bold text-slate-800">Catat Transaksi</h2></div>
-                        <form id="add-form" class="bg-white p-6 md:p-10 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 max-w-2xl mx-auto space-y-6">
+                        <div class="md:hidden mb-6"><h2 class="text-2xl font-bold text-slate-800 dark:text-white">Catat Transaksi</h2></div>
+                        <form id="add-form" class="bg-white dark:bg-slate-800 p-6 md:p-10 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 dark:border-slate-700 max-w-2xl mx-auto space-y-6">
                             
-                            <div class="bg-slate-100 p-1.5 rounded-2xl flex gap-1">
+                            <div class="bg-slate-100 dark:bg-slate-900 p-1.5 rounded-2xl flex gap-1">
                                 <label class="flex-1 cursor-pointer">
                                     <input type="radio" name="tx-type" value="expense" class="peer hidden" checked>
-                                    <div class="text-center py-3 md:py-4 rounded-xl text-sm md:text-base font-bold peer-checked:bg-white peer-checked:text-rose-600 peer-checked:shadow-sm text-slate-500 transition-all flex items-center justify-center gap-2"><i class="ph-bold ph-arrow-up-right text-lg"></i> Pengeluaran</div>
+                                    <div class="text-center py-3 md:py-4 rounded-xl text-sm md:text-base font-bold peer-checked:bg-white dark:peer-checked:bg-slate-800 peer-checked:text-rose-600 peer-checked:shadow-sm text-slate-500 dark:text-slate-400 transition-all flex items-center justify-center gap-2"><i class="ph-bold ph-arrow-up-right text-lg"></i> Pengeluaran</div>
                                 </label>
                                 <label class="flex-1 cursor-pointer">
                                     <input type="radio" name="tx-type" value="income" class="peer hidden">
-                                    <div class="text-center py-3 md:py-4 rounded-xl text-sm md:text-base font-bold peer-checked:bg-white peer-checked:text-emerald-600 peer-checked:shadow-sm text-slate-500 transition-all flex items-center justify-center gap-2"><i class="ph-bold ph-arrow-down-left text-lg"></i> Pemasukan</div>
+                                    <div class="text-center py-3 md:py-4 rounded-xl text-sm md:text-base font-bold peer-checked:bg-white dark:peer-checked:bg-slate-800 peer-checked:text-emerald-600 peer-checked:shadow-sm text-slate-500 dark:text-slate-400 transition-all flex items-center justify-center gap-2"><i class="ph-bold ph-arrow-down-left text-lg"></i> Pemasukan</div>
                                 </label>
                             </div>
 
                             <div>
-                                <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Jumlah (Rp)</label>
+                                <label class="block text-[10px] md:text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">Jumlah (Rp)</label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none"><span class="text-slate-400 font-bold text-lg md:text-xl">Rp</span></div>
-                                    <input type="text" inputmode="numeric" id="input-amount" placeholder="0" required class="currency-input w-full bg-slate-50 border border-slate-200 text-slate-900 text-2xl font-bold rounded-2xl pl-14 pr-5 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
+                                    <input type="text" inputmode="numeric" id="input-amount" placeholder="0" required class="currency-input w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-2xl font-bold rounded-2xl pl-14 pr-5 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
                                 </div>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative">
                                 
-                                <!-- Custom Combobox Category (In App) -->
+                                <!-- Custom Combobox Category -->
                                 <div class="relative z-20">
-                                    <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Kategori</label>
+                                    <label class="block text-[10px] md:text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">Kategori</label>
                                     <div class="relative custom-select" id="tx-category-select">
-                                        <div class="w-full bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-2xl px-5 py-4 flex items-center justify-between cursor-pointer focus:ring-2 focus:ring-indigo-500" onclick="Utils.toggleDropdown('tx-category-select')">
+                                        <div class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white font-medium rounded-2xl px-5 py-4 flex items-center justify-between cursor-pointer focus:ring-2 focus:ring-indigo-500" onclick="Utils.toggleDropdown('tx-category-select')">
                                             <div class="flex items-center gap-3" id="tx-category-display">
                                                 <i class="ph-fill ph-hamburger text-orange-500 text-xl"></i> <span>Makanan</span>
                                             </div>
                                             <i class="ph-bold ph-caret-down text-slate-400 caret-icon transition-transform"></i>
                                         </div>
-                                        <div class="custom-select-options absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-2xl shadow-xl overflow-hidden z-30 max-h-60 overflow-y-auto custom-scrollbar">
-                                            <!-- Diisi otomatis oleh JS -->
-                                        </div>
+                                        <div class="custom-select-options absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl shadow-xl overflow-hidden z-30 max-h-60 overflow-y-auto custom-scrollbar"></div>
                                         <input type="hidden" id="input-category" value="Makanan">
                                     </div>
                                 </div>
 
+                                <!-- Custom Datepicker Trigger -->
                                 <div>
-                                    <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Tanggal</label>
-                                    <input type="date" id="input-date" required class="w-full bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-2xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
+                                    <label class="block text-[10px] md:text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">Tanggal</label>
+                                    <div class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white font-medium rounded-2xl px-4 py-4 flex justify-between items-center cursor-pointer" onclick="CalendarManager.open('input-date')">
+                                        <span id="display-date">Pilih Tanggal</span>
+                                        <i class="ph-bold ph-calendar-blank text-slate-400"></i>
+                                    </div>
+                                    <input type="hidden" id="input-date" required>
                                 </div>
                             </div>
 
                             <div>
-                                <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Catatan Tambahan</label>
-                                <input type="text" id="input-desc" placeholder="Cth: Beli makan siang" required class="w-full bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
+                                <label class="block text-[10px] md:text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">Catatan Tambahan</label>
+                                <input type="text" id="input-desc" placeholder="Cth: Beli makan siang" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white font-medium rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
                             </div>
-                            <button type="submit" class="w-full bg-indigo-600 text-white font-bold rounded-2xl py-4 shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all mt-4 md:text-lg">Simpan Transaksi</button>
+                            <button type="submit" class="w-full bg-indigo-600 text-white font-bold rounded-2xl py-4 shadow-lg shadow-indigo-200 dark:shadow-none hover:bg-indigo-700 active:scale-95 transition-all mt-4 md:text-lg">Simpan Transaksi</button>
                         </form>
                     </section>
 
-                    <!-- ==================== VIEW: RIWAYAT & REKAP (Digabung Tab) ==================== -->
+                    <!-- ==================== VIEW: RIWAYAT & REKAP ==================== -->
                     <section id="view-history" class="view-section">
                         <div class="md:hidden mb-6 flex justify-between items-center">
-                            <div><h2 class="text-2xl font-bold text-slate-800">Riwayat</h2></div>
-                            <button onclick="AppUI.switchTab('recap')" class="text-[10px] font-bold bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg uppercase">Lihat Rekap</button>
+                            <div><h2 class="text-2xl font-bold text-slate-800 dark:text-white">Riwayat</h2></div>
+                            <button onclick="AppUI.switchTab('recap')" class="text-[10px] font-bold bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-3 py-1.5 rounded-lg uppercase">Lihat Rekap</button>
                         </div>
                         
-                        <div class="bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden flex flex-col min-h-[500px]">
-                            <div class="hidden md:flex justify-between items-center p-6 border-b border-slate-100 bg-slate-50/50">
-                                <h3 class="font-bold text-slate-800">Semua Transaksi</h3>
-                                <button onclick="AppUI.switchTab('recap')" class="text-xs font-bold bg-slate-200 text-slate-700 px-4 py-2 rounded-xl hover:bg-slate-300">Rekap Bulanan</button>
+                        <div class="bg-white dark:bg-slate-800 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 dark:border-slate-700 overflow-hidden flex flex-col min-h-[500px]">
+                            <div class="hidden md:flex justify-between items-center p-6 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800">
+                                <h3 class="font-bold text-slate-800 dark:text-white">Semua Transaksi</h3>
+                                <button onclick="AppUI.switchTab('recap')" class="text-xs font-bold bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-xl">Rekap Bulanan</button>
                             </div>
-                            
                             <div id="history-empty" class="flex-col items-center justify-center py-20 text-slate-400 hidden flex-grow">
-                                <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4"><i class="ph-fill ph-receipt text-4xl opacity-40"></i></div>
-                                <p class="text-sm font-bold text-slate-600">Belum ada riwayat</p>
+                                <div class="w-20 h-20 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center mb-4"><i class="ph-fill ph-receipt text-4xl opacity-40"></i></div>
+                                <p class="text-sm font-bold text-slate-600 dark:text-slate-400">Belum ada riwayat</p>
                             </div>
+                            <ul id="history-list" class="divide-y divide-slate-100 dark:divide-slate-700 flex-grow"></ul>
                             
-                            <ul id="history-list" class="divide-y divide-slate-100 flex-grow"></ul>
-                            
-                            <!-- Kontrol Pagination -->
-                            <div id="pagination-controls" class="hidden flex justify-between items-center p-5 border-t border-slate-100 bg-slate-50/50">
-                                <button onclick="TransactionManager.changePage(-1)" id="btn-prev" class="px-4 py-2 text-[11px] md:text-xs font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 disabled:opacity-40 shadow-sm">Sebelumnya</button>
+                            <div id="pagination-controls" class="hidden flex justify-between items-center p-5 border-t border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800">
+                                <button onclick="TransactionManager.changePage(-1)" id="btn-prev" class="px-4 py-2 text-[11px] md:text-xs font-bold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-600 disabled:opacity-40">Sebelumnya</button>
                                 <span id="page-info" class="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-wider">Hal 1 / 1</span>
-                                <button onclick="TransactionManager.changePage(1)" id="btn-next" class="px-4 py-2 text-[11px] md:text-xs font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 disabled:opacity-40 shadow-sm">Selanjutnya</button>
+                                <button onclick="TransactionManager.changePage(1)" id="btn-next" class="px-4 py-2 text-[11px] md:text-xs font-bold text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-600 disabled:opacity-40">Selanjutnya</button>
                             </div>
                         </div>
                     </section>
 
                     <section id="view-recap" class="view-section">
                         <div class="mb-6 flex justify-between items-center">
-                            <h2 class="text-2xl font-bold text-slate-800">Rekap Bulanan</h2>
-                            <button onclick="AppUI.switchTab('history')" class="text-[10px] md:text-xs font-bold bg-indigo-100 text-indigo-700 px-3 py-1.5 md:px-4 md:py-2 rounded-lg md:rounded-xl uppercase">Kembali</button>
+                            <h2 class="text-2xl font-bold text-slate-800 dark:text-white">Rekap Bulanan</h2>
+                            <button onclick="AppUI.switchTab('history')" class="text-[10px] md:text-xs font-bold bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-400 px-3 py-1.5 md:px-4 md:py-2 rounded-lg md:rounded-xl uppercase">Kembali</button>
                         </div>
                         <div id="recap-list" class="space-y-4 md:space-y-6"></div>
                     </section>
 
                     <!-- ==================== VIEW: SETTINGS ==================== -->
                     <section id="view-settings" class="view-section">
-                        <div class="mb-6"><h2 class="text-2xl font-bold text-slate-800">Pengaturan</h2></div>
-                        <div class="bg-white p-6 md:p-10 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 max-w-2xl mx-auto">
-                            <div class="flex items-center gap-4 mb-6 md:mb-8 pb-6 border-b border-slate-100">
-                                <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center"><i class="ph-fill ph-database text-2xl"></i></div>
-                                <div><h3 class="font-bold text-slate-800 md:text-lg">Koneksi Database</h3><p class="text-xs text-slate-500 mt-1">Sambungkan ke Supabase Anda.</p></div>
+                        <div class="mb-6"><h2 class="text-2xl font-bold text-slate-800 dark:text-white">Pengaturan</h2></div>
+                        <div class="bg-white dark:bg-slate-800 p-6 md:p-10 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 dark:border-slate-700 max-w-2xl mx-auto">
+                            <div class="flex items-center gap-4 mb-6 md:mb-8 pb-6 border-b border-slate-100 dark:border-slate-700">
+                                <div class="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center"><i class="ph-fill ph-database text-2xl"></i></div>
+                                <div><h3 class="font-bold text-slate-800 dark:text-white md:text-lg">Koneksi Database</h3><p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Simpan data online dengan Supabase.</p></div>
                             </div>
                             <form id="settings-form" class="space-y-5">
                                 <div>
-                                    <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Project URL</label>
-                                    <input type="url" id="input-supabase-url" placeholder="https://xxxx.supabase.co" class="w-full bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    <label class="block text-[10px] md:text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">Project URL</label>
+                                    <input type="url" id="input-supabase-url" placeholder="https://xxxx.supabase.co" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white font-medium rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                                 </div>
                                 <div>
-                                    <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Anon Key</label>
-                                    <input type="password" id="input-supabase-key" placeholder="eyJhbGciOiJIUzI1NiIsIn..." class="w-full bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    <label class="block text-[10px] md:text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-wider">Anon Key</label>
+                                    <input type="password" id="input-supabase-key" placeholder="eyJhbGciOiJIUzI1NiIsIn..." class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white font-medium rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                                 </div>
-                                <button type="submit" class="w-full bg-slate-900 text-white font-bold rounded-2xl py-4 mt-2 shadow-lg hover:bg-slate-800 transition-all md:text-lg">Simpan Koneksi</button>
+                                <button type="submit" class="w-full bg-slate-900 dark:bg-indigo-600 text-white font-bold rounded-2xl py-4 mt-2 shadow-lg hover:bg-slate-800 dark:hover:bg-indigo-700 transition-all md:text-lg">Simpan Koneksi</button>
                             </form>
                         </div>
                     </section>
@@ -448,144 +485,144 @@
         </div>
     </div>
 
-    <!-- ==================== BOTTOM NAV (MOBILE) - FIXED 5 ITEMS ==================== -->
-    <nav class="md:hidden fixed bottom-0 w-full bg-white border-t border-slate-100 z-50 px-2 pb-safe shadow-[0_-10px_20px_rgba(0,0,0,0.03)]">
+    <!-- BOTTOM NAV (MOBILE) -->
+    <nav class="md:hidden fixed bottom-0 w-full bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700 z-50 px-2 pb-safe shadow-[0_-10px_20px_rgba(0,0,0,0.03)]">
         <div class="flex justify-between items-center h-[70px] px-2">
-            <button onclick="AppUI.switchTab('dashboard')" class="nav-btn nav-btn-dashboard mobile-nav active flex flex-col items-center justify-center w-14 text-slate-400 transition-all">
-                <i class="ph ph-house text-[26px] mb-1 icon-outline"></i> <i class="ph-fill ph-house text-[26px] mb-1 icon-fill"></i> <span class="text-[10px] font-bold">Beranda</span>
-            </button>
-            <button onclick="AppUI.switchTab('history')" class="nav-btn nav-btn-history mobile-nav flex flex-col items-center justify-center w-14 text-slate-400 transition-all">
-                <i class="ph ph-list-dashes text-[26px] mb-1 icon-outline"></i> <i class="ph-fill ph-list-dashes text-[26px] mb-1 icon-fill"></i> <span class="text-[10px] font-bold">Riwayat</span>
-            </button>
+            <button onclick="AppUI.switchTab('dashboard')" class="nav-btn nav-btn-dashboard mobile-nav active flex flex-col items-center justify-center w-14 text-slate-400 transition-all"><i class="ph ph-house text-[26px] mb-1 icon-outline"></i> <i class="ph-fill ph-house text-[26px] mb-1 icon-fill"></i> <span class="text-[10px] font-bold">Beranda</span></button>
+            <button onclick="AppUI.switchTab('history')" class="nav-btn nav-btn-history mobile-nav flex flex-col items-center justify-center w-14 text-slate-400 transition-all"><i class="ph ph-list-dashes text-[26px] mb-1 icon-outline"></i> <i class="ph-fill ph-list-dashes text-[26px] mb-1 icon-fill"></i> <span class="text-[10px] font-bold">Riwayat</span></button>
             <div class="relative -top-6">
-                <button onclick="AppUI.switchTab('add')" class="nav-btn nav-btn-add mobile-nav w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-xl shadow-indigo-300 border-4 border-white active:scale-95 transition-transform">
-                    <i class="ph-bold ph-plus text-3xl"></i>
-                </button>
+                <button onclick="AppUI.switchTab('add')" class="nav-btn nav-btn-add mobile-nav w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-xl shadow-indigo-300 dark:shadow-none border-4 border-white dark:border-slate-800 active:scale-95 transition-transform"><i class="ph-bold ph-plus text-3xl"></i></button>
             </div>
-            <button onclick="AppUI.switchTab('goals')" class="nav-btn nav-btn-goals mobile-nav flex flex-col items-center justify-center w-14 text-slate-400 transition-all">
-                <i class="ph ph-target text-[26px] mb-1 icon-outline"></i> <i class="ph-fill ph-target text-[26px] mb-1 icon-fill"></i> <span class="text-[10px] font-bold">Target</span>
-            </button>
-            <button onclick="AppUI.switchTab('bills')" class="nav-btn nav-btn-bills mobile-nav flex flex-col items-center justify-center w-14 text-slate-400 transition-all">
-                <i class="ph ph-invoice text-[26px] mb-1 icon-outline"></i> <i class="ph-fill ph-invoice text-[26px] mb-1 icon-fill"></i> <span class="text-[10px] font-bold">Tagihan</span>
-            </button>
+            <button onclick="AppUI.switchTab('goals')" class="nav-btn nav-btn-goals mobile-nav flex flex-col items-center justify-center w-14 text-slate-400 transition-all"><i class="ph ph-target text-[26px] mb-1 icon-outline"></i> <i class="ph-fill ph-target text-[26px] mb-1 icon-fill"></i> <span class="text-[10px] font-bold">Target</span></button>
+            <button onclick="AppUI.switchTab('bills')" class="nav-btn nav-btn-bills mobile-nav flex flex-col items-center justify-center w-14 text-slate-400 transition-all"><i class="ph ph-invoice text-[26px] mb-1 icon-outline"></i> <i class="ph-fill ph-invoice text-[26px] mb-1 icon-fill"></i> <span class="text-[10px] font-bold">Tagihan</span></button>
         </div>
     </nav>
 
-    <!-- ==================== CORE JAVASCRIPT ==================== -->
     <script>
-        /** APP STATE */
+        /** THEME MANAGER (DARK / LIGHT MODE) */
+        const ThemeManager = {
+            toggle: () => {
+                document.documentElement.classList.toggle('dark');
+                localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+            }
+        };
+
+        /** APP STATE (LOCAL FIRST SUPPORT) */
         const AppState = {
             supabaseClient: null,
             isConnected: false,
-            transactions: [],
+            transactions: JSON.parse(localStorage.getItem('keuanganku_tx')) || [], // Backup lokal
             currentPage: 1,
             itemsPerPage: 10,
             savingsGoals: JSON.parse(localStorage.getItem('keuanganku_goals')) || [],
             recurringBills: JSON.parse(localStorage.getItem('keuanganku_bills')) || [],
-            billToPay: null // Menyimpan data tagihan yang sedang diproses
+            billToPay: null
         };
 
-        /** UTILITIES & CATEGORIES */
         const Utils = {
             formatIDR: (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(Number(num) || 0),
             formatDate: (dateStr) => dateStr ? new Date(dateStr).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '-',
             getCurrentMonthStr: () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`; },
-            getTodayDateStr: () => new Date().toISOString().split('T')[0],
+            getTodayDateStr: () => { const d = new Date(); const m = String(d.getMonth() + 1).padStart(2, '0'); const day = String(d.getDate()).padStart(2, '0'); return `${d.getFullYear()}-${m}-${day}`; },
             parseRawCurrency: (str) => parseFloat(str.replace(/[^0-9]/g, '')) || 0,
+            formatCurrencyInputEvent: (e) => { let v = e.target.value.replace(/[^0-9]/g, ''); e.target.value = v ? new Intl.NumberFormat('id-ID').format(v) : ''; },
             
-            formatCurrencyInputEvent: (e) => {
-                let value = e.target.value.replace(/[^0-9]/g, '');
-                e.target.value = value ? new Intl.NumberFormat('id-ID').format(value) : '';
-            },
-
-            // MASTER DATA KATEGORI
             categoryData: {
-                'Makanan': { icon: 'ph-hamburger', colorText: 'text-orange-500', bg: 'bg-orange-100' },
-                'Transport': { icon: 'ph-car', colorText: 'text-blue-500', bg: 'bg-blue-100' },
-                'Belanja': { icon: 'ph-shopping-bag', colorText: 'text-purple-500', bg: 'bg-purple-100' },
-                'Hiburan': { icon: 'ph-game-controller', colorText: 'text-pink-500', bg: 'bg-pink-100' },
-                'Gaji': { icon: 'ph-money', colorText: 'text-emerald-500', bg: 'bg-emerald-100' },
-                'Tagihan': { icon: 'ph-invoice', colorText: 'text-rose-500', bg: 'bg-rose-100' },
-                'Lainnya': { icon: 'ph-dots-three', colorText: 'text-slate-500', bg: 'bg-slate-200' }
+                'Makanan': { icon: 'ph-hamburger', colorText: 'text-orange-500', bg: 'bg-orange-100 dark:bg-orange-900/30' },
+                'Transport': { icon: 'ph-car', colorText: 'text-blue-500', bg: 'bg-blue-100 dark:bg-blue-900/30' },
+                'Belanja': { icon: 'ph-shopping-bag', colorText: 'text-purple-500', bg: 'bg-purple-100 dark:bg-purple-900/30' },
+                'Hiburan': { icon: 'ph-game-controller', colorText: 'text-pink-500', bg: 'bg-pink-100 dark:bg-pink-900/30' },
+                'Gaji': { icon: 'ph-money', colorText: 'text-emerald-500', bg: 'bg-emerald-100 dark:bg-emerald-900/30' },
+                'Tagihan': { icon: 'ph-invoice', colorText: 'text-rose-500', bg: 'bg-rose-100 dark:bg-rose-900/30' },
+                'Lainnya': { icon: 'ph-dots-three', colorText: 'text-slate-500', bg: 'bg-slate-200 dark:bg-slate-700' }
             },
-
             getCategoryStyle: (cat, type) => {
-                if (type === 'income') return { icon: 'ph-trend-up', text: 'text-emerald-600', bg: 'bg-emerald-100', color: 'bg-emerald-500' };
-                const c = Utils.categoryData[cat] || Utils.categoryData['Lainnya'];
-                return { icon: c.icon, text: c.colorText, bg: c.bg, color: c.colorText.replace('text-', 'bg-') };
+                if (type === 'income') return { icon: 'ph-trend-up', text: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-100 dark:bg-emerald-900/30', color: 'bg-emerald-500' };
+                const c = Utils.categoryData[cat] || Utils.categoryData['Lainnya']; return { icon: c.icon, text: c.colorText, bg: c.bg, color: c.colorText.replace('text-', 'bg-') };
             },
-
-            // CUSTOM COMBOBOX LOGIC
-            toggleDropdown: (id) => {
-                document.querySelectorAll('.custom-select').forEach(el => {
-                    if (el.id !== id) el.classList.remove('open');
-                });
-                document.getElementById(id).classList.toggle('open');
-            },
-            
+            toggleDropdown: (id) => { document.querySelectorAll('.custom-select').forEach(el => { if (el.id !== id) el.classList.remove('open'); }); document.getElementById(id).classList.toggle('open'); },
             setupCustomSelects: () => {
-                // Render option untuk combobox Transaksi
-                const txSelect = document.querySelector('#tx-category-select .custom-select-options');
-                const billSelect = document.querySelector('#bill-category-select .custom-select-options');
-                
                 const renderOptions = (container, isBill) => {
-                    let html = '';
-                    const cats = isBill ? ['Tagihan', 'Transport', 'Lainnya'] : Object.keys(Utils.categoryData);
+                    let html = ''; const cats = isBill ? ['Tagihan', 'Transport', 'Lainnya'] : Object.keys(Utils.categoryData);
                     cats.forEach(cat => {
                         const style = Utils.categoryData[cat];
-                        html += `
-                            <div class="px-5 py-3.5 flex items-center gap-3 hover:bg-slate-50 cursor-pointer border-b border-slate-50 last:border-0 transition-colors" 
-                                 onclick="Utils.selectOption('${container.parentElement.id}', '${cat}', '${style.icon}', '${style.colorText}')">
-                                <i class="ph-fill ${style.icon} ${style.colorText} text-xl"></i>
-                                <span class="font-bold text-slate-700 text-sm">${cat}</span>
-                            </div>
-                        `;
+                        html += `<div class="px-5 py-3.5 flex items-center gap-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer border-b border-slate-50 dark:border-slate-700 last:border-0 transition-colors" 
+                            onclick="Utils.selectOption('${container.parentElement.id}', '${cat}', '${style.icon}', '${style.colorText}')">
+                            <i class="ph-fill ${style.icon} ${style.colorText} text-xl"></i><span class="font-bold text-slate-700 dark:text-slate-200 text-sm">${cat}</span></div>`;
                     });
                     container.innerHTML = html;
                 };
-
-                renderOptions(txSelect, false);
-                renderOptions(billSelect, true);
-
-                // Global click to close
-                document.addEventListener('click', (e) => {
-                    if(!e.target.closest('.custom-select')) {
-                        document.querySelectorAll('.custom-select').forEach(el => el.classList.remove('open'));
-                    }
-                });
+                renderOptions(document.querySelector('#tx-category-select .custom-select-options'), false); renderOptions(document.querySelector('#bill-category-select .custom-select-options'), true);
+                document.addEventListener('click', (e) => { if(!e.target.closest('.custom-select')) document.querySelectorAll('.custom-select').forEach(el => el.classList.remove('open')); });
             },
-
             selectOption: (selectId, value, icon, color) => {
-                const selectEl = document.getElementById(selectId);
-                selectEl.querySelector('input[type="hidden"]').value = value;
-                selectEl.querySelector('div[id$="-display"]').innerHTML = `<i class="ph-fill ${icon} ${color} text-lg md:text-xl"></i> <span>${value}</span>`;
-                selectEl.classList.remove('open');
+                const s = document.getElementById(selectId); s.querySelector('input[type="hidden"]').value = value;
+                s.querySelector('div[id$="-display"]').innerHTML = `<i class="ph-fill ${icon} ${color} text-lg md:text-xl"></i> <span class="dark:text-white">${value}</span>`; s.classList.remove('open');
+            }
+        };
+
+        /** CUSTOM DATEPICKER (KALENDER) */
+        const CalendarManager = {
+            currentDate: new Date(),
+            selectedDate: new Date(),
+            targetId: '',
+            months: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
+            
+            open: (id) => {
+                CalendarManager.targetId = id;
+                const val = document.getElementById(id).value;
+                if(val) { CalendarManager.selectedDate = new Date(val); CalendarManager.currentDate = new Date(val); }
+                CalendarManager.render(); AppUI.openModal('modal-datepicker');
+            },
+            changeMonth: (delta) => {
+                CalendarManager.currentDate.setMonth(CalendarManager.currentDate.getMonth() + delta);
+                CalendarManager.render();
+            },
+            setToday: () => {
+                CalendarManager.selectedDate = new Date(); CalendarManager.currentDate = new Date();
+                CalendarManager.selectDay(CalendarManager.selectedDate.getDate());
+            },
+            selectDay: (day) => {
+                CalendarManager.selectedDate = new Date(CalendarManager.currentDate.getFullYear(), CalendarManager.currentDate.getMonth(), day);
+                const y = CalendarManager.selectedDate.getFullYear(); const m = String(CalendarManager.selectedDate.getMonth() + 1).padStart(2, '0'); const d = String(day).padStart(2, '0');
+                const finalStr = `${y}-${m}-${d}`;
+                document.getElementById(CalendarManager.targetId).value = finalStr;
+                document.getElementById('display-date').innerText = Utils.formatDate(finalStr);
+                document.getElementById('display-date').classList.add('text-slate-900', 'dark:text-white');
+                AppUI.closeModal('modal-datepicker');
+            },
+            render: () => {
+                document.getElementById('cal-month-year').innerText = `${CalendarManager.months[CalendarManager.currentDate.getMonth()]} ${CalendarManager.currentDate.getFullYear()}`;
+                const daysContainer = document.getElementById('cal-days'); daysContainer.innerHTML = '';
+                const firstDay = new Date(CalendarManager.currentDate.getFullYear(), CalendarManager.currentDate.getMonth(), 1).getDay();
+                const totalDays = new Date(CalendarManager.currentDate.getFullYear(), CalendarManager.currentDate.getMonth() + 1, 0).getDate();
+                
+                // Adjust for Monday start (0=Sun, 1=Mon, ..., 6=Sat). Let's use Sunday start for simplicity matching headers.
+                for (let i = 0; i < firstDay; i++) daysContainer.innerHTML += `<div></div>`;
+                
+                for (let i = 1; i <= totalDays; i++) {
+                    const isSelected = (i === CalendarManager.selectedDate.getDate() && CalendarManager.currentDate.getMonth() === CalendarManager.selectedDate.getMonth() && CalendarManager.currentDate.getFullYear() === CalendarManager.selectedDate.getFullYear());
+                    const style = isSelected ? "bg-indigo-600 text-white font-bold rounded-xl shadow-md" : "text-slate-700 dark:text-slate-300 font-medium hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl cursor-pointer transition-colors";
+                    daysContainer.innerHTML += `<div onclick="CalendarManager.selectDay(${i})" class="aspect-square flex items-center justify-center text-sm ${style}">${i}</div>`;
+                }
             }
         };
 
         /** UI MANAGER */
         const AppUI = {
             showToast: (message, type = 'success') => {
-                const container = document.getElementById('toast-container');
-                const toast = document.createElement('div');
-                const style = type === 'success' ? 'bg-slate-800 text-emerald-400 ph-check-circle' : 'bg-rose-600 text-white ph-warning-circle';
-                toast.className = `text-white ${style.split(' ')[0]} px-5 py-3.5 rounded-2xl shadow-xl flex items-center gap-3 text-sm font-bold toast-animate border border-white/10 w-full max-w-sm`;
-                toast.innerHTML = `<i class="ph-fill ${style.split(' ')[2]} text-xl ${style.split(' ')[1]}"></i> ${message}`;
-                container.appendChild(toast);
-                setTimeout(() => {
-                    toast.style.opacity = '0'; toast.style.transform = 'translateY(-20px)'; toast.style.transition = 'all 0.3s ease';
-                    setTimeout(() => toast.remove(), 300);
-                }, 3000);
+                const c = document.getElementById('toast-container'); const t = document.createElement('div');
+                const s = type === 'success' ? 'bg-slate-800 text-emerald-400 ph-check-circle' : 'bg-rose-600 text-white ph-warning-circle';
+                t.className = `text-white ${s.split(' ')[0]} px-5 py-3.5 rounded-2xl shadow-xl flex items-center gap-3 text-sm font-bold toast-animate border border-white/10 w-full max-w-sm`;
+                t.innerHTML = `<i class="ph-fill ${s.split(' ')[2]} text-xl ${s.split(' ')[1]}"></i> ${message}`;
+                c.appendChild(t); setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(-20px)'; t.style.transition = 'all 0.3s ease'; setTimeout(() => t.remove(), 300); }, 3000);
             },
             openModal: (id) => document.getElementById(id).classList.remove('hidden'),
-            closeModal: (id) => {
-                document.getElementById(id).classList.add('hidden');
-                if(id === 'modal-add-savings') document.getElementById('input-add-savings').value = '';
-            },
+            closeModal: (id) => { document.getElementById(id).classList.add('hidden'); if(id === 'modal-add-savings') document.getElementById('input-add-savings').value = ''; },
             switchTab: (tabId) => {
                 const titles = { 'dashboard': 'Beranda', 'history': 'Riwayat', 'add': 'Catat Transaksi', 'recap': 'Rekap', 'settings': 'Pengaturan', 'goals': 'Target Tabungan', 'bills': 'Tagihan' };
                 document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-                document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active', 'bg-indigo-50', 'text-indigo-600', 'font-semibold'));
+                document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active', 'bg-indigo-50', 'text-indigo-600', 'font-semibold', 'dark:bg-slate-700', 'dark:bg-indigo-900', 'dark:text-indigo-400'));
                 
                 document.getElementById(`view-${tabId}`).classList.add('active');
                 if(document.getElementById('desktop-page-title')) document.getElementById('desktop-page-title').innerText = titles[tabId];
@@ -593,33 +630,34 @@
                 if(tabId !== 'add' && tabId !== 'settings' && tabId !== 'recap') {
                     document.querySelectorAll(`.nav-btn-${tabId}`).forEach(el => {
                         el.classList.add('active');
-                        if(el.classList.contains('desktop-nav')) el.classList.add('bg-indigo-50', 'text-indigo-600', 'font-semibold');
+                        if(el.classList.contains('desktop-nav')) el.classList.add('bg-indigo-50', 'text-indigo-600', 'font-semibold', 'dark:bg-indigo-900', 'dark:text-indigo-400');
                     });
                 }
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         };
 
-        /** DATABASE SERVICE */
+        /** DATABASE & SYNC MANAGER */
         const DatabaseService = {
             init: async () => {
                 const url = localStorage.getItem('sb_url'); const key = localStorage.getItem('sb_key');
-                if (!url || !key) return;
+                if (!url || !key) {
+                    TransactionManager.renderAll(); // Render Lokal jika belum ada Supabase
+                    return;
+                }
                 document.getElementById('input-supabase-url').value = url; document.getElementById('input-supabase-key').value = key;
                 try {
-                    AppState.supabaseClient = window.supabase.createClient(url, key);
-                    AppState.isConnected = true;
+                    AppState.supabaseClient = window.supabase.createClient(url, key); AppState.isConnected = true;
                     const statusEl = document.getElementById('header-status');
                     statusEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span> <span class="text-emerald-700">Online</span>';
                     statusEl.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-[10px] font-bold text-emerald-700 uppercase border border-emerald-100";
                     document.getElementById('setup-warning').classList.add('hidden');
                     await DatabaseService.fetchTransactions();
-                } catch (err) { AppState.isConnected = false; }
+                } catch (err) { AppState.isConnected = false; TransactionManager.renderAll(); }
             },
             connect: async (url, key) => {
                 try {
-                    const test = window.supabase.createClient(url, key);
-                    const { error } = await test.from('transactions').select('id').limit(1);
+                    const test = window.supabase.createClient(url, key); const { error } = await test.from('transactions').select('id').limit(1);
                     if (error) throw error;
                     localStorage.setItem('sb_url', url); localStorage.setItem('sb_key', key);
                     AppUI.showToast("Database terhubung!"); await DatabaseService.init(); AppUI.switchTab('dashboard');
@@ -630,208 +668,135 @@
                 try {
                     const { data, error } = await AppState.supabaseClient.from('transactions').select('*').order('date', { ascending: false }).order('id', { ascending: false });
                     if (error) throw error;
-                    AppState.transactions = data || []; AppState.currentPage = 1; TransactionManager.renderAll();
-                } catch (err) { AppUI.showToast("Gagal mengambil data.", "error"); }
+                    AppState.transactions = data || []; localStorage.setItem('keuanganku_tx', JSON.stringify(AppState.transactions)); 
+                    AppState.currentPage = 1; TransactionManager.renderAll();
+                } catch (err) { AppUI.showToast("Gagal menarik data dari server.", "error"); TransactionManager.renderAll(); }
             },
             addTransaction: async (txData) => {
-                if(!AppState.isConnected) { AppUI.showToast('Hubungkan database!', 'error'); return false; }
-                try {
-                    const { data, error } = await AppState.supabaseClient.from('transactions').insert([txData]).select();
-                    if(error) throw error;
-                    AppState.transactions.unshift(data[0]);
-                    AppState.transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
-                    AppState.currentPage = 1; return true;
-                } catch (err) { AppUI.showToast("Gagal menyimpan.", "error"); return false; }
+                // Selalu simpan lokal
+                const localTx = { ...txData, id: Date.now() };
+                AppState.transactions.unshift(localTx);
+                AppState.transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+                localStorage.setItem('keuanganku_tx', JSON.stringify(AppState.transactions));
+
+                // Jika terhubung, simpan ke Supabase juga
+                if(AppState.isConnected) {
+                    try { await AppState.supabaseClient.from('transactions').insert([txData]); } 
+                    catch (err) { console.log('Gagal sync ke server'); }
+                }
+                
+                AppState.currentPage = 1; TransactionManager.renderAll(); return true;
             },
             deleteTransaction: async (id) => {
                 if(!confirm("Hapus transaksi ini?")) return;
-                try {
-                    await AppState.supabaseClient.from('transactions').delete().eq('id', id);
-                    AppState.transactions = AppState.transactions.filter(t => t.id !== id);
-                    TransactionManager.renderAll(); AppUI.showToast("Dihapus.");
-                } catch (err) { AppUI.showToast("Gagal.", "error"); }
+                AppState.transactions = AppState.transactions.filter(t => t.id !== id);
+                localStorage.setItem('keuanganku_tx', JSON.stringify(AppState.transactions));
+                if(AppState.isConnected) { try { await AppState.supabaseClient.from('transactions').delete().eq('id', id); } catch (e){} }
+                TransactionManager.renderAll(); AppUI.showToast("Dihapus.");
             }
         };
 
-        /** MULTI-GOAL MANAGER */
+        /** MULTI-GOAL MANAGER (Kategori Terpisah) */
         const GoalManager = {
             saveState: () => localStorage.setItem('keuanganku_goals', JSON.stringify(AppState.savingsGoals)),
-            
             render: () => {
-                const listEl = document.getElementById('goals-list-container');
-                const summaryEl = document.getElementById('dash-goals-summary');
-                listEl.innerHTML = ''; summaryEl.innerHTML = '';
-                
-                let totalSaved = 0;
+                const listEl = document.getElementById('goals-list-container'); const summaryEl = document.getElementById('dash-goals-summary');
+                listEl.innerHTML = ''; summaryEl.innerHTML = ''; let totalSaved = 0;
                 
                 if (AppState.savingsGoals.length === 0) {
-                    summaryEl.innerHTML = `<p class="text-xs text-slate-400 font-medium">Tidak ada target aktif. Tambahkan di menu Target.</p>`;
-                    listEl.innerHTML = `
-                        <div class="col-span-full text-center py-16 bg-white rounded-3xl border border-slate-200 border-dashed">
-                            <div class="w-14 h-14 bg-amber-50 rounded-full flex items-center justify-center text-amber-500 mx-auto mb-3"><i class="ph-fill ph-target text-3xl"></i></div>
-                            <h4 class="font-bold text-slate-700 text-sm mb-1">Belum ada impian</h4>
-                            <p class="text-xs text-slate-500 px-4">Buat target menabung pertama Anda sekarang.</p>
-                        </div>
-                    `;
+                    summaryEl.innerHTML = `<p class="text-xs text-slate-400 font-medium">Tidak ada target aktif.</p>`;
+                    listEl.innerHTML = `<div class="col-span-full text-center py-16 bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 border-dashed">
+                        <div class="w-14 h-14 bg-amber-50 dark:bg-amber-900/30 rounded-full flex items-center justify-center text-amber-500 mx-auto mb-3"><i class="ph-fill ph-target text-3xl"></i></div>
+                        <h4 class="font-bold text-slate-700 dark:text-white text-sm mb-1">Belum ada impian</h4></div>`;
                 } else {
                     AppState.savingsGoals.forEach((goal, idx) => {
-                        totalSaved += goal.saved;
-                        let persen = Math.min((goal.saved / goal.target) * 100, 100);
-                        
-                        // Render di Dashboard (Ringkasan)
-                        if(idx < 2) {
-                            summaryEl.innerHTML += `
-                                <div class="mb-3 last:mb-0">
-                                    <div class="flex justify-between text-xs font-bold text-slate-700 mb-1"><span>${goal.name}</span><span>${Math.round(persen)}%</span></div>
-                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="bg-amber-500 h-1.5 rounded-full" style="width: ${persen}%"></div></div>
-                                </div>
-                            `;
+                        totalSaved += goal.saved; let persen = Math.min((goal.saved / goal.target) * 100, 100);
+                        if(idx < 2) { // Dashboard Summary
+                            summaryEl.innerHTML += `<div class="mb-3 last:mb-0"><div class="flex justify-between text-xs font-bold text-slate-700 dark:text-slate-300 mb-1"><span>${goal.name}</span><span>${Math.round(persen)}%</span></div>
+                                <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden"><div class="bg-amber-500 h-1.5 rounded-full" style="width: ${persen}%"></div></div></div>`;
                         }
-
-                        // Render di Halaman Target
-                        listEl.innerHTML += `
-                            <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)] flex flex-col justify-between">
-                                <div>
-                                    <div class="flex justify-between items-start mb-2">
-                                        <h3 class="font-bold text-slate-800 text-lg leading-tight">${goal.name}</h3>
-                                        <button onclick="GoalManager.deleteGoal(${goal.id})" class="text-slate-400 hover:text-rose-500 transition-colors"><i class="ph-bold ph-trash"></i></button>
-                                    </div>
-                                    <div class="w-full bg-slate-100 rounded-full h-2 mb-2 overflow-hidden"><div class="bg-amber-500 h-2 rounded-full" style="width: ${persen}%"></div></div>
-                                    <div class="flex justify-between items-center text-[10px] md:text-xs font-bold uppercase tracking-wide">
-                                        <span class="text-amber-500">${Utils.formatIDR(goal.saved)}</span>
-                                        <span class="text-slate-400">/ ${Utils.formatIDR(goal.target)}</span>
-                                    </div>
-                                </div>
-                                <button onclick="GoalManager.openAddModal(${goal.id}, '${goal.name}')" class="w-full bg-amber-50 text-amber-600 font-bold rounded-xl py-2.5 mt-4 hover:bg-amber-100 transition-colors text-sm"><i class="ph-bold ph-plus"></i> Isi Tabungan</button>
-                            </div>
-                        `;
+                        // Goals View List
+                        listEl.innerHTML += `<div class="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-[0_4px_20px_rgb(0,0,0,0.03)] flex flex-col justify-between">
+                            <div><div class="flex justify-between items-start mb-2"><h3 class="font-bold text-slate-800 dark:text-white text-lg leading-tight">${goal.name}</h3>
+                            <button onclick="GoalManager.deleteGoal(${goal.id})" class="text-slate-400 hover:text-rose-500 transition-colors"><i class="ph-bold ph-trash"></i></button></div>
+                            <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2 mb-2 overflow-hidden"><div class="bg-amber-500 h-2 rounded-full" style="width: ${persen}%"></div></div>
+                            <div class="flex justify-between items-center text-[10px] md:text-xs font-bold uppercase tracking-wide"><span class="text-amber-500">${Utils.formatIDR(goal.saved)}</span><span class="text-slate-400 dark:text-slate-500">/ ${Utils.formatIDR(goal.target)}</span></div>
+                            </div><button onclick="GoalManager.openAddModal(${goal.id}, '${goal.name}')" class="w-full bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 font-bold rounded-xl py-2.5 mt-4 hover:bg-amber-100 dark:hover:bg-amber-900/40 transition-colors text-sm"><i class="ph-bold ph-plus"></i> Isi Tabungan</button></div>`;
                     });
                 }
                 document.getElementById('goals-total-saved').innerText = Utils.formatIDR(totalSaved);
             },
-            
-            addGoal: (name, target) => {
-                AppState.savingsGoals.push({ id: Date.now(), name, target, saved: 0 });
-                GoalManager.saveState(); GoalManager.render(); AppUI.showToast("Target impian dibuat!");
-            },
-            deleteGoal: (id) => {
-                if(confirm("Hapus target ini? Uang yang dialokasikan akan diretas.")) {
-                    AppState.savingsGoals = AppState.savingsGoals.filter(g => g.id !== id);
-                    GoalManager.saveState(); GoalManager.render(); AppUI.showToast("Dihapus.");
-                }
-            },
-            openAddModal: (id, name) => {
-                document.getElementById('input-savings-id').value = id;
-                document.getElementById('modal-add-savings-title').innerText = `Isi Tabungan: ${name}`;
-                AppUI.openModal('modal-add-savings');
-            },
-            addSavings: (id, amount) => {
-                const goal = AppState.savingsGoals.find(g => g.id == id);
-                if(goal) {
-                    goal.saved += amount;
-                    GoalManager.saveState(); GoalManager.render();
-                    if(goal.saved >= goal.target) AppUI.showToast("Selamat! Target Anda tercapai! 🎉");
-                    else AppUI.showToast("Uang ditabung!");
-                }
-            }
+            addGoal: (name, target) => { AppState.savingsGoals.push({ id: Date.now(), name, target, saved: 0 }); GoalManager.saveState(); GoalManager.render(); AppUI.showToast("Target impian dibuat!"); },
+            deleteGoal: (id) => { if(confirm("Hapus target ini?")) { AppState.savingsGoals = AppState.savingsGoals.filter(g => g.id !== id); GoalManager.saveState(); GoalManager.render(); } },
+            openAddModal: (id, name) => { document.getElementById('input-savings-id').value = id; document.getElementById('modal-add-savings-title').innerText = `Isi Tabungan: ${name}`; AppUI.openModal('modal-add-savings'); },
+            addSavings: (id, amount) => { const goal = AppState.savingsGoals.find(g => g.id == id); if(goal) { goal.saved += amount; GoalManager.saveState(); GoalManager.render(); AppUI.showToast(goal.saved >= goal.target ? "Selamat! Target tercapai! 🎉" : "Uang ditabung!"); } }
         };
 
-        /** BILLS MANAGER (TAGIHAN RUTIN) */
+        /** BILLS MANAGER (Siklus Cerdas Reset Otomatis) */
         const BillManager = {
             saveState: () => localStorage.setItem('keuanganku_bills', JSON.stringify(AppState.recurringBills)),
-            
             addBill: (name, amount, category, dateNum) => {
                 AppState.recurringBills.push({ id: Date.now().toString(), name, amount, category, date: parseInt(dateNum), lastPaidMonth: null });
-                BillManager.saveState(); BillManager.render(); BillManager.checkDueBills();
-                AppUI.showToast("Tagihan rutin ditambahkan.");
+                BillManager.saveState(); BillManager.render(); BillManager.checkDueBills(); AppUI.showToast("Tagihan rutin ditambahkan."); AppUI.closeModal('modal-add-bill');
             },
-            
-            deleteBill: (id) => {
-                if(!confirm("Hapus rincian tagihan rutin ini?")) return;
-                AppState.recurringBills = AppState.recurringBills.filter(b => b.id !== id);
-                BillManager.saveState(); BillManager.render(); BillManager.checkDueBills();
-            },
-            
+            deleteBill: (id) => { if(confirm("Hapus tagihan ini?")) { AppState.recurringBills = AppState.recurringBills.filter(b => b.id !== id); BillManager.saveState(); BillManager.render(); BillManager.checkDueBills(); } },
             checkDueBills: () => {
-                const currentMonthStr = Utils.getCurrentMonthStr();
-                const currentDay = new Date().getDate();
-                
+                const currentMonthStr = Utils.getCurrentMonthStr(); const currentDay = new Date().getDate();
                 AppState.dueBillsCache = AppState.recurringBills.filter(b => (currentDay >= b.date) && (b.lastPaidMonth !== currentMonthStr));
-
                 const banner = document.getElementById('reminder-banner');
-                if (AppState.dueBillsCache.length > 0) {
-                    document.getElementById('reminder-text').innerText = `Ada ${AppState.dueBillsCache.length} tagihan yang butuh perhatian Anda.`;
-                    banner.classList.remove('hidden');
-                } else { banner.classList.add('hidden'); }
+                if (AppState.dueBillsCache.length > 0) { document.getElementById('reminder-text').innerText = `Ada ${AppState.dueBillsCache.length} tagihan yang butuh perhatian Anda.`; banner.classList.remove('hidden'); } else { banner.classList.add('hidden'); }
             },
-
             openPayModal: (id) => {
-                const bill = AppState.recurringBills.find(b => b.id === id);
-                if(!bill) return;
-                AppState.billToPay = bill;
-                document.getElementById('pay-bill-name').innerText = `Bayar ${bill.name}?`;
-                document.getElementById('pay-bill-amount').innerText = Utils.formatIDR(bill.amount);
-                AppUI.openModal('modal-pay-bill');
+                const bill = AppState.recurringBills.find(b => b.id === id); if(!bill) return; AppState.billToPay = bill;
+                document.getElementById('pay-bill-name').innerText = `Bayar ${bill.name}?`; document.getElementById('pay-bill-amount').innerText = Utils.formatIDR(bill.amount); AppUI.openModal('modal-pay-bill');
             },
-            
             confirmPayBill: async () => {
-                const bill = AppState.billToPay;
-                if(!bill) return;
-                if(!AppState.isConnected) { AppUI.closeModal('modal-pay-bill'); return AppUI.showToast('Harap hubungkan Database dulu!', 'error'); }
-
-                const txObj = { type: 'expense', amount: bill.amount, category: bill.category, date: Utils.getTodayDateStr(), description: `[Otomatis] ${bill.name}` };
-                
+                const bill = AppState.billToPay; if(!bill) return;
+                const txObj = { type: 'expense', amount: bill.amount, category: bill.category, date: Utils.getTodayDateStr(), description: `[Otomatis] Tagihan ${bill.name}` };
                 const isSuccess = await DatabaseService.addTransaction(txObj);
                 if(isSuccess) {
                     const billRef = AppState.recurringBills.find(b => b.id === bill.id);
-                    if(billRef) billRef.lastPaidMonth = Utils.getCurrentMonthStr();
-                    BillManager.saveState(); BillManager.render(); BillManager.checkDueBills();
-                    AppUI.closeModal('modal-pay-bill'); AppUI.showToast(`Tagihan ${bill.name} Lunas!`);
+                    if(billRef) billRef.lastPaidMonth = Utils.getCurrentMonthStr(); // Set lunas di bulan ini (Reset bulan depan)
+                    BillManager.saveState(); BillManager.render(); BillManager.checkDueBills(); AppUI.closeModal('modal-pay-bill'); AppUI.showToast(`${bill.name} Lunas!`);
                 }
             },
-            
             render: () => {
-                const container = document.getElementById('bills-list-container');
-                container.innerHTML = '';
-                
-                if (AppState.recurringBills.length === 0) {
-                    container.innerHTML = `<p class="text-sm text-slate-400 text-center py-10 bg-white rounded-3xl border border-slate-100 border-dashed">Belum ada tagihan rutin disetting.</p>`;
-                    return;
-                }
+                const container = document.getElementById('bills-list-container'); container.innerHTML = '';
+                if (AppState.recurringBills.length === 0) { container.innerHTML = `<p class="text-sm text-slate-400 text-center py-10 bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 border-dashed">Belum ada tagihan diatur.</p>`; return; }
+
+                const currentMonthStr = Utils.getCurrentMonthStr();
+                const currentDay = new Date().getDate();
 
                 AppState.recurringBills.forEach(bill => {
-                    const isPaid = bill.lastPaidMonth === Utils.getCurrentMonthStr();
-                    const statusStr = isPaid ? '<span class="text-[10px] text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded font-bold uppercase tracking-wider"><i class="ph-bold ph-check"></i> Lunas</span>' : '<span class="text-[10px] text-rose-500 bg-rose-100 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Menunggu</span>';
-                    const btnHtml = isPaid ? 
-                        `<button onclick="BillManager.deleteBill('${bill.id}')" class="text-xs font-bold text-slate-400 hover:text-rose-500 p-2">Hapus</button>` :
-                        `<button onclick="BillManager.openPayModal('${bill.id}')" class="bg-rose-500 text-white font-bold text-xs px-4 py-2 rounded-lg hover:bg-rose-600 shadow-md">Bayar</button>`;
+                    const isPaidThisMonth = bill.lastPaidMonth === currentMonthStr;
+                    const isDue = currentDay >= bill.date;
                     
-                    const style = Utils.getCategoryStyle(bill.category, 'expense');
+                    let statusHtml, btnHtml;
+                    if (isPaidThisMonth) {
+                        statusHtml = `<span class="text-[10px] text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 px-2 py-0.5 rounded font-bold uppercase tracking-wider"><i class="ph-bold ph-check"></i> Lunas Bln Ini</span>`;
+                        btnHtml = `<button onclick="BillManager.deleteBill('${bill.id}')" class="text-xs font-bold text-slate-400 hover:text-rose-500 p-2">Hapus</button>`;
+                    } else if (isDue) {
+                        statusHtml = `<span class="text-[10px] text-rose-500 bg-rose-100 dark:bg-rose-900/30 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Bayar Sekarang</span>`;
+                        btnHtml = `<button onclick="BillManager.openPayModal('${bill.id}')" class="bg-rose-500 text-white font-bold text-xs px-4 py-2 rounded-lg hover:bg-rose-600 shadow-md">Bayar</button>`;
+                    } else {
+                        statusHtml = `<span class="text-[10px] text-slate-500 bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Jatuh Tempo Tgl ${bill.date}</span>`;
+                        btnHtml = `<button onclick="BillManager.deleteBill('${bill.id}')" class="text-xs font-bold text-slate-400 hover:text-rose-500 p-2">Hapus</button>`;
+                    }
 
-                    container.innerHTML += `
-                        <div class="flex items-center justify-between p-5 bg-white border border-slate-100 shadow-sm rounded-3xl hover:shadow-md transition-all">
-                            <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}"><i class="ph-fill ${style.icon} text-2xl"></i></div>
-                                <div>
-                                    <h4 class="font-bold text-sm text-slate-800">${bill.name}</h4>
-                                    <p class="text-xs text-slate-500 font-medium mt-0.5">Tgl ${bill.date} • <span class="font-bold text-slate-700">${Utils.formatIDR(bill.amount)}</span></p>
-                                    <div class="mt-1">${statusStr}</div>
-                                </div>
-                            </div>
-                            <div class="flex flex-col gap-2">${btnHtml}</div>
-                        </div>
-                    `;
+                    const style = Utils.getCategoryStyle(bill.category, 'expense');
+                    container.innerHTML += `<div class="flex items-center justify-between p-5 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-sm rounded-3xl hover:shadow-md transition-all">
+                        <div class="flex items-center gap-4"><div class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}"><i class="ph-fill ${style.icon} text-2xl"></i></div>
+                        <div><h4 class="font-bold text-sm text-slate-800 dark:text-white">${bill.name}</h4><p class="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5"><span class="font-bold text-slate-700 dark:text-slate-300">${Utils.formatIDR(bill.amount)}</span></p>
+                        <div class="mt-1">${statusHtml}</div></div></div><div class="flex flex-col gap-2">${btnHtml}</div></div>`;
                 });
             }
         };
 
-        /** TRANSACTIONS MANAGER */
+        /** TRANSACTIONS MANAGER (Dashboard & Riwayat) */
         const TransactionManager = {
             changePage: (delta) => {
                 const totalPages = Math.ceil(AppState.transactions.length / AppState.itemsPerPage) || 1;
-                AppState.currentPage += delta;
-                if(AppState.currentPage < 1) AppState.currentPage = 1;
-                if(AppState.currentPage > totalPages) AppState.currentPage = totalPages;
+                AppState.currentPage += delta; if(AppState.currentPage < 1) AppState.currentPage = 1; if(AppState.currentPage > totalPages) AppState.currentPage = totalPages;
                 TransactionManager.renderAll(); window.scrollTo({ top: 0, behavior: 'smooth' });
             },
             renderAll: () => { TransactionManager.renderDashboard(); TransactionManager.renderHistory(); TransactionManager.renderRecap(); },
@@ -847,8 +812,7 @@
                     if(tx.date && tx.date.substring(0, 7) === currentMonthStr) {
                         if (tx.type === 'income') currentMonthIncome += nominal;
                         if (tx.type === 'expense') {
-                            currentMonthExpense += nominal;
-                            const cat = tx.category || 'Lainnya'; categoryData[cat] = (categoryData[cat] || 0) + nominal;
+                            currentMonthExpense += nominal; const cat = tx.category || 'Lainnya'; categoryData[cat] = (categoryData[cat] || 0) + nominal;
                         }
                     }
                 });
@@ -857,34 +821,17 @@
                 document.getElementById('dash-income').innerText = Utils.formatIDR(currentMonthIncome);
                 document.getElementById('dash-expense').innerText = Utils.formatIDR(currentMonthExpense);
 
-                // Bar Ratio
-                let totalCashflow = currentMonthIncome + currentMonthExpense;
-                let expenseRatio = totalCashflow === 0 ? 0 : (currentMonthExpense / totalCashflow) * 100;
+                let totalCashflow = currentMonthIncome + currentMonthExpense; let expenseRatio = totalCashflow === 0 ? 0 : (currentMonthExpense / totalCashflow) * 100;
                 document.getElementById('dash-ratio-bar').style.width = `${expenseRatio}%`;
 
-                // Insight Text
-                const insightEl = document.getElementById('dash-insight-text');
-                if (currentMonthExpense === 0) insightEl.innerText = "Bagus! Anda belum mengeluarkan uang bulan ini.";
-                else if (currentMonthExpense >= currentMonthIncome && currentMonthIncome > 0) insightEl.innerText = "Hati-hati, pengeluaran bulan ini sudah melampaui pemasukan Anda.";
-                else {
-                    const topCat = Object.keys(categoryData).reduce((a, b) => categoryData[a] > categoryData[b] ? a : b, null);
-                    if(topCat) insightEl.innerText = `Pengeluaran terbesar bulan ini dialokasikan untuk ${topCat} (${Utils.formatIDR(categoryData[topCat])}).`;
-                }
-
                 const catListEl = document.getElementById('category-breakdown-list'); catListEl.innerHTML = '';
-                if(Object.keys(categoryData).length === 0) {
-                    catListEl.innerHTML = `<p class="text-center text-xs text-slate-400 py-4 font-medium">Belum ada pengeluaran bulan ini.</p>`;
-                } else {
-                    Object.keys(categoryData).sort((a,b) => categoryData[b] - categoryData[a]).forEach(cat => {
+                if(Object.keys(categoryData).length === 0) { catListEl.innerHTML = `<p class="text-center text-xs text-slate-400 py-4 font-medium">Belum ada pengeluaran.</p>`; } 
+                else {
+                    Object.keys(categoryData).sort((a,b) => categoryData[b] - categoryData[a]).slice(0, 4).forEach(cat => {
                         const amt = categoryData[cat]; const persen = (amt / currentMonthExpense) * 100; const style = Utils.getCategoryStyle(cat, 'expense');
-                        catListEl.innerHTML += `
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}"><i class="ph-fill ${style.icon} text-xl"></i></div>
-                                <div class="flex-grow min-w-0">
-                                    <div class="flex justify-between items-end mb-1.5"><p class="text-sm font-bold text-slate-800">${cat}</p><p class="text-xs font-bold text-slate-700">${Utils.formatIDR(amt)}</p></div>
-                                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden"><div class="h-1.5 rounded-full ${style.color}" style="width: ${persen}%"></div></div>
-                                </div>
-                            </div>`;
+                        catListEl.innerHTML += `<div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}"><i class="ph-fill ${style.icon} text-xl"></i></div>
+                            <div class="flex-grow min-w-0"><div class="flex justify-between items-end mb-1.5"><p class="text-sm font-bold text-slate-800 dark:text-white">${cat}</p><p class="text-xs font-bold text-slate-700 dark:text-slate-300">${Utils.formatIDR(amt)}</p></div>
+                            <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-1.5 overflow-hidden"><div class="h-1.5 rounded-full ${style.color}" style="width: ${persen}%"></div></div></div></div>`;
                     });
                 }
 
@@ -893,151 +840,108 @@
                 else {
                     document.getElementById('dash-empty').classList.add('hidden');
                     AppState.transactions.slice(0, 4).forEach((tx) => {
-                        const style = Utils.getCategoryStyle(tx.category || 'Lainnya', tx.type);
-                        const sign = tx.type === 'income' ? '+' : '-';
-                        dashRecent.innerHTML += `
-                            <div onclick="AppUI.switchTab('history')" class="bg-white p-4 md:p-5 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 flex items-center gap-4 hover:border-indigo-100 cursor-pointer">
-                                <div class="w-11 h-11 md:w-12 md:h-12 rounded-2xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}"><i class="ph-fill ${style.icon} text-xl md:text-2xl"></i></div>
-                                <div class="flex-grow min-w-0">
-                                    <p class="text-[13px] md:text-sm font-bold text-slate-800 truncate">${tx.description || '-'}</p>
-                                    <p class="text-[10px] md:text-xs font-medium text-slate-400 mt-0.5">${Utils.formatDate(tx.date)}</p>
-                                </div>
-                                <div class="text-right shrink-0"><p class="text-[13px] md:text-sm font-bold ${tx.type === 'income' ? 'text-emerald-600' : 'text-slate-800'}">${sign}${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p></div>
-                            </div>`;
+                        const style = Utils.getCategoryStyle(tx.category || 'Lainnya', tx.type); const sign = tx.type === 'income' ? '+' : '-';
+                        dashRecent.innerHTML += `<div onclick="AppUI.switchTab('history')" class="bg-white dark:bg-slate-800 p-4 md:p-5 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 dark:border-slate-700 flex items-center gap-4 cursor-pointer">
+                            <div class="w-11 h-11 md:w-12 md:h-12 rounded-2xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}"><i class="ph-fill ${style.icon} text-xl md:text-2xl"></i></div>
+                            <div class="flex-grow min-w-0"><p class="text-[13px] md:text-sm font-bold text-slate-800 dark:text-white truncate">${tx.description || '-'}</p><p class="text-[10px] md:text-xs font-medium text-slate-400 dark:text-slate-500 mt-0.5">${Utils.formatDate(tx.date)}</p></div>
+                            <div class="text-right shrink-0"><p class="text-[13px] md:text-sm font-bold ${tx.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-800 dark:text-white'}">${sign}${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p></div></div>`;
                     });
                 }
             },
             
             renderHistory: () => {
-                const historyList = document.getElementById('history-list'); const pagination = document.getElementById('pagination-controls');
-                historyList.innerHTML = '';
-                if (AppState.transactions.length === 0) {
-                    document.getElementById('history-empty').classList.remove('hidden'); document.getElementById('history-empty').classList.add('flex');
-                    pagination.classList.add('hidden'); pagination.classList.remove('flex'); return;
-                } 
+                const historyList = document.getElementById('history-list'); const pagination = document.getElementById('pagination-controls'); historyList.innerHTML = '';
+                if (AppState.transactions.length === 0) { document.getElementById('history-empty').classList.remove('hidden'); document.getElementById('history-empty').classList.add('flex'); pagination.classList.add('hidden'); pagination.classList.remove('flex'); return; } 
                 document.getElementById('history-empty').classList.add('hidden'); document.getElementById('history-empty').classList.remove('flex');
                 
-                const totalPages = Math.ceil(AppState.transactions.length / AppState.itemsPerPage) || 1;
-                if(AppState.currentPage > totalPages) AppState.currentPage = totalPages;
+                const totalPages = Math.ceil(AppState.transactions.length / AppState.itemsPerPage) || 1; if(AppState.currentPage > totalPages) AppState.currentPage = totalPages;
                 if (AppState.transactions.length > AppState.itemsPerPage) {
-                    pagination.classList.remove('hidden'); pagination.classList.add('flex');
-                    document.getElementById('page-info').innerText = `HAL ${AppState.currentPage} DARI ${totalPages}`;
+                    pagination.classList.remove('hidden'); pagination.classList.add('flex'); document.getElementById('page-info').innerText = `HAL ${AppState.currentPage} DARI ${totalPages}`;
                     document.getElementById('btn-prev').disabled = AppState.currentPage === 1; document.getElementById('btn-next').disabled = AppState.currentPage === totalPages;
                 } else { pagination.classList.add('hidden'); pagination.classList.remove('flex'); }
 
                 const paginated = AppState.transactions.slice((AppState.currentPage - 1) * AppState.itemsPerPage, ((AppState.currentPage - 1) * AppState.itemsPerPage) + AppState.itemsPerPage);
                 paginated.forEach((tx) => {
                     const style = Utils.getCategoryStyle(tx.category, tx.type); const sign = tx.type === 'income' ? '+' : '-';
-                    historyList.innerHTML += `
-                        <li class="flex items-center gap-4 md:gap-5 py-4 px-6 md:px-8 group hover:bg-slate-50 transition-colors">
-                            <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}"><i class="ph-fill ${style.icon} text-2xl md:text-3xl"></i></div>
-                            <div class="flex-grow min-w-0">
-                                <p class="text-sm md:text-base font-bold text-slate-800 truncate">${tx.description || '-'}</p>
-                                <div class="flex items-center gap-2 mt-1">
-                                    <span class="text-[10px] md:text-xs font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">${tx.category || 'Lainnya'}</span>
-                                    <span class="text-[11px] md:text-xs font-medium text-slate-400">${Utils.formatDate(tx.date)}</span>
-                                </div>
-                            </div>
-                            <div class="text-right shrink-0">
-                                <p class="text-sm md:text-base font-bold ${tx.type === 'income' ? 'text-emerald-600' : 'text-slate-800'}">${sign}${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p>
-                                <button onclick="DatabaseService.deleteTransaction(${tx.id})" class="text-[10px] md:text-xs font-bold text-rose-500 mt-1.5 uppercase hover:underline">Hapus</button>
-                            </div>
-                        </li>`;
+                    historyList.innerHTML += `<li class="flex items-center gap-4 md:gap-5 py-4 px-6 md:px-8 group hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                        <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}"><i class="ph-fill ${style.icon} text-2xl md:text-3xl"></i></div>
+                        <div class="flex-grow min-w-0"><p class="text-sm md:text-base font-bold text-slate-800 dark:text-white truncate">${tx.description || '-'}</p>
+                        <div class="flex items-center gap-2 mt-1"><span class="text-[10px] md:text-xs font-bold bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 px-2 py-0.5 rounded uppercase tracking-wider">${tx.category || 'Lainnya'}</span><span class="text-[11px] md:text-xs font-medium text-slate-400 dark:text-slate-500">${Utils.formatDate(tx.date)}</span></div></div>
+                        <div class="text-right shrink-0"><p class="text-sm md:text-base font-bold ${tx.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-800 dark:text-white'}">${sign}${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p>
+                        <button onclick="DatabaseService.deleteTransaction(${tx.id})" class="text-[10px] md:text-xs font-bold text-rose-500 mt-1.5 uppercase hover:underline">Hapus</button></div></li>`;
                 });
             },
             
             renderRecap: () => {
                 const recapList = document.getElementById('recap-list'); recapList.innerHTML = '';
-                if (AppState.transactions.length === 0) {
-                    recapList.innerHTML = `<div class="text-center py-20 bg-white rounded-[2rem] border border-slate-100 border-dashed text-slate-400 font-medium"><i class="ph-fill ph-chart-bar text-4xl mb-2 opacity-50 block"></i>Belum ada data bulanan.</div>`;
-                    return;
-                }
+                if (AppState.transactions.length === 0) { recapList.innerHTML = `<div class="text-center py-20 bg-white dark:bg-slate-800 rounded-[2rem] border border-slate-100 dark:border-slate-700 border-dashed text-slate-400 font-medium"><i class="ph-fill ph-chart-bar text-4xl mb-2 opacity-50 block"></i>Belum ada data bulanan.</div>`; return; }
                 const monthlyData = {};
                 AppState.transactions.forEach(tx => {
                     if(!tx.date) return; const monthYear = tx.date.substring(0, 7);
                     if (!monthlyData[monthYear]) monthlyData[monthYear] = { label: new Date(tx.date).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }), income: 0, expense: 0, count: 0 };
-                    const nominal = Number(tx.amount) || 0;
-                    if (tx.type === 'income') monthlyData[monthYear].income += nominal;
-                    if (tx.type === 'expense') monthlyData[monthYear].expense += nominal;
-                    monthlyData[monthYear].count += 1;
+                    const nominal = Number(tx.amount) || 0; if (tx.type === 'income') monthlyData[monthYear].income += nominal; if (tx.type === 'expense') monthlyData[monthYear].expense += nominal; monthlyData[monthYear].count += 1;
                 });
                 Object.keys(monthlyData).sort((a, b) => b.localeCompare(a)).forEach(my => {
-                    const data = monthlyData[my]; const balance = data.income - data.expense;
-                    const balanceColor = balance >= 0 ? 'text-emerald-600' : 'text-rose-600';
-                    recapList.innerHTML += `
-                        <div class="bg-white p-5 md:p-6 rounded-[2rem] shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100">
-                            <div class="flex justify-between items-center mb-5 border-b border-slate-100 pb-4">
-                                <div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500"><i class="ph-bold ph-calendar-blank"></i></div><h3 class="font-bold text-slate-800 md:text-lg">${data.label}</h3></div>
-                                <span class="text-[10px] md:text-xs font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-lg">${data.count} Transaksi</span>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4 mb-4">
-                                <div><p class="text-[10px] md:text-xs font-bold text-slate-400 uppercase mb-1">Masuk</p><p class="font-bold text-sm md:text-base text-emerald-600">${Utils.formatIDR(data.income)}</p></div>
-                                <div><p class="text-[10px] md:text-xs font-bold text-slate-400 uppercase mb-1">Keluar</p><p class="font-bold text-sm md:text-base text-rose-600">${Utils.formatIDR(data.expense)}</p></div>
-                            </div>
-                            <div class="${balance >= 0 ? 'bg-emerald-50' : 'bg-rose-50'} rounded-xl p-4 flex justify-between items-center">
-                                <span class="text-xs md:text-sm font-bold ${balanceColor} uppercase">Sisa / Saldo Bersih</span>
-                                <span class="font-bold text-base md:text-lg ${balanceColor}">${Utils.formatIDR(balance)}</span>
-                            </div>
-                        </div>`;
+                    const data = monthlyData[my]; const balance = data.income - data.expense; const balanceColor = balance >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
+                    recapList.innerHTML += `<div class="bg-white dark:bg-slate-800 p-5 md:p-6 rounded-[2rem] shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 dark:border-slate-700">
+                        <div class="flex justify-between items-center mb-5 border-b border-slate-100 dark:border-slate-700 pb-4">
+                        <div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-300"><i class="ph-bold ph-calendar-blank"></i></div><h3 class="font-bold text-slate-800 dark:text-white md:text-lg">${data.label}</h3></div>
+                        <span class="text-[10px] md:text-xs font-bold text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-900 px-2 py-1 rounded-lg">${data.count} Transaksi</span></div>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div><p class="text-[10px] md:text-xs font-bold text-slate-400 dark:text-slate-500 uppercase mb-1">Masuk</p><p class="font-bold text-sm md:text-base text-emerald-600 dark:text-emerald-400">${Utils.formatIDR(data.income)}</p></div>
+                        <div><p class="text-[10px] md:text-xs font-bold text-slate-400 dark:text-slate-500 uppercase mb-1">Keluar</p><p class="font-bold text-sm md:text-base text-rose-600 dark:text-rose-400">${Utils.formatIDR(data.expense)}</p></div></div>
+                        <div class="${balance >= 0 ? 'bg-emerald-50 dark:bg-emerald-900/20' : 'bg-rose-50 dark:bg-rose-900/20'} rounded-xl p-4 flex justify-between items-center"><span class="text-xs md:text-sm font-bold ${balanceColor} uppercase">Saldo Bersih</span><span class="font-bold text-base md:text-lg ${balanceColor}">${Utils.formatIDR(balance)}</span></div></div>`;
                 });
             }
         };
 
-        /** INITIALIZATION BINDINGS */
+        /** INisialisasi Aplikasi */
         document.addEventListener('DOMContentLoaded', () => {
+            // Setup Datepicker Trigger Input
             document.getElementById('input-date').value = Utils.getTodayDateStr();
+            document.getElementById('display-date').innerText = Utils.formatDate(Utils.getTodayDateStr());
+            document.getElementById('display-date').classList.add('text-slate-900', 'dark:text-white');
+
             document.querySelectorAll('.currency-input').forEach(el => el.addEventListener('input', Utils.formatCurrencyInputEvent));
             Utils.setupCustomSelects();
 
-            // Forms
+            // Form Target
             document.getElementById('form-set-goal').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const target = Utils.parseRawCurrency(document.getElementById('input-goal-target').value);
+                e.preventDefault(); const target = Utils.parseRawCurrency(document.getElementById('input-goal-target').value);
                 if(target <= 0) return AppUI.showToast("Harga tidak valid", 'error');
-                GoalManager.addGoal(document.getElementById('input-goal-name').value, target);
-                AppUI.closeModal('modal-set-goal'); document.getElementById('form-set-goal').reset();
+                GoalManager.addGoal(document.getElementById('input-goal-name').value, target); AppUI.closeModal('modal-set-goal'); document.getElementById('form-set-goal').reset();
             });
 
+            // Form Isi Tabungan
             document.getElementById('form-add-savings').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const added = Utils.parseRawCurrency(document.getElementById('input-add-savings').value);
+                e.preventDefault(); const added = Utils.parseRawCurrency(document.getElementById('input-add-savings').value);
                 if(added <= 0) return AppUI.showToast("Nominal tidak valid", "error");
-                GoalManager.addSavings(document.getElementById('input-savings-id').value, added);
-                AppUI.closeModal('modal-add-savings');
+                GoalManager.addSavings(document.getElementById('input-savings-id').value, added); AppUI.closeModal('modal-add-savings');
             });
 
-            document.getElementById('settings-form').addEventListener('submit', (e) => {
-                e.preventDefault();
-                DatabaseService.connect(document.getElementById('input-supabase-url').value.trim(), document.getElementById('input-supabase-key').value.trim());
-            });
-
+            // Form Transaksi Baru
             document.getElementById('add-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const amount = Utils.parseRawCurrency(document.getElementById('input-amount').value);
+                e.preventDefault(); const amount = Utils.parseRawCurrency(document.getElementById('input-amount').value);
                 if(amount <= 0) return AppUI.showToast("Jumlah nominal tidak valid!", "error");
-                const obj = {
-                    type: document.querySelector('input[name="tx-type"]:checked').value, amount,
-                    category: document.getElementById('input-category').value,
-                    date: document.getElementById('input-date').value,
-                    description: document.getElementById('input-desc').value
-                };
-                if(await DatabaseService.addTransaction(obj)) {
-                    document.getElementById('input-amount').value = ''; document.getElementById('input-desc').value = '';
-                    AppUI.showToast("Transaksi disimpan!"); TransactionManager.renderAll(); AppUI.switchTab('dashboard');
-                }
+                const obj = { type: document.querySelector('input[name="tx-type"]:checked').value, amount, category: document.getElementById('input-category').value, date: document.getElementById('input-date').value, description: document.getElementById('input-desc').value };
+                if(await DatabaseService.addTransaction(obj)) { document.getElementById('input-amount').value = ''; document.getElementById('input-desc').value = ''; AppUI.showToast("Transaksi disimpan!"); AppUI.switchTab('dashboard'); }
             });
 
+            // Form Tagihan Baru
             document.getElementById('add-bill-form').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const amount = Utils.parseRawCurrency(document.getElementById('bill-amount').value);
+                e.preventDefault(); const amount = Utils.parseRawCurrency(document.getElementById('bill-amount').value);
                 if(amount <= 0) return AppUI.showToast("Nominal tagihan tidak valid", 'error');
-                BillManager.addBill(document.getElementById('bill-name').value, amount, document.getElementById('bill-category-value').value, document.getElementById('bill-date').value);
-                document.getElementById('add-bill-form').reset();
+                BillManager.addBill(document.getElementById('bill-name').value, amount, document.getElementById('bill-category-value').value, document.getElementById('bill-date').value); document.getElementById('add-bill-form').reset();
             });
-
+            
+            document.getElementById('settings-form').addEventListener('submit', (e) => {
+                e.preventDefault(); DatabaseService.connect(document.getElementById('input-supabase-url').value.trim(), document.getElementById('input-supabase-key').value.trim());
+            });
+            
             document.getElementById('btn-confirm-pay').addEventListener('click', BillManager.confirmPayBill);
 
-            // Execute
+            // Render Awal Aplikasi (Offline/Local First)
+            TransactionManager.renderAll();
             GoalManager.render(); BillManager.render(); BillManager.checkDueBills(); AppUI.switchTab('dashboard'); DatabaseService.init();
         });
     </script>
