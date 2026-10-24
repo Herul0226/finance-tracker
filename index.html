@@ -14,7 +14,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; overscroll-behavior-y: none; }
+        /* FIX: Menghapus overscroll-none dan overflow-hidden agar fitur pull-to-refresh native browser HP aktif */
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
         .view-section { display: none; animation: fadeIn 0.3s ease-in-out; }
         .view-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -38,287 +39,287 @@
         .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
     </style>
 </head>
-<body class="text-slate-800 antialiased overflow-hidden">
+<body class="text-slate-800 antialiased"> <!-- FIX: overflow-hidden dihapus -->
 
     <div id="toast-container" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 w-11/12 max-w-sm pointer-events-none"></div>
 
-    <div class="flex h-screen w-full bg-slate-50">
+    <!-- SIDEBAR (DESKTOP) -->
+    <!-- FIX: Sidebar dibuat fixed agar tidak ikut terscroll -->
+    <aside class="hidden md:flex flex-col w-72 bg-white border-r border-slate-200 shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-30 fixed left-0 top-0 h-[100dvh]">
+        <div class="px-6 py-8 flex items-center gap-3 border-b border-slate-100">
+            <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-200">
+                <i class="ph-bold ph-wallet text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-tight text-slate-900 leading-tight">Keuanganku</h1>
+                <p class="text-xs text-slate-500 font-medium">Dashboard Finansial</p>
+            </div>
+        </div>
         
-        <!-- SIDEBAR (DESKTOP) -->
-        <aside class="hidden md:flex flex-col w-72 bg-white border-r border-slate-200 shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-20">
-            <div class="px-6 py-8 flex items-center gap-3 border-b border-slate-100">
-                <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-200">
-                    <i class="ph-bold ph-wallet text-xl"></i>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold tracking-tight text-slate-900 leading-tight">Keuanganku</h1>
-                    <p class="text-xs text-slate-500 font-medium">Dashboard Finansial</p>
-                </div>
-            </div>
-            
-            <nav class="flex-grow px-4 py-6 space-y-2 overflow-y-auto custom-scrollbar">
-                <button onclick="switchTab('dashboard')" class="nav-btn nav-btn-dashboard desktop-nav w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 transition-all text-sm font-medium">
-                    <i class="ph ph-house text-xl icon-outline"></i>
-                    <i class="ph-fill ph-house text-xl icon-fill"></i>
-                    Beranda
-                </button>
-                <button onclick="switchTab('history')" class="nav-btn nav-btn-history desktop-nav w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 transition-all text-sm font-medium">
-                    <i class="ph ph-list-dashes text-xl icon-outline"></i>
-                    <i class="ph-fill ph-list-dashes text-xl icon-fill"></i>
-                    Riwayat Transaksi
-                </button>
-                <button onclick="switchTab('recap')" class="nav-btn nav-btn-recap desktop-nav w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 transition-all text-sm font-medium">
-                    <i class="ph ph-chart-bar text-xl icon-outline"></i>
-                    <i class="ph-fill ph-chart-bar text-xl icon-fill"></i>
-                    Rekap Bulanan
-                </button>
-                <div class="pt-4 pb-2"><div class="border-t border-slate-100 mx-2"></div></div>
-                <button onclick="switchTab('settings')" class="nav-btn nav-btn-settings desktop-nav w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 transition-all text-sm font-medium">
-                    <i class="ph ph-gear text-xl icon-outline"></i>
-                    <i class="ph-fill ph-gear text-xl icon-fill"></i>
-                    Pengaturan
-                </button>
-            </nav>
-            
-            <div class="p-4 border-t border-slate-100">
-                <button onclick="switchTab('add')" class="w-full bg-indigo-600 text-white font-bold rounded-xl py-3.5 shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all flex justify-center items-center gap-2">
-                    <i class="ph-bold ph-plus text-lg"></i> Catat Transaksi
-                </button>
-            </div>
-        </aside>
+        <nav class="flex-grow px-4 py-6 space-y-2 overflow-y-auto custom-scrollbar">
+            <button onclick="switchTab('dashboard')" class="nav-btn nav-btn-dashboard desktop-nav w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 transition-all text-sm font-medium">
+                <i class="ph ph-house text-xl icon-outline"></i>
+                <i class="ph-fill ph-house text-xl icon-fill"></i>
+                Beranda
+            </button>
+            <button onclick="switchTab('history')" class="nav-btn nav-btn-history desktop-nav w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 transition-all text-sm font-medium">
+                <i class="ph ph-list-dashes text-xl icon-outline"></i>
+                <i class="ph-fill ph-list-dashes text-xl icon-fill"></i>
+                Riwayat Transaksi
+            </button>
+            <button onclick="switchTab('recap')" class="nav-btn nav-btn-recap desktop-nav w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 transition-all text-sm font-medium">
+                <i class="ph ph-chart-bar text-xl icon-outline"></i>
+                <i class="ph-fill ph-chart-bar text-xl icon-fill"></i>
+                Rekap Bulanan
+            </button>
+            <div class="pt-4 pb-2"><div class="border-t border-slate-100 mx-2"></div></div>
+            <button onclick="switchTab('settings')" class="nav-btn nav-btn-settings desktop-nav w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 transition-all text-sm font-medium">
+                <i class="ph ph-gear text-xl icon-outline"></i>
+                <i class="ph-fill ph-gear text-xl icon-fill"></i>
+                Pengaturan
+            </button>
+        </nav>
+        
+        <div class="p-4 border-t border-slate-100 bg-white">
+            <button onclick="switchTab('add')" class="w-full bg-indigo-600 text-white font-bold rounded-xl py-3.5 shadow-lg shadow-indigo-200 hover:bg-indigo-700 active:scale-95 transition-all flex justify-center items-center gap-2">
+                <i class="ph-bold ph-plus text-lg"></i> Catat Transaksi
+            </button>
+        </div>
+    </aside>
 
-        <!-- MAIN CONTENT AREA -->
-        <div class="flex-1 flex flex-col h-screen relative overflow-hidden">
+    <!-- MAIN CONTENT AREA -->
+    <!-- FIX: Margin left md:ml-72 ditambahkan untuk desktop, dan tinggi menggunakan min-h-[100dvh] -->
+    <div class="md:ml-72 flex flex-col min-h-[100dvh] relative bg-slate-50">
+        
+        <!-- FIX: Header dibuat sticky top-0 dan ada efek blur agar tidak nyangkut saat browser address bar muncul -->
+        <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md px-5 py-4 flex items-center justify-between shadow-sm border-b border-slate-100 md:px-10 md:py-6">
+            <div class="flex items-center gap-2 md:hidden">
+                <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white"><i class="ph-bold ph-wallet"></i></div>
+                <h1 class="text-lg font-bold tracking-tight">Keuanganku</h1>
+            </div>
+            <div class="hidden md:block">
+                <h2 id="desktop-page-title" class="text-2xl font-bold text-slate-800">Beranda</h2>
+            </div>
             
-            <header class="bg-white px-5 py-4 flex items-center justify-between shadow-sm z-10 md:px-10 md:py-6 border-b border-slate-100">
-                <div class="flex items-center gap-2 md:hidden">
-                    <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white"><i class="ph-bold ph-wallet"></i></div>
-                    <h1 class="text-lg font-bold tracking-tight">Keuanganku</h1>
-                </div>
-                <div class="hidden md:block">
-                    <h2 id="desktop-page-title" class="text-2xl font-bold text-slate-800">Beranda</h2>
-                </div>
+            <div id="header-status" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 text-[10px] font-bold text-slate-500 tracking-wide uppercase">
+                <span class="w-2 h-2 rounded-full bg-slate-400"></span> Offline
+            </div>
+        </header>
+
+        <!-- FIX: Element main tidak lagi menggunakan overflow-y-auto secara paksa, membiarkan body yang menscroll -->
+        <main class="flex-1 p-5 md:p-10 pb-28 md:pb-10">
+            <div class="max-w-4xl mx-auto w-full">
                 
-                <div id="header-status" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 text-[10px] font-bold text-slate-500 tracking-wide uppercase">
-                    <span class="w-2 h-2 rounded-full bg-slate-400"></span> Offline
+                <div id="setup-warning" class="hidden mb-6 bg-rose-50 border border-rose-200 rounded-2xl p-4 md:p-5 shadow-sm">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-full bg-rose-200 text-rose-600 flex items-center justify-center shrink-0">
+                            <i class="ph-bold ph-plugs-connected text-lg"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-rose-900 md:text-lg">Belum Terhubung ke Database</h3>
+                            <p class="text-xs md:text-sm text-rose-700 mt-1 mb-3">Aplikasi belum terhubung ke Supabase. Data Anda tidak akan tersimpan secara online.</p>
+                            <button onclick="switchTab('settings')" class="text-xs md:text-sm font-bold bg-rose-600 text-white px-4 py-2 rounded-xl hover:bg-rose-700 transition-all shadow-md shadow-rose-200">Hubungkan Sekarang</button>
+                        </div>
+                    </div>
                 </div>
-            </header>
 
-            <main class="flex-1 overflow-y-auto custom-scrollbar p-5 md:p-10 pb-28 md:pb-10">
-                <div class="max-w-4xl mx-auto w-full">
-                    
-                    <div id="setup-warning" class="hidden mb-6 bg-rose-50 border border-rose-200 rounded-2xl p-4 md:p-5 shadow-sm">
-                        <div class="flex items-start gap-3">
-                            <div class="w-8 h-8 rounded-full bg-rose-200 text-rose-600 flex items-center justify-center shrink-0">
-                                <i class="ph-bold ph-plugs-connected text-lg"></i>
+                <!-- VIEW: BERANDA -->
+                <section id="view-dashboard" class="view-section active">
+                    <div class="bg-gradient-to-br from-indigo-600 via-indigo-700 to-blue-800 rounded-3xl p-6 md:p-10 text-white shadow-xl shadow-indigo-200/50 mb-8 relative overflow-hidden">
+                        <div class="absolute -right-10 -top-10 w-48 h-48 bg-white rounded-full mix-blend-overlay opacity-10 blur-3xl"></div>
+                        <div class="absolute -left-10 -bottom-10 w-48 h-48 bg-blue-400 rounded-full mix-blend-overlay opacity-20 blur-3xl"></div>
+                        
+                        <p class="text-indigo-100 text-xs md:text-sm font-medium mb-1 tracking-wide uppercase">Total Saldo (Keseluruhan)</p>
+                        <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-8 md:mb-12" id="dash-balance">Rp 0</h2>
+                        
+                        <div class="grid grid-cols-2 gap-4 relative z-10">
+                            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 md:p-5 border border-white/10">
+                                <div class="flex items-center gap-2 text-indigo-100 mb-2 text-[10px] md:text-xs font-bold uppercase tracking-wider">
+                                    <div class="w-6 h-6 rounded-full bg-emerald-400/20 flex items-center justify-center text-emerald-300"><i class="ph-bold ph-arrow-down-left"></i></div>
+                                    Pemasukan Bulan Ini
+                                </div>
+                                <p class="font-bold text-base md:text-lg" id="dash-income">Rp 0</p>
                             </div>
-                            <div>
-                                <h3 class="font-bold text-rose-900 md:text-lg">Belum Terhubung ke Database</h3>
-                                <p class="text-xs md:text-sm text-rose-700 mt-1 mb-3">Aplikasi belum terhubung ke Supabase. Data Anda tidak akan tersimpan secara online.</p>
-                                <button onclick="switchTab('settings')" class="text-xs md:text-sm font-bold bg-rose-600 text-white px-4 py-2 rounded-xl hover:bg-rose-700 transition-all shadow-md shadow-rose-200">Hubungkan Sekarang</button>
+                            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 md:p-5 border border-white/10">
+                                <div class="flex items-center gap-2 text-indigo-100 mb-2 text-[10px] md:text-xs font-bold uppercase tracking-wider">
+                                    <div class="w-6 h-6 rounded-full bg-rose-400/20 flex items-center justify-center text-rose-300"><i class="ph-bold ph-arrow-up-right"></i></div>
+                                    Pengeluaran Bulan Ini
+                                </div>
+                                <p class="font-bold text-base md:text-lg" id="dash-expense">Rp 0</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- VIEW: BERANDA -->
-                    <section id="view-dashboard" class="view-section active">
-                        <div class="bg-gradient-to-br from-indigo-600 via-indigo-700 to-blue-800 rounded-3xl p-6 md:p-10 text-white shadow-xl shadow-indigo-200/50 mb-8 relative overflow-hidden">
-                            <div class="absolute -right-10 -top-10 w-48 h-48 bg-white rounded-full mix-blend-overlay opacity-10 blur-3xl"></div>
-                            <div class="absolute -left-10 -bottom-10 w-48 h-48 bg-blue-400 rounded-full mix-blend-overlay opacity-20 blur-3xl"></div>
-                            
-                            <p class="text-indigo-100 text-xs md:text-sm font-medium mb-1 tracking-wide uppercase">Total Saldo (Keseluruhan)</p>
-                            <h2 class="text-4xl md:text-5xl font-bold tracking-tight mb-8 md:mb-12" id="dash-balance">Rp 0</h2>
-                            
-                            <div class="grid grid-cols-2 gap-4 relative z-10">
-                                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 md:p-5 border border-white/10">
-                                    <div class="flex items-center gap-2 text-indigo-100 mb-2 text-[10px] md:text-xs font-bold uppercase tracking-wider">
-                                        <div class="w-6 h-6 rounded-full bg-emerald-400/20 flex items-center justify-center text-emerald-300"><i class="ph-bold ph-arrow-down-left"></i></div>
-                                        Pemasukan Bulan Ini
-                                    </div>
-                                    <p class="font-bold text-base md:text-lg" id="dash-income">Rp 0</p>
+                    <div>
+                        <div class="flex justify-between items-end mb-5">
+                            <h3 class="font-bold text-slate-800 text-lg md:text-xl">Transaksi Terakhir</h3>
+                            <button onclick="switchTab('history')" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-lg hover:bg-indigo-100 transition-colors md:hidden">Lihat Semua</button>
+                        </div>
+                        
+                        <div class="text-center py-10 bg-white rounded-3xl border border-slate-200 border-dashed hidden mb-4" id="dash-empty">
+                            <i class="ph-fill ph-receipt text-4xl text-slate-300 mb-2 block"></i>
+                            <p class="text-sm font-medium text-slate-500">Belum ada transaksi</p>
+                        </div>
+
+                        <div id="dash-recent-list" class="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0"></div>
+                    </div>
+                </section>
+
+                <!-- VIEW: TAMBAH TRANSAKSI -->
+                <section id="view-add" class="view-section">
+                    <div class="md:hidden mb-6">
+                        <h2 class="text-2xl font-bold text-slate-800">Catat Transaksi</h2>
+                    </div>
+                    <form id="add-form" class="bg-white p-6 md:p-10 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 max-w-2xl mx-auto space-y-6">
+                        <div class="bg-slate-100 p-1.5 rounded-2xl flex gap-1">
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="tx-type" value="expense" class="peer hidden" checked>
+                                <div class="text-center py-3 md:py-4 rounded-xl text-sm md:text-base font-bold peer-checked:bg-white peer-checked:text-rose-600 peer-checked:shadow-sm text-slate-500 transition-all flex items-center justify-center gap-2"><i class="ph-bold ph-arrow-up-right text-lg"></i> Pengeluaran</div>
+                            </label>
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="tx-type" value="income" class="peer hidden">
+                                <div class="text-center py-3 md:py-4 rounded-xl text-sm md:text-base font-bold peer-checked:bg-white peer-checked:text-emerald-600 peer-checked:shadow-sm text-slate-500 transition-all flex items-center justify-center gap-2"><i class="ph-bold ph-arrow-down-left text-lg"></i> Pemasukan</div>
+                            </label>
+                        </div>
+
+                        <div>
+                            <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Jumlah (Rp)</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none"><span class="text-slate-400 font-bold text-lg md:text-xl">Rp</span></div>
+                                <input type="number" id="input-amount" placeholder="0" required min="1" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-2xl font-bold rounded-2xl pl-14 pr-5 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Kategori</label>
+                                <div class="relative">
+                                    <select id="input-category" class="w-full appearance-none bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
+                                        <option value="Makanan">🍔 Makanan</option>
+                                        <option value="Transport">🚗 Transport</option>
+                                        <option value="Belanja">🛍️ Belanja</option>
+                                        <option value="Gaji">💰 Gaji</option>
+                                        <option value="Hiburan">🎮 Hiburan</option>
+                                        <option value="Lainnya">📦 Lainnya</option>
+                                    </select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400"><i class="ph-bold ph-caret-down"></i></div>
                                 </div>
-                                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 md:p-5 border border-white/10">
-                                    <div class="flex items-center gap-2 text-indigo-100 mb-2 text-[10px] md:text-xs font-bold uppercase tracking-wider">
-                                        <div class="w-6 h-6 rounded-full bg-rose-400/20 flex items-center justify-center text-rose-300"><i class="ph-bold ph-arrow-up-right"></i></div>
-                                        Pengeluaran Bulan Ini
-                                    </div>
-                                    <p class="font-bold text-base md:text-lg" id="dash-expense">Rp 0</p>
-                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Tanggal</label>
+                                <input type="date" id="input-date" required class="w-full bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-2xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
                             </div>
                         </div>
 
                         <div>
-                            <div class="flex justify-between items-end mb-5">
-                                <h3 class="font-bold text-slate-800 text-lg md:text-xl">Transaksi Terakhir</h3>
-                                <button onclick="switchTab('history')" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-lg hover:bg-indigo-100 transition-colors md:hidden">Lihat Semua</button>
-                            </div>
-                            
-                            <div class="text-center py-10 bg-white rounded-3xl border border-slate-200 border-dashed hidden mb-4" id="dash-empty">
-                                <i class="ph-fill ph-receipt text-4xl text-slate-300 mb-2 block"></i>
-                                <p class="text-sm font-medium text-slate-500">Belum ada transaksi</p>
-                            </div>
-
-                            <div id="dash-recent-list" class="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0"></div>
+                            <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Catatan Tambahan</label>
+                            <input type="text" id="input-desc" placeholder="Cth: Makan siang bareng teman" required class="w-full bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
                         </div>
-                    </section>
+                        <button type="submit" class="w-full bg-indigo-600 text-white font-bold rounded-2xl py-4 shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-all mt-4 md:text-lg">Simpan Transaksi</button>
+                    </form>
+                </section>
 
-                    <!-- VIEW: TAMBAH TRANSAKSI -->
-                    <section id="view-add" class="view-section">
-                        <div class="md:hidden mb-6">
-                            <h2 class="text-2xl font-bold text-slate-800">Catat Transaksi</h2>
-                        </div>
-                        <form id="add-form" class="bg-white p-6 md:p-10 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 max-w-2xl mx-auto space-y-6">
-                            <div class="bg-slate-100 p-1.5 rounded-2xl flex gap-1">
-                                <label class="flex-1 cursor-pointer">
-                                    <input type="radio" name="tx-type" value="expense" class="peer hidden" checked>
-                                    <div class="text-center py-3 md:py-4 rounded-xl text-sm md:text-base font-bold peer-checked:bg-white peer-checked:text-rose-600 peer-checked:shadow-sm text-slate-500 transition-all flex items-center justify-center gap-2"><i class="ph-bold ph-arrow-up-right text-lg"></i> Pengeluaran</div>
-                                </label>
-                                <label class="flex-1 cursor-pointer">
-                                    <input type="radio" name="tx-type" value="income" class="peer hidden">
-                                    <div class="text-center py-3 md:py-4 rounded-xl text-sm md:text-base font-bold peer-checked:bg-white peer-checked:text-emerald-600 peer-checked:shadow-sm text-slate-500 transition-all flex items-center justify-center gap-2"><i class="ph-bold ph-arrow-down-left text-lg"></i> Pemasukan</div>
-                                </label>
-                            </div>
-
-                            <div>
-                                <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Jumlah (Rp)</label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none"><span class="text-slate-400 font-bold text-lg md:text-xl">Rp</span></div>
-                                    <input type="number" id="input-amount" placeholder="0" required min="1" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-2xl font-bold rounded-2xl pl-14 pr-5 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Kategori</label>
-                                    <div class="relative">
-                                        <select id="input-category" class="w-full appearance-none bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
-                                            <option value="Makanan">🍔 Makanan</option>
-                                            <option value="Transport">🚗 Transport</option>
-                                            <option value="Belanja">🛍️ Belanja</option>
-                                            <option value="Gaji">💰 Gaji</option>
-                                            <option value="Hiburan">🎮 Hiburan</option>
-                                            <option value="Lainnya">📦 Lainnya</option>
-                                        </select>
-                                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400"><i class="ph-bold ph-caret-down"></i></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Tanggal</label>
-                                    <input type="date" id="input-date" required class="w-full bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-2xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Catatan Tambahan</label>
-                                <input type="text" id="input-desc" placeholder="Cth: Makan siang bareng teman" required class="w-full bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
-                            </div>
-                            <button type="submit" class="w-full bg-indigo-600 text-white font-bold rounded-2xl py-4 shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-all mt-4 md:text-lg">Simpan Transaksi</button>
-                        </form>
-                    </section>
-
-                    <!-- VIEW: RIWAYAT -->
-                    <section id="view-history" class="view-section h-full flex-col">
-                        <div class="md:hidden mb-6 flex justify-between items-center">
-                            <div><h2 class="text-2xl font-bold text-slate-800">Riwayat</h2></div>
-                            <span id="history-count-mobile" class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-lg uppercase">0 Data</span>
-                        </div>
-
-                        <div class="bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden flex flex-col min-h-[500px]">
-                            <div class="hidden md:flex justify-between items-center p-6 border-b border-slate-100 bg-slate-50/50">
-                                <h3 class="font-bold text-slate-800">Semua Transaksi</h3>
-                                <span id="history-count-desktop" class="text-xs font-bold bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-lg">0 Data</span>
-                            </div>
-                            
-                            <div id="history-empty" class="flex-col items-center justify-center py-20 text-slate-400 hidden flex-grow">
-                                <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4"><i class="ph-fill ph-receipt text-4xl opacity-40"></i></div>
-                                <p class="text-sm font-bold text-slate-600">Belum ada riwayat</p>
-                            </div>
-                            
-                            <ul id="history-list" class="divide-y divide-slate-100 flex-grow"></ul>
-                            
-                            <!-- Kontrol Pagination -->
-                            <div id="pagination-controls" class="hidden flex justify-between items-center p-5 border-t border-slate-100 bg-slate-50/50">
-                                <button onclick="changePage(-1)" id="btn-prev" class="px-4 py-2 text-[11px] md:text-xs font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm transition-all">Sebelumnya</button>
-                                <span id="page-info" class="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-wider">Hal 1 / 1</span>
-                                <button onclick="changePage(1)" id="btn-next" class="px-4 py-2 text-[11px] md:text-xs font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm transition-all">Selanjutnya</button>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- VIEW: REKAP BULANAN -->
-                    <section id="view-recap" class="view-section">
-                        <div class="md:hidden mb-6">
-                            <h2 class="text-2xl font-bold text-slate-800">Rekap Bulanan</h2>
-                        </div>
-                        <div id="recap-list" class="space-y-4 md:space-y-6">
-                            <div class="text-center py-20 bg-white rounded-[2rem] border border-slate-100 border-dashed text-slate-400 font-medium"><i class="ph-fill ph-chart-bar text-4xl mb-2 opacity-50 block"></i>Belum ada data bulanan.</div>
-                        </div>
-                    </section>
-
-                    <!-- VIEW: SETTINGS -->
-                    <section id="view-settings" class="view-section">
-                        <div class="md:hidden mb-6">
-                            <h2 class="text-2xl font-bold text-slate-800">Pengaturan</h2>
-                        </div>
-                        <div class="bg-white p-6 md:p-10 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 max-w-2xl mx-auto">
-                            <div class="flex items-center gap-4 mb-6 md:mb-8 pb-6 border-b border-slate-100">
-                                <div class="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center"><i class="ph-fill ph-database text-2xl md:text-3xl"></i></div>
-                                <div>
-                                    <h3 class="font-bold text-slate-800 md:text-lg">Koneksi Supabase</h3>
-                                    <p class="text-xs md:text-sm text-slate-500 mt-1">Hubungkan ke database cloud milik Anda.</p>
-                                </div>
-                            </div>
-                            <form id="settings-form" class="space-y-5">
-                                <div>
-                                    <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Project URL</label>
-                                    <input type="url" id="input-supabase-url" placeholder="https://xxxx.supabase.co" class="w-full bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Anon Key</label>
-                                    <input type="password" id="input-supabase-key" placeholder="eyJhbGciOiJIUzI1NiIsIn..." class="w-full bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                                </div>
-                                <button type="submit" class="w-full bg-slate-900 text-white font-bold rounded-2xl py-4 mt-2 shadow-lg hover:bg-slate-800 transition-all md:text-lg">Simpan & Hubungkan</button>
-                            </form>
-                        </div>
-                    </section>
-                </div>
-            </main>
-
-            <!-- BOTTOM NAV (HANYA TAMPIL DI MOBILE) -->
-            <nav class="md:hidden fixed bottom-0 w-full bg-white border-t border-slate-100 z-50 px-2 pb-safe shadow-[0_-10px_20px_rgba(0,0,0,0.03)]">
-                <div class="flex justify-between items-center h-[70px] px-2">
-                    <button onclick="switchTab('dashboard')" class="nav-btn nav-btn-dashboard mobile-nav active flex flex-col items-center justify-center w-14 text-slate-400 transition-all">
-                        <i class="ph ph-house text-[26px] mb-1 icon-outline"></i>
-                        <i class="ph-fill ph-house text-[26px] mb-1 icon-fill"></i>
-                        <span class="text-[10px] font-bold">Beranda</span>
-                    </button>
-                    <button onclick="switchTab('history')" class="nav-btn nav-btn-history mobile-nav flex flex-col items-center justify-center w-14 text-slate-400 transition-all">
-                        <i class="ph ph-list-dashes text-[26px] mb-1 icon-outline"></i>
-                        <i class="ph-fill ph-list-dashes text-[26px] mb-1 icon-fill"></i>
-                        <span class="text-[10px] font-bold">Riwayat</span>
-                    </button>
-                    
-                    <div class="relative -top-6">
-                        <button onclick="switchTab('add')" class="nav-btn nav-btn-add mobile-nav w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-xl shadow-indigo-300 border-4 border-white active:scale-95 transition-transform">
-                            <i class="ph-bold ph-plus text-3xl"></i>
-                        </button>
+                <!-- VIEW: RIWAYAT -->
+                <section id="view-history" class="view-section">
+                    <div class="md:hidden mb-6 flex justify-between items-center">
+                        <div><h2 class="text-2xl font-bold text-slate-800">Riwayat</h2></div>
+                        <span id="history-count-mobile" class="text-[10px] font-bold bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-lg uppercase">0 Data</span>
                     </div>
-                    
-                    <button onclick="switchTab('recap')" class="nav-btn nav-btn-recap mobile-nav flex flex-col items-center justify-center w-14 text-slate-400 transition-all">
-                        <i class="ph ph-chart-bar text-[26px] mb-1 icon-outline"></i>
-                        <i class="ph-fill ph-chart-bar text-[26px] mb-1 icon-fill"></i>
-                        <span class="text-[10px] font-bold">Rekap</span>
-                    </button>
-                    <button onclick="switchTab('settings')" class="nav-btn nav-btn-settings mobile-nav flex flex-col items-center justify-center w-14 text-slate-400 transition-all">
-                        <i class="ph ph-gear text-[26px] mb-1 icon-outline"></i>
-                        <i class="ph-fill ph-gear text-[26px] mb-1 icon-fill"></i>
-                        <span class="text-[10px] font-bold">Setelan</span>
-                    </button>
-                </div>
-            </nav>
-            
-        </div>
+
+                    <div class="bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 overflow-hidden flex flex-col min-h-[500px]">
+                        <div class="hidden md:flex justify-between items-center p-6 border-b border-slate-100 bg-slate-50/50">
+                            <h3 class="font-bold text-slate-800">Semua Transaksi</h3>
+                            <span id="history-count-desktop" class="text-xs font-bold bg-indigo-100 text-indigo-700 px-3 py-1.5 rounded-lg">0 Data</span>
+                        </div>
+                        
+                        <div id="history-empty" class="flex-col items-center justify-center py-20 text-slate-400 hidden flex-grow">
+                            <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4"><i class="ph-fill ph-receipt text-4xl opacity-40"></i></div>
+                            <p class="text-sm font-bold text-slate-600">Belum ada riwayat</p>
+                        </div>
+                        
+                        <ul id="history-list" class="divide-y divide-slate-100 flex-grow"></ul>
+                        
+                        <!-- Kontrol Pagination -->
+                        <div id="pagination-controls" class="hidden flex justify-between items-center p-5 border-t border-slate-100 bg-slate-50/50">
+                            <button onclick="changePage(-1)" id="btn-prev" class="px-4 py-2 text-[11px] md:text-xs font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm transition-all">Sebelumnya</button>
+                            <span id="page-info" class="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-wider">Hal 1 / 1</span>
+                            <button onclick="changePage(1)" id="btn-next" class="px-4 py-2 text-[11px] md:text-xs font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm transition-all">Selanjutnya</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VIEW: REKAP BULANAN -->
+                <section id="view-recap" class="view-section">
+                    <div class="md:hidden mb-6">
+                        <h2 class="text-2xl font-bold text-slate-800">Rekap Bulanan</h2>
+                    </div>
+                    <div id="recap-list" class="space-y-4 md:space-y-6">
+                        <div class="text-center py-20 bg-white rounded-[2rem] border border-slate-100 border-dashed text-slate-400 font-medium"><i class="ph-fill ph-chart-bar text-4xl mb-2 opacity-50 block"></i>Belum ada data bulanan.</div>
+                    </div>
+                </section>
+
+                <!-- VIEW: SETTINGS -->
+                <section id="view-settings" class="view-section">
+                    <div class="md:hidden mb-6">
+                        <h2 class="text-2xl font-bold text-slate-800">Pengaturan</h2>
+                    </div>
+                    <div class="bg-white p-6 md:p-10 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 max-w-2xl mx-auto">
+                        <div class="flex items-center gap-4 mb-6 md:mb-8 pb-6 border-b border-slate-100">
+                            <div class="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center"><i class="ph-fill ph-database text-2xl md:text-3xl"></i></div>
+                            <div>
+                                <h3 class="font-bold text-slate-800 md:text-lg">Koneksi Supabase</h3>
+                                <p class="text-xs md:text-sm text-slate-500 mt-1">Hubungkan ke database cloud milik Anda.</p>
+                            </div>
+                        </div>
+                        <form id="settings-form" class="space-y-5">
+                            <div>
+                                <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Project URL</label>
+                                <input type="url" id="input-supabase-url" placeholder="https://xxxx.supabase.co" class="w-full bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Anon Key</label>
+                                <input type="password" id="input-supabase-key" placeholder="eyJhbGciOiJIUzI1NiIsIn..." class="w-full bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                            <button type="submit" class="w-full bg-slate-900 text-white font-bold rounded-2xl py-4 mt-2 shadow-lg hover:bg-slate-800 transition-all md:text-lg">Simpan & Hubungkan</button>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </main>
     </div>
+
+    <!-- BOTTOM NAV (HANYA TAMPIL DI MOBILE) -->
+    <nav class="md:hidden fixed bottom-0 w-full bg-white border-t border-slate-100 z-50 px-2 pb-safe shadow-[0_-10px_20px_rgba(0,0,0,0.03)]">
+        <div class="flex justify-between items-center h-[70px] px-2">
+            <button onclick="switchTab('dashboard')" class="nav-btn nav-btn-dashboard mobile-nav active flex flex-col items-center justify-center w-14 text-slate-400 transition-all">
+                <i class="ph ph-house text-[26px] mb-1 icon-outline"></i>
+                <i class="ph-fill ph-house text-[26px] mb-1 icon-fill"></i>
+                <span class="text-[10px] font-bold">Beranda</span>
+            </button>
+            <button onclick="switchTab('history')" class="nav-btn nav-btn-history mobile-nav flex flex-col items-center justify-center w-14 text-slate-400 transition-all">
+                <i class="ph ph-list-dashes text-[26px] mb-1 icon-outline"></i>
+                <i class="ph-fill ph-list-dashes text-[26px] mb-1 icon-fill"></i>
+                <span class="text-[10px] font-bold">Riwayat</span>
+            </button>
+            
+            <div class="relative -top-6">
+                <button onclick="switchTab('add')" class="nav-btn nav-btn-add mobile-nav w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-xl shadow-indigo-300 border-4 border-white active:scale-95 transition-transform">
+                    <i class="ph-bold ph-plus text-3xl"></i>
+                </button>
+            </div>
+            
+            <button onclick="switchTab('recap')" class="nav-btn nav-btn-recap mobile-nav flex flex-col items-center justify-center w-14 text-slate-400 transition-all">
+                <i class="ph ph-chart-bar text-[26px] mb-1 icon-outline"></i>
+                <i class="ph-fill ph-chart-bar text-[26px] mb-1 icon-fill"></i>
+                <span class="text-[10px] font-bold">Rekap</span>
+            </button>
+            <button onclick="switchTab('settings')" class="nav-btn nav-btn-settings mobile-nav flex flex-col items-center justify-center w-14 text-slate-400 transition-all">
+                <i class="ph ph-gear text-[26px] mb-1 icon-outline"></i>
+                <i class="ph-fill ph-gear text-[26px] mb-1 icon-fill"></i>
+                <span class="text-[10px] font-bold">Setelan</span>
+            </button>
+        </div>
+    </nav>
 
     <script>
         let supabaseClient = null;
@@ -372,6 +373,8 @@
                     if(el.classList.contains('desktop-nav')) el.classList.add('bg-indigo-50', 'text-indigo-600', 'font-semibold');
                 });
             }
+            // Auto scroll ke atas saat ganti tab
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         
         function changePage(delta) {
@@ -381,8 +384,8 @@
             if(currentPage > totalPages) currentPage = totalPages;
             renderUI();
             
-            // Scroll otomatis ke atas list jika ganti halaman (Desktop)
-            const listEl = document.getElementById('history-list');
+            // Scroll otomatis ke atas list jika ganti halaman
+            const listEl = document.getElementById('view-history');
             if(listEl) listEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
@@ -476,30 +479,24 @@
 
         function renderUI() {
             try {
-                // Kalkulasi Saldo (All-Time & Bulan Ini)
                 let totalIncome = 0; let totalExpense = 0;
                 let currentMonthIncome = 0; let currentMonthExpense = 0;
-                
                 const monthlyData = {};
                 
-                // Mengambil format YYYY-MM dari HP pengguna saat ini
                 const now = new Date();
                 const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 
                 transactions.forEach(tx => {
                     const nominal = Number(tx.amount) || 0;
                     
-                    // Total Saldo Keseluruhan
                     if (tx.type === 'income') totalIncome += nominal;
                     if (tx.type === 'expense') totalExpense += nominal;
                     
-                    // Untuk Kartu Beranda (Bulan Ini Saja)
                     if(tx.date && tx.date.substring(0, 7) === currentMonthStr) {
                         if (tx.type === 'income') currentMonthIncome += nominal;
                         if (tx.type === 'expense') currentMonthExpense += nominal;
                     }
 
-                    // Untuk Data Tab Rekap Bulanan
                     if(tx.date) {
                         const monthYear = tx.date.substring(0, 7);
                         if (!monthlyData[monthYear]) {
@@ -513,12 +510,10 @@
                     }
                 });
 
-                // Update UI Kartu Beranda
                 document.getElementById('dash-balance').innerText = formatIDR(totalIncome - totalExpense);
                 document.getElementById('dash-income').innerText = formatIDR(currentMonthIncome);
                 document.getElementById('dash-expense').innerText = formatIDR(currentMonthExpense);
 
-                // Setup Elements
                 const historyList = document.getElementById('history-list');
                 const dashRecent = document.getElementById('dash-recent-list');
                 const recapList = document.getElementById('recap-list');
@@ -529,7 +524,6 @@
                 
                 historyList.innerHTML = ''; dashRecent.innerHTML = ''; recapList.innerHTML = '';
 
-                // Kosongkan State
                 if (transactions.length === 0) {
                     document.getElementById('history-empty').classList.remove('hidden'); 
                     document.getElementById('history-empty').classList.add('flex');
@@ -542,7 +536,6 @@
                     document.getElementById('history-empty').classList.remove('flex');
                     document.getElementById('dash-empty').classList.add('hidden');
 
-                    // ================= PAGINATION LOGIC (10 Data per Halaman) =================
                     const totalPages = Math.ceil(transactions.length / itemsPerPage) || 1;
                     if(currentPage > totalPages) currentPage = totalPages;
                     
@@ -558,7 +551,6 @@
                     const startIndex = (currentPage - 1) * itemsPerPage;
                     const paginatedTransactions = transactions.slice(startIndex, startIndex + itemsPerPage);
 
-                    // ================= RENDER RIWAYAT =================
                     paginatedTransactions.forEach((tx) => {
                         const style = getIcon(tx.category || 'Lainnya', tx.type);
                         const sign = tx.type === 'income' ? '+' : '-';
@@ -586,7 +578,6 @@
                         historyList.appendChild(li);
                     });
 
-                    // ================= RENDER BERANDA (MAX 4 TRANSAKSI TERAKHIR) =================
                     transactions.forEach((tx, index) => {
                         if (index < 4) {
                             const style = getIcon(tx.category || 'Lainnya', tx.type);
@@ -610,7 +601,6 @@
                         }
                     });
 
-                    // ================= RENDER REKAP BULANAN =================
                     const sortedMonths = Object.keys(monthlyData).sort((a, b) => b.localeCompare(a));
                     sortedMonths.forEach(my => {
                         const data = monthlyData[my];
