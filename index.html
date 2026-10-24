@@ -24,7 +24,6 @@
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
         .custom-scrollbar:hover::-webkit-scrollbar-thumb { background-color: #94a3b8; }
         
-        /* FIX: Animasi Notifikasi Diperbaiki agar pas di tengah */
         @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .toast-animate { animation: slideDown 0.3s ease-out forwards; }
         
@@ -41,7 +40,6 @@
 </head>
 <body class="text-slate-800 antialiased overflow-hidden">
 
-    <!-- Kontainer Notifikasi pas di tengah -->
     <div id="toast-container" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2 w-11/12 max-w-sm pointer-events-none"></div>
 
     <div class="flex h-screen w-full bg-slate-50">
@@ -135,14 +133,14 @@
                                 <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 md:p-5 border border-white/10">
                                     <div class="flex items-center gap-2 text-indigo-100 mb-2 text-[10px] md:text-xs font-bold uppercase tracking-wider">
                                         <div class="w-6 h-6 rounded-full bg-emerald-400/20 flex items-center justify-center text-emerald-300"><i class="ph-bold ph-arrow-down-left"></i></div>
-                                        Total Pemasukan
+                                        Pemasukan Bln Ini
                                     </div>
                                     <p class="font-bold text-base md:text-lg" id="dash-income">Rp 0</p>
                                 </div>
                                 <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 md:p-5 border border-white/10">
                                     <div class="flex items-center gap-2 text-indigo-100 mb-2 text-[10px] md:text-xs font-bold uppercase tracking-wider">
                                         <div class="w-6 h-6 rounded-full bg-rose-400/20 flex items-center justify-center text-rose-300"><i class="ph-bold ph-arrow-up-right"></i></div>
-                                        Total Pengeluaran
+                                        Pengeluaran Bln Ini
                                     </div>
                                     <p class="font-bold text-base md:text-lg" id="dash-expense">Rp 0</p>
                                 </div>
@@ -235,7 +233,15 @@
                                 <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4"><i class="ph-fill ph-receipt text-4xl opacity-40"></i></div>
                                 <p class="text-sm font-bold text-slate-600">Belum ada riwayat</p>
                             </div>
+                            
                             <ul id="history-list" class="divide-y divide-slate-100 flex-grow"></ul>
+                            
+                            <!-- Kontrol Pagination -->
+                            <div id="pagination-controls" class="hidden flex justify-between items-center p-5 border-t border-slate-100 bg-slate-50/50">
+                                <button onclick="changePage(-1)" id="btn-prev" class="px-4 py-2 text-[11px] md:text-xs font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm transition-all">Sebelumnya</button>
+                                <span id="page-info" class="text-[11px] md:text-xs font-bold text-slate-400 uppercase tracking-wider">Hal 1 / 1</span>
+                                <button onclick="changePage(1)" id="btn-next" class="px-4 py-2 text-[11px] md:text-xs font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm transition-all">Selanjutnya</button>
+                            </div>
                         </div>
                     </section>
 
@@ -319,6 +325,10 @@
         let transactions = [];
         let isConnected = false;
         
+        // Pagination State
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        
         document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
 
         function showToast(message, type = 'success') {
@@ -328,14 +338,13 @@
             const bgColor = isSuccess ? 'bg-slate-800' : 'bg-rose-600';
             const icon = isSuccess ? 'ph-check-circle text-emerald-400' : 'ph-warning-circle text-white';
             
-            // FIX: Class "w-full max-w-sm" ditambahkan ke toast agar ukurannya rapi di tengah
             toast.className = `${bgColor} text-white px-5 py-3.5 rounded-2xl shadow-xl flex items-center gap-3 text-sm font-bold toast-animate border border-white/10 w-full max-w-sm`;
             toast.innerHTML = `<i class="ph-fill ${icon} text-xl"></i> ${message}`;
             container.appendChild(toast);
             
             setTimeout(() => {
                 toast.style.opacity = '0';
-                toast.style.transform = 'translateY(-20px)'; // FIX: Hanya geser ke atas saat hilang
+                toast.style.transform = 'translateY(-20px)'; 
                 toast.style.transition = 'all 0.3s ease';
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
@@ -363,6 +372,18 @@
                     if(el.classList.contains('desktop-nav')) el.classList.add('bg-indigo-50', 'text-indigo-600', 'font-semibold');
                 });
             }
+        }
+        
+        function changePage(delta) {
+            const totalPages = Math.ceil(transactions.length / itemsPerPage) || 1;
+            currentPage += delta;
+            if(currentPage < 1) currentPage = 1;
+            if(currentPage > totalPages) currentPage = totalPages;
+            renderUI();
+            
+            // Scroll otomatis ke atas list jika ganti halaman (Desktop)
+            const listEl = document.getElementById('history-list');
+            if(listEl) listEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         async function initDatabase() {
@@ -403,7 +424,9 @@
             try {
                 const { data, error } = await supabaseClient.from('transactions').select('*').order('date', { ascending: false }).order('id', { ascending: false });
                 if (error) throw error;
-                transactions = data || []; renderUI();
+                transactions = data || []; 
+                currentPage = 1;
+                renderUI();
             } catch (err) { showToast("Gagal mengambil data.", "error"); }
         }
 
@@ -418,8 +441,11 @@
             try {
                 const { data, error } = await supabaseClient.from('transactions').insert([{ type, amount, category, date, description: desc }]).select();
                 if(error) throw error;
-                transactions.unshift(data[0]); transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+                transactions.unshift(data[0]); 
+                transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
                 document.getElementById('input-amount').value = ''; document.getElementById('input-desc').value = '';
+                
+                currentPage = 1; // Kembali ke hal 1 setelah input data
                 showToast("Transaksi disimpan!"); renderUI(); switchTab('dashboard');
             } catch (err) { showToast("Gagal menyimpan data.", "error"); }
         });
@@ -450,13 +476,30 @@
 
         function renderUI() {
             try {
-                let income = 0; let expense = 0;
+                // Kalkulasi Saldo (All-Time & Bulan Ini)
+                let totalIncome = 0; let totalExpense = 0;
+                let currentMonthIncome = 0; let currentMonthExpense = 0;
+                
                 const monthlyData = {};
+                
+                // Mengambil format YYYY-MM dari HP pengguna saat ini
+                const now = new Date();
+                const currentMonthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 
                 transactions.forEach(tx => {
                     const nominal = Number(tx.amount) || 0;
-                    if (tx.type === 'income') income += nominal;
-                    if (tx.type === 'expense') expense += nominal;
+                    
+                    // Total Saldo Keseluruhan
+                    if (tx.type === 'income') totalIncome += nominal;
+                    if (tx.type === 'expense') totalExpense += nominal;
+                    
+                    // Untuk Kartu Beranda (Bulan Ini Saja)
+                    if(tx.date && tx.date.substring(0, 7) === currentMonthStr) {
+                        if (tx.type === 'income') currentMonthIncome += nominal;
+                        if (tx.type === 'expense') currentMonthExpense += nominal;
+                    }
+
+                    // Untuk Data Tab Rekap Bulanan
                     if(tx.date) {
                         const monthYear = tx.date.substring(0, 7);
                         if (!monthlyData[monthYear]) {
@@ -470,30 +513,53 @@
                     }
                 });
 
-                document.getElementById('dash-balance').innerText = formatIDR(income - expense);
-                document.getElementById('dash-income').innerText = formatIDR(income);
-                document.getElementById('dash-expense').innerText = formatIDR(expense);
+                // Update UI Kartu Beranda
+                document.getElementById('dash-balance').innerText = formatIDR(totalIncome - totalExpense);
+                document.getElementById('dash-income').innerText = formatIDR(currentMonthIncome);
+                document.getElementById('dash-expense').innerText = formatIDR(currentMonthExpense);
 
+                // Setup Elements
                 const historyList = document.getElementById('history-list');
                 const dashRecent = document.getElementById('dash-recent-list');
                 const recapList = document.getElementById('recap-list');
+                const paginationControls = document.getElementById('pagination-controls');
                 
                 document.getElementById('history-count-mobile').innerText = `${transactions.length} Data`;
                 document.getElementById('history-count-desktop').innerText = `${transactions.length} Data`;
                 
                 historyList.innerHTML = ''; dashRecent.innerHTML = ''; recapList.innerHTML = '';
 
+                // Kosongkan State
                 if (transactions.length === 0) {
                     document.getElementById('history-empty').classList.remove('hidden'); 
                     document.getElementById('history-empty').classList.add('flex');
                     document.getElementById('dash-empty').classList.remove('hidden');
+                    paginationControls.classList.add('hidden'); paginationControls.classList.remove('flex');
+                    
                     recapList.innerHTML = `<div class="text-center py-20 bg-white rounded-[2rem] border border-slate-100 border-dashed text-slate-400 font-medium"><i class="ph-fill ph-chart-bar text-4xl mb-2 opacity-50 block"></i>Belum ada data bulanan.</div>`;
                 } else {
                     document.getElementById('history-empty').classList.add('hidden'); 
                     document.getElementById('history-empty').classList.remove('flex');
                     document.getElementById('dash-empty').classList.add('hidden');
 
-                    transactions.forEach((tx, index) => {
+                    // ================= PAGINATION LOGIC (10 Data per Halaman) =================
+                    const totalPages = Math.ceil(transactions.length / itemsPerPage) || 1;
+                    if(currentPage > totalPages) currentPage = totalPages;
+                    
+                    if (transactions.length > itemsPerPage) {
+                        paginationControls.classList.remove('hidden'); paginationControls.classList.add('flex');
+                        document.getElementById('page-info').innerText = `HAL ${currentPage} DARI ${totalPages}`;
+                        document.getElementById('btn-prev').disabled = currentPage === 1;
+                        document.getElementById('btn-next').disabled = currentPage === totalPages;
+                    } else {
+                        paginationControls.classList.add('hidden'); paginationControls.classList.remove('flex');
+                    }
+
+                    const startIndex = (currentPage - 1) * itemsPerPage;
+                    const paginatedTransactions = transactions.slice(startIndex, startIndex + itemsPerPage);
+
+                    // ================= RENDER RIWAYAT =================
+                    paginatedTransactions.forEach((tx) => {
                         const style = getIcon(tx.category || 'Lainnya', tx.type);
                         const sign = tx.type === 'income' ? '+' : '-';
                         const amountClass = tx.type === 'income' ? 'text-emerald-600' : 'text-slate-800';
@@ -518,8 +584,16 @@
                                 </div>
                             </div>`;
                         historyList.appendChild(li);
+                    });
 
+                    // ================= RENDER BERANDA (MAX 4 TRANSAKSI TERAKHIR) =================
+                    transactions.forEach((tx, index) => {
                         if (index < 4) {
+                            const style = getIcon(tx.category || 'Lainnya', tx.type);
+                            const sign = tx.type === 'income' ? '+' : '-';
+                            const amountClass = tx.type === 'income' ? 'text-emerald-600' : 'text-slate-800';
+                            const formatted = formatIDR(Number(tx.amount)||0).replace(/Rp/g, '').trim();
+
                             const div = document.createElement('div');
                             div.className = "bg-white p-4 md:p-5 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 flex items-center gap-4 hover:border-indigo-200 transition-colors cursor-pointer";
                             div.setAttribute("onclick", "switchTab('history')");
@@ -536,6 +610,7 @@
                         }
                     });
 
+                    // ================= RENDER REKAP BULANAN =================
                     const sortedMonths = Object.keys(monthlyData).sort((a, b) => b.localeCompare(a));
                     sortedMonths.forEach(my => {
                         const data = monthlyData[my];
