@@ -186,14 +186,14 @@
                                 <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10">
                                     <div class="flex items-center gap-2 text-indigo-100 mb-1.5 text-[10px] md:text-xs font-bold uppercase tracking-wider">
                                         <div class="w-5 h-5 rounded-full bg-emerald-400/20 flex items-center justify-center text-emerald-300"><i class="ph-bold ph-arrow-down-left"></i></div>
-                                        Pemasukan Bln Ini
+                                        Pemasukan Bulan Ini
                                     </div>
                                     <p class="font-bold text-sm md:text-base" id="dash-income">Rp 0</p>
                                 </div>
                                 <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10">
                                     <div class="flex items-center gap-2 text-indigo-100 mb-1.5 text-[10px] md:text-xs font-bold uppercase tracking-wider">
                                         <div class="w-5 h-5 rounded-full bg-rose-400/20 flex items-center justify-center text-rose-300"><i class="ph-bold ph-arrow-up-right"></i></div>
-                                        Pengeluaran Bln Ini
+                                        Pengeluaran Bulan Ini
                                     </div>
                                     <p class="font-bold text-sm md:text-base" id="dash-expense">Rp 0</p>
                                 </div>
@@ -234,7 +234,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                             <!-- Pengeluaran Per Kategori -->
                             <div>
-                                <h3 class="font-bold text-slate-800 text-lg mb-4">Pengeluaran Kategori <span class="text-[10px] text-slate-400 font-normal ml-1">(Bln Ini)</span></h3>
+                                <h3 class="font-bold text-slate-800 text-lg mb-4">Pengeluaran Kategori <span class="text-[10px] text-slate-400 font-normal ml-1">(Bulan Ini)</span></h3>
                                 <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)] flex flex-col gap-4" id="category-breakdown-list"></div>
                             </div>
                             <!-- Transaksi Terakhir -->
@@ -687,7 +687,7 @@
                 }
 
                 AppState.recurringBills.forEach(bill => {
-                    const statusStr = bill.lastPaidMonth === Utils.getCurrentMonthStr() ? '<span class="text-[10px] text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Lunas Bln Ini</span>' : '<span class="text-[10px] text-rose-500 bg-rose-100 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Belum Lunas</span>';
+                    const statusStr = bill.lastPaidMonth === Utils.getCurrentMonthStr() ? '<span class="text-[10px] text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Lunas Bulan Ini</span>' : '<span class="text-[10px] text-rose-500 bg-rose-100 px-2 py-0.5 rounded font-bold uppercase tracking-wider">Belum Lunas</span>';
                     
                     container.innerHTML += `
                         <div class="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-2xl hover:shadow-sm transition-all">
