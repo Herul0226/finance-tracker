@@ -15,55 +15,36 @@
 
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; overscroll-behavior-y: none; }
-        
-        .view-section {
-            display: none;
-            animation: fadeIn 0.3s ease-in-out;
-        }
+        .view-section { display: none; animation: fadeIn 0.3s ease-in-out; }
         .view-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Custom Scrollbar */
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
         .custom-scrollbar:hover::-webkit-scrollbar-thumb { background-color: #94a3b8; }
         
-        /* Toast Animation */
-        @keyframes slideDown {
-            from { transform: translate(-50%, -100%); opacity: 0; }
-            to { transform: translate(-50%, 0); opacity: 1; }
-        }
+        @keyframes slideDown { from { transform: translate(-50%, -100%); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
         .toast-animate { animation: slideDown 0.3s ease-out forwards; }
         
-        /* Mobile Nav Active State */
         .nav-btn.active .icon-outline { display: none; }
         .nav-btn.active .icon-fill { display: block; }
         .nav-btn:not(.active) .icon-fill { display: none; }
         .nav-btn.active.mobile-nav { color: #4f46e5; }
         
-        /* Desktop Nav Active State */
         .nav-btn.desktop-nav.active { background-color: #eef2ff; color: #4f46e5; font-weight: 600; }
         .nav-btn.desktop-nav.active .icon-outline { display: none; }
         .nav-btn.desktop-nav.active .icon-fill { display: block; }
-        
-        /* Safe Area untuk iOS */
         .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
     </style>
 </head>
 <body class="text-slate-800 antialiased overflow-hidden">
 
-    <!-- Toast Notification -->
     <div id="toast-container" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2 w-11/12 max-w-sm pointer-events-none"></div>
 
-    <!-- MAIN APP LAYOUT (RESPONSIVE GRID) -->
     <div class="flex h-screen w-full bg-slate-50">
         
-        <!-- ================= SIDEBAR (DESKTOP) ================= -->
+        <!-- SIDEBAR (DESKTOP) -->
         <aside class="hidden md:flex flex-col w-72 bg-white border-r border-slate-200 shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-20">
             <div class="px-6 py-8 flex items-center gap-3 border-b border-slate-100">
                 <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-200">
@@ -91,9 +72,7 @@
                     <i class="ph-fill ph-chart-bar text-xl icon-fill"></i>
                     Rekap Bulanan
                 </button>
-                <div class="pt-4 pb-2">
-                    <div class="border-t border-slate-100 mx-2"></div>
-                </div>
+                <div class="pt-4 pb-2"><div class="border-t border-slate-100 mx-2"></div></div>
                 <button onclick="switchTab('settings')" class="nav-btn nav-btn-settings desktop-nav w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-slate-50 transition-all text-sm font-medium">
                     <i class="ph ph-gear text-xl icon-outline"></i>
                     <i class="ph-fill ph-gear text-xl icon-fill"></i>
@@ -108,19 +87,14 @@
             </div>
         </aside>
 
-        <!-- ================= MAIN CONTENT AREA ================= -->
+        <!-- MAIN CONTENT AREA -->
         <div class="flex-1 flex flex-col h-screen relative overflow-hidden">
             
-            <!-- HEADER (Shared Mobile & Desktop) -->
             <header class="bg-white px-5 py-4 flex items-center justify-between shadow-sm z-10 md:px-10 md:py-6 border-b border-slate-100">
-                <!-- Tampil hanya di Mobile -->
                 <div class="flex items-center gap-2 md:hidden">
-                    <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
-                        <i class="ph-bold ph-wallet"></i>
-                    </div>
+                    <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white"><i class="ph-bold ph-wallet"></i></div>
                     <h1 class="text-lg font-bold tracking-tight">Keuanganku</h1>
                 </div>
-                <!-- Tampil hanya di Desktop (Judul Tab Aktif) -->
                 <div class="hidden md:block">
                     <h2 id="desktop-page-title" class="text-2xl font-bold text-slate-800">Beranda</h2>
                 </div>
@@ -130,12 +104,9 @@
                 </div>
             </header>
 
-            <!-- KONTEN SCROLLABLE -->
             <main class="flex-1 overflow-y-auto custom-scrollbar p-5 md:p-10 pb-28 md:pb-10">
-                
                 <div class="max-w-4xl mx-auto w-full">
                     
-                    <!-- Peringatan Database -->
                     <div id="setup-warning" class="hidden mb-6 bg-rose-50 border border-rose-200 rounded-2xl p-4 md:p-5 shadow-sm">
                         <div class="flex items-start gap-3">
                             <div class="w-8 h-8 rounded-full bg-rose-200 text-rose-600 flex items-center justify-center shrink-0">
@@ -149,9 +120,8 @@
                         </div>
                     </div>
 
-                    <!-- ================= VIEW: BERANDA ================= -->
+                    <!-- VIEW: BERANDA -->
                     <section id="view-dashboard" class="view-section active">
-                        <!-- Kartu Saldo -->
                         <div class="bg-gradient-to-br from-indigo-600 via-indigo-700 to-blue-800 rounded-3xl p-6 md:p-10 text-white shadow-xl shadow-indigo-200/50 mb-8 relative overflow-hidden">
                             <div class="absolute -right-10 -top-10 w-48 h-48 bg-white rounded-full mix-blend-overlay opacity-10 blur-3xl"></div>
                             <div class="absolute -left-10 -bottom-10 w-48 h-48 bg-blue-400 rounded-full mix-blend-overlay opacity-20 blur-3xl"></div>
@@ -177,28 +147,28 @@
                             </div>
                         </div>
 
-                        <!-- Transaksi Terakhir -->
                         <div>
                             <div class="flex justify-between items-end mb-5">
                                 <h3 class="font-bold text-slate-800 text-lg md:text-xl">Transaksi Terakhir</h3>
                                 <button onclick="switchTab('history')" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-lg hover:bg-indigo-100 transition-colors md:hidden">Lihat Semua</button>
                             </div>
-                            <div id="dash-recent-list" class="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
-                                <div class="text-center py-10 bg-white rounded-3xl border border-slate-200 border-dashed md:col-span-2" id="dash-empty">
-                                    <i class="ph-fill ph-receipt text-4xl text-slate-300 mb-2"></i>
-                                    <p class="text-sm font-medium text-slate-500">Belum ada transaksi</p>
-                                </div>
+                            
+                            <!-- BUG FIX: Elemen kosong dipisah agar tidak terhapus -->
+                            <div class="text-center py-10 bg-white rounded-3xl border border-slate-200 border-dashed hidden mb-4" id="dash-empty">
+                                <i class="ph-fill ph-receipt text-4xl text-slate-300 mb-2 block"></i>
+                                <p class="text-sm font-medium text-slate-500">Belum ada transaksi</p>
                             </div>
+
+                            <!-- Daftar Transaksi -->
+                            <div id="dash-recent-list" class="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0"></div>
                         </div>
                     </section>
 
-                    <!-- ================= VIEW: TAMBAH TRANSAKSI ================= -->
+                    <!-- VIEW: TAMBAH TRANSAKSI -->
                     <section id="view-add" class="view-section">
                         <div class="md:hidden mb-6">
                             <h2 class="text-2xl font-bold text-slate-800">Catat Transaksi</h2>
-                            <p class="text-xs text-slate-500 mt-1">Masukkan data baru.</p>
                         </div>
-                        
                         <form id="add-form" class="bg-white p-6 md:p-10 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 max-w-2xl mx-auto space-y-6">
                             <div class="bg-slate-100 p-1.5 rounded-2xl flex gap-1">
                                 <label class="flex-1 cursor-pointer">
@@ -244,12 +214,11 @@
                                 <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Catatan Tambahan</label>
                                 <input type="text" id="input-desc" placeholder="Cth: Makan siang bareng teman" required class="w-full bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
                             </div>
-
                             <button type="submit" class="w-full bg-indigo-600 text-white font-bold rounded-2xl py-4 shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-all mt-4 md:text-lg">Simpan Transaksi</button>
                         </form>
                     </section>
 
-                    <!-- ================= VIEW: RIWAYAT ================= -->
+                    <!-- VIEW: RIWAYAT -->
                     <section id="view-history" class="view-section h-full flex-col">
                         <div class="md:hidden mb-6 flex justify-between items-center">
                             <div><h2 class="text-2xl font-bold text-slate-800">Riwayat</h2></div>
@@ -266,30 +235,25 @@
                                 <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4"><i class="ph-fill ph-receipt text-4xl opacity-40"></i></div>
                                 <p class="text-sm font-bold text-slate-600">Belum ada riwayat</p>
                             </div>
-
                             <ul id="history-list" class="divide-y divide-slate-100 flex-grow"></ul>
                         </div>
                     </section>
 
-                    <!-- ================= VIEW: REKAP BULANAN ================= -->
+                    <!-- VIEW: REKAP BULANAN -->
                     <section id="view-recap" class="view-section">
                         <div class="md:hidden mb-6">
                             <h2 class="text-2xl font-bold text-slate-800">Rekap Bulanan</h2>
-                            <p class="text-xs text-slate-500 mt-1">Rincian statistik per bulan.</p>
                         </div>
-                        
                         <div id="recap-list" class="space-y-4 md:space-y-6">
-                            <!-- Diisi oleh Javascript -->
-                            <div class="text-center py-20 bg-white rounded-[2rem] shadow-sm border border-slate-100 text-slate-400">Memuat data bulanan...</div>
+                            <div class="text-center py-20 bg-white rounded-[2rem] border border-slate-100 border-dashed text-slate-400 font-medium"><i class="ph-fill ph-chart-bar text-4xl mb-2 opacity-50 block"></i>Belum ada data bulanan.</div>
                         </div>
                     </section>
 
-                    <!-- ================= VIEW: SETTINGS ================= -->
+                    <!-- VIEW: SETTINGS -->
                     <section id="view-settings" class="view-section">
                         <div class="md:hidden mb-6">
                             <h2 class="text-2xl font-bold text-slate-800">Pengaturan</h2>
                         </div>
-                        
                         <div class="bg-white p-6 md:p-10 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 max-w-2xl mx-auto">
                             <div class="flex items-center gap-4 mb-6 md:mb-8 pb-6 border-b border-slate-100">
                                 <div class="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center"><i class="ph-fill ph-database text-2xl md:text-3xl"></i></div>
@@ -298,7 +262,6 @@
                                     <p class="text-xs md:text-sm text-slate-500 mt-1">Hubungkan ke database cloud milik Anda.</p>
                                 </div>
                             </div>
-
                             <form id="settings-form" class="space-y-5">
                                 <div>
                                     <label class="block text-[10px] md:text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Project URL</label>
@@ -315,7 +278,7 @@
                 </div>
             </main>
 
-            <!-- ================= BOTTOM NAV (HANYA TAMPIL DI MOBILE) ================= -->
+            <!-- BOTTOM NAV (HANYA TAMPIL DI MOBILE) -->
             <nav class="md:hidden fixed bottom-0 w-full bg-white border-t border-slate-100 z-50 px-2 pb-safe shadow-[0_-10px_20px_rgba(0,0,0,0.03)]">
                 <div class="flex justify-between items-center h-[70px] px-2">
                     <button onclick="switchTab('dashboard')" class="nav-btn nav-btn-dashboard mobile-nav active flex flex-col items-center justify-center w-14 text-slate-400 transition-all">
@@ -329,7 +292,6 @@
                         <span class="text-[10px] font-bold">Riwayat</span>
                     </button>
                     
-                    <!-- Tombol Tambah Melayang -->
                     <div class="relative -top-6">
                         <button onclick="switchTab('add')" class="nav-btn nav-btn-add mobile-nav w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-xl shadow-indigo-300 border-4 border-white active:scale-95 transition-transform">
                             <i class="ph-bold ph-plus text-3xl"></i>
@@ -353,9 +315,6 @@
     </div>
 
     <script>
-        // ==========================================
-        // INISIALISASI
-        // ==========================================
         let supabaseClient = null;
         let transactions = [];
         let isConnected = false;
@@ -366,14 +325,11 @@
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             const isSuccess = type === 'success';
-            
             const bgColor = isSuccess ? 'bg-slate-800' : 'bg-rose-600';
             const icon = isSuccess ? 'ph-check-circle text-emerald-400' : 'ph-warning-circle text-white';
-            
             toast.className = `${bgColor} text-white px-5 py-3.5 rounded-2xl shadow-xl flex items-center gap-3 text-sm font-bold toast-animate border border-white/10`;
             toast.innerHTML = `<i class="ph-fill ${icon} text-xl"></i> ${message}`;
             container.appendChild(toast);
-            
             setTimeout(() => {
                 toast.style.opacity = '0';
                 toast.style.transform = 'translate(-50%, -20px)';
@@ -382,9 +338,6 @@
             }, 3000);
         }
 
-        // ==========================================
-        // FUNGSI NAVIGASI TAB (Desktop & Mobile)
-        // ==========================================
         const pageTitles = {
             'dashboard': 'Beranda',
             'history': 'Riwayat Transaksi',
@@ -394,34 +347,21 @@
         };
 
         function switchTab(tabId) {
-            // Sembunyikan semua konten
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-            // Hapus status aktif dari semua tombol (mobile & desktop)
-            document.querySelectorAll('.nav-btn').forEach(el => {
-                el.classList.remove('active', 'bg-indigo-50', 'text-indigo-600', 'font-semibold');
-            });
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active', 'bg-indigo-50', 'text-indigo-600', 'font-semibold'));
             
-            // Tampilkan konten terpilih
             document.getElementById(`view-${tabId}`).classList.add('active');
-            
-            // Ubah Judul Header Desktop
             const titleEl = document.getElementById('desktop-page-title');
             if(titleEl) titleEl.innerText = pageTitles[tabId] || 'Keuanganku';
             
-            // Beri highlight pada tombol yang sesuai (jika bukan add)
             if(tabId !== 'add') {
                 document.querySelectorAll(`.nav-btn-${tabId}`).forEach(el => {
                     el.classList.add('active');
-                    if(el.classList.contains('desktop-nav')) {
-                        el.classList.add('bg-indigo-50', 'text-indigo-600', 'font-semibold');
-                    }
+                    if(el.classList.contains('desktop-nav')) el.classList.add('bg-indigo-50', 'text-indigo-600', 'font-semibold');
                 });
             }
         }
 
-        // ==========================================
-        // DATABASE & CRUD
-        // ==========================================
         async function initDatabase() {
             const url = localStorage.getItem('sb_url');
             const key = localStorage.getItem('sb_key');
@@ -432,7 +372,6 @@
                 try {
                     supabaseClient = window.supabase.createClient(url, key);
                     isConnected = true;
-                    
                     document.getElementById('header-status').innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span> <span class="text-emerald-700">Online</span>';
                     document.getElementById('header-status').className = "flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-[10px] font-bold text-emerald-700 tracking-wide uppercase border border-emerald-100";
                     document.getElementById('setup-warning').classList.add('hidden');
@@ -447,48 +386,36 @@
             const url = document.getElementById('input-supabase-url').value.trim();
             const key = document.getElementById('input-supabase-key').value.trim();
             if(!url || !key) return showToast('Harap isi URL dan Key.', 'error');
-
             try {
                 const testClient = window.supabase.createClient(url, key);
                 const { error } = await testClient.from('transactions').select('id').limit(1);
                 if (error) throw error;
-                
                 localStorage.setItem('sb_url', url); localStorage.setItem('sb_key', key);
-                showToast("Database terhubung!");
-                await initDatabase(); switchTab('dashboard');
+                showToast("Database terhubung!"); await initDatabase(); switchTab('dashboard');
             } catch (err) { showToast("Koneksi gagal. Periksa kembali.", "error"); }
         });
 
         async function fetchData() {
             if(!isConnected) return;
             try {
-                const { data, error } = await supabaseClient
-                    .from('transactions').select('*')
-                    .order('date', { ascending: false }).order('id', { ascending: false });
-
+                const { data, error } = await supabaseClient.from('transactions').select('*').order('date', { ascending: false }).order('id', { ascending: false });
                 if (error) throw error;
-                transactions = data || [];
-                renderUI();
+                transactions = data || []; renderUI();
             } catch (err) { showToast("Gagal mengambil data.", "error"); }
         }
 
         document.getElementById('add-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             if(!isConnected) { showToast('Hubungkan database di Pengaturan!', 'error'); return switchTab('settings'); }
-
             const type = document.querySelector('input[name="tx-type"]:checked').value;
             const amount = parseFloat(document.getElementById('input-amount').value);
             const category = document.getElementById('input-category').value;
             const date = document.getElementById('input-date').value;
             const desc = document.getElementById('input-desc').value;
-
             try {
-                const { data, error } = await supabaseClient
-                    .from('transactions').insert([{ type, amount, category, date, description: desc }]).select();
+                const { data, error } = await supabaseClient.from('transactions').insert([{ type, amount, category, date, description: desc }]).select();
                 if(error) throw error;
-                
-                transactions.unshift(data[0]);
-                transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+                transactions.unshift(data[0]); transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
                 document.getElementById('input-amount').value = ''; document.getElementById('input-desc').value = '';
                 showToast("Transaksi disimpan!"); renderUI(); switchTab('dashboard');
             } catch (err) { showToast("Gagal menyimpan data.", "error"); }
@@ -503,9 +430,6 @@
             } catch (err) { showToast("Gagal menghapus.", "error"); }
         }
 
-        // ==========================================
-        // HELPERS
-        // ==========================================
         const formatIDR = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(Number(num)||0);
         const formatDate = (dateString) => dateString ? new Date(dateString).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '-';
         const getIcon = (cat, type) => {
@@ -521,149 +445,131 @@
             return map[cat] || map['Lainnya'];
         };
 
-        // ==========================================
-        // RENDER UI & REKAP BULANAN
-        // ==========================================
         function renderUI() {
-            let income = 0; let expense = 0;
-            const monthlyData = {}; // Untuk Rekap Bulanan
+            try {
+                let income = 0; let expense = 0;
+                const monthlyData = {};
 
-            transactions.forEach(tx => {
-                const nominal = Number(tx.amount) || 0;
-                
-                // Kalkulasi Total Saldo Keseluruhan
-                if (tx.type === 'income') income += nominal;
-                if (tx.type === 'expense') expense += nominal;
-
-                // Kalkulasi Rekap Bulanan (YYYY-MM)
-                if(tx.date) {
-                    const monthYear = tx.date.substring(0, 7);
-                    if (!monthlyData[monthYear]) {
-                        // Ambil nama bulan yang cantik (Misal: Oktober 2026)
-                        const labelObj = new Date(tx.date);
-                        const labelStr = labelObj.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
-                        monthlyData[monthYear] = { label: labelStr, income: 0, expense: 0, count: 0 };
+                transactions.forEach(tx => {
+                    const nominal = Number(tx.amount) || 0;
+                    if (tx.type === 'income') income += nominal;
+                    if (tx.type === 'expense') expense += nominal;
+                    if(tx.date) {
+                        const monthYear = tx.date.substring(0, 7);
+                        if (!monthlyData[monthYear]) {
+                            const labelObj = new Date(tx.date);
+                            const labelStr = labelObj.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+                            monthlyData[monthYear] = { label: labelStr, income: 0, expense: 0, count: 0 };
+                        }
+                        if (tx.type === 'income') monthlyData[monthYear].income += nominal;
+                        if (tx.type === 'expense') monthlyData[monthYear].expense += nominal;
+                        monthlyData[monthYear].count += 1;
                     }
-                    if (tx.type === 'income') monthlyData[monthYear].income += nominal;
-                    if (tx.type === 'expense') monthlyData[monthYear].expense += nominal;
-                    monthlyData[monthYear].count += 1;
+                });
+
+                document.getElementById('dash-balance').innerText = formatIDR(income - expense);
+                document.getElementById('dash-income').innerText = formatIDR(income);
+                document.getElementById('dash-expense').innerText = formatIDR(expense);
+
+                const historyList = document.getElementById('history-list');
+                const dashRecent = document.getElementById('dash-recent-list');
+                const recapList = document.getElementById('recap-list');
+                
+                document.getElementById('history-count-mobile').innerText = `${transactions.length} Data`;
+                document.getElementById('history-count-desktop').innerText = `${transactions.length} Data`;
+                
+                historyList.innerHTML = ''; dashRecent.innerHTML = ''; recapList.innerHTML = '';
+
+                if (transactions.length === 0) {
+                    document.getElementById('history-empty').classList.remove('hidden'); 
+                    document.getElementById('history-empty').classList.add('flex');
+                    document.getElementById('dash-empty').classList.remove('hidden');
+                    recapList.innerHTML = `<div class="text-center py-20 bg-white rounded-[2rem] border border-slate-100 border-dashed text-slate-400 font-medium"><i class="ph-fill ph-chart-bar text-4xl mb-2 opacity-50 block"></i>Belum ada data bulanan.</div>`;
+                } else {
+                    document.getElementById('history-empty').classList.add('hidden'); 
+                    document.getElementById('history-empty').classList.remove('flex');
+                    document.getElementById('dash-empty').classList.add('hidden');
+
+                    transactions.forEach((tx, index) => {
+                        const style = getIcon(tx.category || 'Lainnya', tx.type);
+                        const sign = tx.type === 'income' ? '+' : '-';
+                        const amountClass = tx.type === 'income' ? 'text-emerald-600' : 'text-slate-800';
+                        const formatted = formatIDR(Number(tx.amount)||0).replace(/Rp/g, '').trim();
+                        
+                        const li = document.createElement('li');
+                        li.innerHTML = `
+                            <div class="flex items-center gap-4 md:gap-5 py-4 px-6 md:px-8 group hover:bg-slate-50 transition-colors">
+                                <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">
+                                    <i class="ph-fill ${style.icon} text-2xl md:text-3xl"></i>
+                                </div>
+                                <div class="flex-grow min-w-0">
+                                    <p class="text-sm md:text-base font-bold text-slate-800 truncate">${tx.description || '-'}</p>
+                                    <div class="flex items-center gap-2 mt-1">
+                                        <span class="text-[10px] md:text-xs font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">${tx.category || 'Lainnya'}</span>
+                                        <span class="text-[11px] md:text-xs font-medium text-slate-400">${formatDate(tx.date)}</span>
+                                    </div>
+                                </div>
+                                <div class="text-right shrink-0">
+                                    <p class="text-sm md:text-base font-bold ${amountClass}">${sign}${formatted}</p>
+                                    <button onclick="deleteTx(${tx.id})" class="text-[10px] md:text-xs font-bold text-rose-500 mt-1.5 uppercase hover:underline">Hapus</button>
+                                </div>
+                            </div>`;
+                        historyList.appendChild(li);
+
+                        if (index < 4) {
+                            const div = document.createElement('div');
+                            div.className = "bg-white p-4 md:p-5 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 flex items-center gap-4 hover:border-indigo-200 transition-colors cursor-pointer";
+                            div.setAttribute("onclick", "switchTab('history')");
+                            div.innerHTML = `
+                                <div class="w-11 h-11 md:w-12 md:h-12 rounded-2xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">
+                                    <i class="ph-fill ${style.icon} text-xl md:text-2xl"></i>
+                                </div>
+                                <div class="flex-grow min-w-0">
+                                    <p class="text-[13px] md:text-sm font-bold text-slate-800 truncate">${tx.description || '-'}</p>
+                                    <p class="text-[10px] md:text-xs font-medium text-slate-400 mt-0.5">${formatDate(tx.date)}</p>
+                                </div>
+                                <div class="text-right shrink-0"><p class="text-[13px] md:text-sm font-bold ${amountClass}">${sign}${formatted}</p></div>`;
+                            dashRecent.appendChild(div);
+                        }
+                    });
+
+                    const sortedMonths = Object.keys(monthlyData).sort((a, b) => b.localeCompare(a));
+                    sortedMonths.forEach(my => {
+                        const data = monthlyData[my];
+                        const balance = data.income - data.expense;
+                        const balanceColor = balance >= 0 ? 'text-emerald-600' : 'text-rose-600';
+                        const balanceBg = balance >= 0 ? 'bg-emerald-50' : 'bg-rose-50';
+
+                        recapList.innerHTML += `
+                            <div class="bg-white p-5 md:p-6 rounded-[2rem] shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100">
+                                <div class="flex justify-between items-center mb-5 border-b border-slate-100 pb-4">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500"><i class="ph-bold ph-calendar-blank"></i></div>
+                                        <h3 class="font-bold text-slate-800 md:text-lg">${data.label}</h3>
+                                    </div>
+                                    <span class="text-[10px] md:text-xs font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-lg">${data.count} Transaksi</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4 mb-4">
+                                    <div><p class="text-[10px] md:text-xs font-bold text-slate-400 uppercase mb-1">Masuk</p><p class="font-bold text-sm md:text-base text-emerald-600">${formatIDR(data.income)}</p></div>
+                                    <div><p class="text-[10px] md:text-xs font-bold text-slate-400 uppercase mb-1">Keluar</p><p class="font-bold text-sm md:text-base text-rose-600">${formatIDR(data.expense)}</p></div>
+                                </div>
+                                <div class="${balanceBg} rounded-xl p-4 flex justify-between items-center">
+                                    <span class="text-xs md:text-sm font-bold ${balanceColor} uppercase">Sisa / Saldo Bersih</span>
+                                    <span class="font-bold text-base md:text-lg ${balanceColor}">${formatIDR(balance)}</span>
+                                </div>
+                            </div>
+                        `;
+                    });
                 }
-            });
-
-            // Update Kartu Dashboard
-            document.getElementById('dash-balance').innerText = formatIDR(income - expense);
-            document.getElementById('dash-income').innerText = formatIDR(income);
-            document.getElementById('dash-expense').innerText = formatIDR(expense);
-
-            // Setup Daftar
-            const historyList = document.getElementById('history-list');
-            const dashRecent = document.getElementById('dash-recent-list');
-            const recapList = document.getElementById('recap-list');
-            
-            document.getElementById('history-count-mobile').innerText = `${transactions.length} Data`;
-            document.getElementById('history-count-desktop').innerText = `${transactions.length} Data`;
-            historyList.innerHTML = ''; dashRecent.innerHTML = ''; recapList.innerHTML = '';
-
-            // Render Riwayat Kosong
-            if (transactions.length === 0) {
-                document.getElementById('history-empty').classList.remove('hidden'); document.getElementById('history-empty').classList.add('flex');
-                document.getElementById('dash-empty').style.display = 'block';
-                recapList.innerHTML = `<div class="text-center py-20 bg-white rounded-[2rem] border border-slate-100 border-dashed text-slate-400 font-medium"><i class="ph-fill ph-chart-bar text-4xl mb-2 opacity-50 block"></i>Belum ada data bulanan.</div>`;
-            } else {
-                document.getElementById('history-empty').classList.add('hidden'); document.getElementById('history-empty').classList.remove('flex');
-                document.getElementById('dash-empty').style.display = 'none';
-
-                // Render Daftar Riwayat & Beranda
-                transactions.forEach((tx, index) => {
-                    const style = getIcon(tx.category || 'Lainnya', tx.type);
-                    const sign = tx.type === 'income' ? '+' : '-';
-                    const amountClass = tx.type === 'income' ? 'text-emerald-600' : 'text-slate-800';
-                    const formatted = formatIDR(Number(tx.amount)||0).replace(/Rp/g, '').trim();
-                    
-                    // Riwayat Penuh
-                    const li = document.createElement('li');
-                    li.innerHTML = `
-                        <div class="flex items-center gap-4 md:gap-5 py-4 px-6 md:px-8 group hover:bg-slate-50 transition-colors">
-                            <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">
-                                <i class="ph-fill ${style.icon} text-2xl md:text-3xl"></i>
-                            </div>
-                            <div class="flex-grow min-w-0">
-                                <p class="text-sm md:text-base font-bold text-slate-800 truncate">${tx.description || '-'}</p>
-                                <div class="flex items-center gap-2 mt-1">
-                                    <span class="text-[10px] md:text-xs font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase tracking-wider">${tx.category || 'Lainnya'}</span>
-                                    <span class="text-[11px] md:text-xs font-medium text-slate-400">${formatDate(tx.date)}</span>
-                                </div>
-                            </div>
-                            <div class="text-right shrink-0">
-                                <p class="text-sm md:text-base font-bold ${amountClass}">${sign}${formatted}</p>
-                                <button onclick="deleteTx(${tx.id})" class="text-[10px] md:text-xs font-bold text-rose-500 mt-1.5 uppercase hover:underline">Hapus</button>
-                            </div>
-                        </div>`;
-                    historyList.appendChild(li);
-
-                    // 4 Transaksi Terakhir di Beranda
-                    if (index < 4) {
-                        const div = document.createElement('div');
-                        div.className = "bg-white p-4 md:p-5 rounded-2xl shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 flex items-center gap-4 hover:border-indigo-200 transition-colors cursor-pointer";
-                        div.setAttribute("onclick", "switchTab('history')");
-                        div.innerHTML = `
-                            <div class="w-11 h-11 md:w-12 md:h-12 rounded-2xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">
-                                <i class="ph-fill ${style.icon} text-xl md:text-2xl"></i>
-                            </div>
-                            <div class="flex-grow min-w-0">
-                                <p class="text-[13px] md:text-sm font-bold text-slate-800 truncate">${tx.description || '-'}</p>
-                                <p class="text-[10px] md:text-xs font-medium text-slate-400 mt-0.5">${formatDate(tx.date)}</p>
-                            </div>
-                            <div class="text-right shrink-0"><p class="text-[13px] md:text-sm font-bold ${amountClass}">${sign}${formatted}</p></div>`;
-                        dashRecent.appendChild(div);
-                    }
-                });
-
-                // ================= RENDER REKAP BULANAN =================
-                // Urutkan dari bulan terbaru ke terlama
-                const sortedMonths = Object.keys(monthlyData).sort((a, b) => b.localeCompare(a));
-                
-                sortedMonths.forEach(my => {
-                    const data = monthlyData[my];
-                    const balance = data.income - data.expense;
-                    const balanceColor = balance >= 0 ? 'text-emerald-600' : 'text-rose-600';
-                    const balanceBg = balance >= 0 ? 'bg-emerald-50' : 'bg-rose-50';
-
-                    const cardHTML = `
-                        <div class="bg-white p-5 md:p-6 rounded-[2rem] shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-slate-100 relative overflow-hidden">
-                            <div class="flex justify-between items-center mb-5 border-b border-slate-100 pb-4">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500"><i class="ph-bold ph-calendar-blank"></i></div>
-                                    <h3 class="font-bold text-slate-800 md:text-lg">${data.label}</h3>
-                                </div>
-                                <span class="text-[10px] md:text-xs font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-lg">${data.count} Transaksi</span>
-                            </div>
-                            
-                            <div class="grid grid-cols-2 gap-4 mb-4">
-                                <div>
-                                    <p class="text-[10px] md:text-xs font-bold text-slate-400 uppercase mb-1">Masuk</p>
-                                    <p class="font-bold text-sm md:text-base text-emerald-600">${formatIDR(data.income)}</p>
-                                </div>
-                                <div>
-                                    <p class="text-[10px] md:text-xs font-bold text-slate-400 uppercase mb-1">Keluar</p>
-                                    <p class="font-bold text-sm md:text-base text-rose-600">${formatIDR(data.expense)}</p>
-                                </div>
-                            </div>
-                            
-                            <div class="${balanceBg} rounded-xl p-4 flex justify-between items-center">
-                                <span class="text-xs md:text-sm font-bold ${balanceColor} uppercase">Sisa / Saldo Bersih</span>
-                                <span class="font-bold text-base md:text-lg ${balanceColor}">${formatIDR(balance)}</span>
-                            </div>
-                        </div>
-                    `;
-                    recapList.innerHTML += cardHTML;
-                });
+            } catch (err) {
+                console.error("Render Error:", err);
+                showToast("Terjadi kesalahan pada tampilan layar.", "error");
             }
         }
 
         window.addEventListener('DOMContentLoaded', () => {
             initDatabase();
-            switchTab('dashboard'); // Mulai di halaman Beranda
+            switchTab('dashboard');
         });
     </script>
 </body>
