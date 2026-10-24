@@ -4,103 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Keuanganku - Mobile App</title>
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #e2e8f0;
-            overscroll-behavior-y: none;
-        }
-        .app-container {
-            max-width: 480px;
-            margin: 0 auto;
-            background-color: #f8fafc;
-            min-height: 100vh;
-            position: relative;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            display: flex;
-            flex-direction: column;
-        }
-        .view-section {
-            display: none;
-            animation: fadeIn 0.3s ease-in-out;
-            padding-bottom: 90px;
-        }
-        .view-section.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #e2e8f0; overscroll-behavior-y: none; }
+        .app-container { max-width: 480px; margin: 0 auto; background-color: #f8fafc; min-height: 100vh; position: relative; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); display: flex; flex-direction: column; }
+        .view-section { display: none; animation: fadeIn 0.3s ease-in-out; padding-bottom: 90px; }
+        .view-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
-        @keyframes slideDown {
-            from { transform: translate(-50%, -100%); opacity: 0; }
-            to { transform: translate(-50%, 0); opacity: 1; }
-        }
+        @keyframes slideDown { from { transform: translate(-50%, -100%); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
         .toast-animate { animation: slideDown 0.3s ease-out forwards; }
-        @keyframes scaleIn {
-            from { transform: scale(0.95); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        .modal-animate { animation: scaleIn 0.2s ease-out forwards; }
-        .loader {
-            border: 3px solid rgba(255,255,255,0.3);
-            border-top: 3px solid white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-        }
-        .loader-dark {
-            border: 3px solid #e2e8f0;
-            border-top: 3px solid #4f46e5;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        .loader { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid white; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
+        .loader-dark { border: 3px solid #e2e8f0; border-top: 3px solid #4f46e5; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="text-slate-800 antialiased">
 
-    <!-- Toast Notification Container -->
     <div id="toast-container" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-2 w-11/12 max-w-sm pointer-events-none"></div>
 
-    <!-- Custom Confirm Modal -->
-    <div id="confirm-modal" class="fixed inset-0 bg-slate-900/50 z-[100] hidden items-center justify-center backdrop-blur-sm px-4">
-        <div class="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl modal-animate">
-            <div class="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mb-4 mx-auto">
-                <i class="ph-bold ph-warning text-2xl"></i>
-            </div>
-            <h3 class="text-lg font-bold text-center mb-2">Hapus Transaksi?</h3>
-            <p class="text-sm text-slate-500 text-center mb-6">Data yang dihapus tidak dapat dikembalikan lagi.</p>
-            <div class="flex gap-3">
-                <button id="modal-cancel" class="flex-1 py-3 bg-slate-100 text-slate-700 font-medium rounded-xl hover:bg-slate-200 transition-colors">Batal</button>
-                <button id="modal-confirm" class="flex-1 py-3 bg-rose-600 text-white font-medium rounded-xl hover:bg-rose-700 transition-colors">Hapus</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- App Container -->
     <div class="app-container">
-        
-        <!-- Header -->
         <header class="bg-white px-5 py-4 sticky top-0 z-40 flex items-center justify-between shadow-[0_4px_20px_-15px_rgba(0,0,0,0.1)]">
             <div class="flex items-center gap-2">
-                <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
-                    <i class="ph-bold ph-wallet"></i>
-                </div>
+                <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white"><i class="ph-bold ph-wallet"></i></div>
                 <h1 class="text-lg font-bold tracking-tight">Keuanganku</h1>
             </div>
             <div id="header-status" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-xs font-medium text-slate-500">
@@ -108,38 +39,20 @@
             </div>
         </header>
 
-        <!-- Main Content Area -->
         <main class="flex-grow relative overflow-y-auto custom-scrollbar">
             
-            <!-- VIEW: DASHBOARD -->
             <section id="view-dashboard" class="view-section active p-5">
-                <div id="setup-warning" class="hidden mb-6 bg-amber-50 border border-amber-200 rounded-2xl p-4">
-                    <div class="flex items-start gap-3">
-                        <i class="ph-fill ph-warning-circle text-amber-500 text-xl mt-0.5"></i>
-                        <div>
-                            <h3 class="font-semibold text-amber-900 text-sm">Database Belum Terhubung</h3>
-                            <p class="text-xs text-amber-700 mt-1 mb-2">Buka tab Pengaturan untuk memasukkan kredensial Supabase Anda.</p>
-                            <button onclick="switchTab('settings')" class="text-xs font-semibold bg-amber-200 text-amber-900 px-3 py-1.5 rounded-lg">Buka Pengaturan</button>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="bg-gradient-to-br from-indigo-600 to-blue-700 rounded-3xl p-6 text-white shadow-lg shadow-indigo-200 mb-6 relative overflow-hidden">
                     <i class="ph-fill ph-coins absolute -right-4 -bottom-4 text-8xl opacity-10"></i>
                     <p class="text-indigo-100 text-sm font-medium mb-1">Total Saldo Saat Ini</p>
                     <h2 class="text-3xl font-bold tracking-tight mb-6" id="dash-balance">Rp 0</h2>
-                    
                     <div class="grid grid-cols-2 gap-4">
                         <div class="bg-white/20 backdrop-blur-md rounded-2xl p-3">
-                            <div class="flex items-center gap-1.5 text-indigo-50 mb-1 text-xs">
-                                <i class="ph-fill ph-arrow-down-left text-emerald-400"></i> Pemasukan
-                            </div>
+                            <div class="flex items-center gap-1.5 text-indigo-50 mb-1 text-xs"><i class="ph-fill ph-arrow-down-left text-emerald-400"></i> Pemasukan</div>
                             <p class="font-semibold text-sm" id="dash-income">Rp 0</p>
                         </div>
                         <div class="bg-white/20 backdrop-blur-md rounded-2xl p-3">
-                            <div class="flex items-center gap-1.5 text-indigo-50 mb-1 text-xs">
-                                <i class="ph-fill ph-arrow-up-right text-rose-400"></i> Pengeluaran
-                            </div>
+                            <div class="flex items-center gap-1.5 text-indigo-50 mb-1 text-xs"><i class="ph-fill ph-arrow-up-right text-rose-400"></i> Pengeluaran</div>
                             <p class="font-semibold text-sm" id="dash-expense">Rp 0</p>
                         </div>
                     </div>
@@ -150,14 +63,12 @@
                         <h3 class="font-bold text-slate-800">Transaksi Terakhir</h3>
                         <button onclick="switchTab('history')" class="text-xs font-medium text-indigo-600">Lihat Semua</button>
                     </div>
-                    
                     <div id="dash-recent-list" class="space-y-3">
                         <div class="text-center py-8 text-slate-400 text-sm" id="dash-empty">Belum ada transaksi</div>
                     </div>
                 </div>
             </section>
 
-            <!-- VIEW: ADD TRANSACTION -->
             <section id="view-add" class="view-section p-5">
                 <h2 class="text-xl font-bold text-slate-800 mb-6">Tambah Transaksi</h2>
                 <form id="add-form" class="space-y-5 bg-white p-5 rounded-3xl shadow-sm border border-slate-100">
@@ -171,129 +82,80 @@
                             <div class="text-center py-2 rounded-lg text-sm font-medium peer-checked:bg-white peer-checked:text-emerald-600 peer-checked:shadow-sm text-slate-500 transition-all">Pemasukan</div>
                         </label>
                     </div>
-
                     <div>
-                        <label class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wider">Jumlah (Rp)</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <span class="text-slate-400 font-medium">Rp</span>
-                            </div>
-                            <input type="number" id="input-amount" placeholder="0" required min="1" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-lg font-semibold rounded-xl pl-11 pr-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
-                        </div>
+                        <label class="block text-xs font-semibold text-slate-500 mb-1.5">Jumlah (Rp)</label>
+                        <input type="number" id="input-amount" placeholder="0" required min="1" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-lg font-semibold rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     </div>
-
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wider">Kategori</label>
-                            <div class="relative">
-                                <select id="input-category" class="w-full appearance-none bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
-                                    <option value="Makanan">Makanan</option>
-                                    <option value="Transport">Transport</option>
-                                    <option value="Belanja">Belanja</option>
-                                    <option value="Gaji">Gaji</option>
-                                    <option value="Hiburan">Hiburan</option>
-                                    <option value="Lainnya">Lainnya</option>
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
-                                    <i class="ph-bold ph-caret-down"></i>
-                                </div>
-                            </div>
+                            <label class="block text-xs font-semibold text-slate-500 mb-1.5">Kategori</label>
+                            <select id="input-category" class="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                <option value="Makanan">Makanan</option>
+                                <option value="Transport">Transport</option>
+                                <option value="Belanja">Belanja</option>
+                                <option value="Gaji">Gaji</option>
+                                <option value="Lainnya">Lainnya</option>
+                            </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wider">Tanggal</label>
-                            <input type="date" id="input-date" required class="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all text-sm">
+                            <label class="block text-xs font-semibold text-slate-500 mb-1.5">Tanggal</label>
+                            <input type="date" id="input-date" required class="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                         </div>
                     </div>
-
                     <div>
-                        <label class="block text-xs font-semibold text-slate-500 mb-1.5 uppercase tracking-wider">Catatan</label>
-                        <input type="text" id="input-desc" placeholder="Cth: Makan siang bareng teman" required class="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
+                        <label class="block text-xs font-semibold text-slate-500 mb-1.5">Catatan</label>
+                        <input type="text" id="input-desc" required class="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                     </div>
-
-                    <button type="submit" id="btn-submit-tx" class="w-full bg-indigo-600 text-white font-semibold rounded-xl py-4 mt-2 hover:bg-indigo-700 active:scale-[0.98] transition-all flex justify-center items-center gap-2">
-                        <span id="txt-submit-tx">Simpan Transaksi</span>
-                        <div id="loader-submit-tx" class="loader hidden"></div>
-                    </button>
+                    <button type="submit" id="btn-submit-tx" class="w-full bg-indigo-600 text-white font-semibold rounded-xl py-4 hover:bg-indigo-700">Simpan Transaksi</button>
                 </form>
             </section>
 
-            <!-- VIEW: HISTORY -->
             <section id="view-history" class="view-section p-5 h-full flex-col">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-xl font-bold text-slate-800">Riwayat</h2>
-                    <span id="history-count" class="text-xs font-medium bg-slate-200 text-slate-600 px-2.5 py-1 rounded-full">0 Data</span>
                 </div>
-
                 <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden flex flex-col min-h-[400px]">
-                    <div id="history-loading" class="flex-col items-center justify-center py-12 text-slate-400 hidden">
-                        <div class="loader loader-dark mb-3 border-t-indigo-600"></div>
-                        <p class="text-sm">Memuat data...</p>
-                    </div>
-
-                    <div id="history-empty" class="flex-col items-center justify-center py-16 text-slate-400 hidden flex-grow">
-                        <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-3">
-                            <i class="ph-fill ph-receipt text-3xl opacity-40"></i>
-                        </div>
-                        <p class="text-sm">Belum ada riwayat transaksi.</p>
-                    </div>
-
                     <ul id="history-list" class="divide-y divide-slate-100 flex-grow"></ul>
                 </div>
             </section>
 
-            <!-- VIEW: SETTINGS -->
             <section id="view-settings" class="view-section p-5">
                 <h2 class="text-xl font-bold text-slate-800 mb-6">Pengaturan Database</h2>
                 <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6">
                     <form id="settings-form" class="space-y-4">
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 mb-1.5">Project URL</label>
-                            <input type="url" id="input-supabase-url" placeholder="https://xxxx.supabase.co" class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
+                            <input type="url" id="input-supabase-url" placeholder="https://xxxx.supabase.co" class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl px-4 py-3">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 mb-1.5">Anon Key</label>
-                            <input type="password" id="input-supabase-key" placeholder="eyJhbGciOiJIUzI1NiIsIn..." class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all">
+                            <input type="password" id="input-supabase-key" placeholder="eyJhbGciOiJIUzI1NiIsIn..." class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl px-4 py-3">
                         </div>
-                        <button type="submit" id="btn-save-settings" class="w-full bg-slate-900 text-white font-semibold rounded-xl py-3.5 mt-2 hover:bg-slate-800 transition-all flex justify-center items-center gap-2">
-                            <span id="txt-save-settings">Simpan & Hubungkan</span>
-                            <div id="loader-save-settings" class="loader hidden"></div>
-                        </button>
+                        <button type="submit" class="w-full bg-slate-900 text-white font-semibold rounded-xl py-3.5 hover:bg-slate-800">Simpan & Hubungkan</button>
                     </form>
                 </div>
             </section>
         </main>
 
-        <!-- Bottom Navigation Bar -->
         <nav class="bg-white border-t border-slate-200 fixed bottom-0 w-full max-w-[480px] z-50 px-2 pb-safe">
             <div class="flex justify-around items-center h-16">
-                <button onclick="switchTab('dashboard')" id="tab-dashboard" class="nav-tab active flex flex-col items-center justify-center w-16 text-slate-400 hover:text-indigo-600 transition-colors">
-                    <i class="ph ph-house text-2xl mb-1 icon-outline"></i>
-                    <i class="ph-fill ph-house text-2xl mb-1 icon-fill hidden"></i>
-                    <span class="text-[10px] font-medium">Beranda</span>
+                <button onclick="switchTab('dashboard')" id="tab-dashboard" class="nav-tab active flex flex-col items-center justify-center w-16 text-slate-400">
+                    <i class="ph-fill ph-house text-2xl mb-1"></i><span class="text-[10px] font-medium">Beranda</span>
                 </button>
-                <button onclick="switchTab('history')" id="tab-history" class="nav-tab flex flex-col items-center justify-center w-16 text-slate-400 hover:text-indigo-600 transition-colors">
-                    <i class="ph ph-list-dashes text-2xl mb-1 icon-outline"></i>
-                    <i class="ph-fill ph-list-dashes text-2xl mb-1 icon-fill hidden"></i>
-                    <span class="text-[10px] font-medium">Riwayat</span>
+                <button onclick="switchTab('history')" id="tab-history" class="nav-tab flex flex-col items-center justify-center w-16 text-slate-400">
+                    <i class="ph-fill ph-list-dashes text-2xl mb-1"></i><span class="text-[10px] font-medium">Riwayat</span>
                 </button>
                 <div class="relative -top-5">
-                    <button onclick="switchTab('add')" id="tab-add" class="w-14 h-14 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-indigo-300 hover:bg-indigo-700 hover:scale-105 transition-all transform active:scale-95">
+                    <button onclick="switchTab('add')" id="tab-add" class="w-14 h-14 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-indigo-300">
                         <i class="ph-bold ph-plus text-2xl"></i>
                     </button>
                 </div>
-                <button onclick="switchTab('settings')" id="tab-settings" class="nav-tab flex flex-col items-center justify-center w-16 text-slate-400 hover:text-indigo-600 transition-colors">
-                    <i class="ph ph-gear text-2xl mb-1 icon-outline"></i>
-                    <i class="ph-fill ph-gear text-2xl mb-1 icon-fill hidden"></i>
-                    <span class="text-[10px] font-medium">Setelan</span>
+                <button onclick="switchTab('settings')" id="tab-settings" class="nav-tab flex flex-col items-center justify-center w-16 text-slate-400">
+                    <i class="ph-fill ph-gear text-2xl mb-1"></i><span class="text-[10px] font-medium">Setelan</span>
                 </button>
             </div>
         </nav>
-        <style>
-            .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
-            .nav-tab.active { color: #4f46e5; }
-            .nav-tab.active .icon-outline { display: none; }
-            .nav-tab.active .icon-fill { display: block; }
-        </style>
+        <style> .nav-tab.active { color: #4f46e5; } </style>
     </div>
 
     <script>
@@ -301,123 +163,58 @@
         let transactions = [];
         let isConnected = false;
         
-        const inputUrl = document.getElementById('input-supabase-url');
-        const inputKey = document.getElementById('input-supabase-key');
-        const settingsForm = document.getElementById('settings-form');
-        const headerStatus = document.getElementById('header-status');
-        const setupWarning = document.getElementById('setup-warning');
-        
-        const addForm = document.getElementById('add-form');
-        const inputAmount = document.getElementById('input-amount');
-        const inputCategory = document.getElementById('input-category');
-        const inputDesc = document.getElementById('input-desc');
-        const inputDate = document.getElementById('input-date');
-        
-        inputDate.value = new Date().toISOString().split('T')[0];
-
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            const isSuccess = type === 'success';
-            const bgColor = isSuccess ? 'bg-slate-800' : 'bg-rose-600';
-            const icon = isSuccess ? 'ph-check-circle text-emerald-400' : 'ph-warning-circle text-white';
-            
-            toast.className = `${bgColor} text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 text-sm font-medium toast-animate pointer-events-auto`;
-            toast.innerHTML = `<i class="ph-fill ${icon} text-lg"></i> ${message}`;
-            container.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translate(-50%, -20px)';
-                toast.style.transition = 'all 0.3s ease';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        let confirmAction = null;
-        const confirmModal = document.getElementById('confirm-modal');
-        document.getElementById('modal-cancel').addEventListener('click', () => {
-            confirmModal.classList.add('hidden');
-            confirmModal.classList.remove('flex');
-        });
-        document.getElementById('modal-confirm').addEventListener('click', () => {
-            if(confirmAction) confirmAction();
-            confirmModal.classList.add('hidden');
-            confirmModal.classList.remove('flex');
-        });
-
-        function showConfirm(action) {
-            confirmAction = action;
-            confirmModal.classList.remove('hidden');
-            confirmModal.classList.add('flex');
-        }
+        document.getElementById('input-date').value = new Date().toISOString().split('T')[0];
 
         function switchTab(tabId) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
             document.getElementById(`view-${tabId}`).classList.add('active');
             if(tabId !== 'add') document.getElementById(`tab-${tabId}`).classList.add('active');
-            if(tabId === 'dashboard' || tabId === 'history') renderUI();
         }
 
         async function initDatabase() {
             const url = localStorage.getItem('sb_url');
             const key = localStorage.getItem('sb_key');
-
             if (url && key) {
-                inputUrl.value = url;
-                inputKey.value = key;
+                document.getElementById('input-supabase-url').value = url;
+                document.getElementById('input-supabase-key').value = key;
                 try {
                     supabaseClient = window.supabase.createClient(url, key);
                     isConnected = true;
-                    setupWarning.classList.add('hidden');
-                    headerStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span> Online';
+                    document.getElementById('header-status').innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Online';
                     await fetchData();
                 } catch (err) {
                     isConnected = false;
-                    headerStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-slate-400"></span> Offline';
                 }
-            } else {
-                isConnected = false;
-                setupWarning.classList.remove('hidden');
-                headerStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-slate-400"></span> Offline';
             }
         }
 
-        settingsForm.addEventListener('submit', async (e) => {
+        document.getElementById('settings-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const url = inputUrl.value.trim();
-            const key = inputKey.value.trim();
-
-            if(!url || !key) return showToast('URL dan Key wajib diisi!', 'error');
-
-            const btnTxt = document.getElementById('txt-save-settings');
-            const loader = document.getElementById('loader-save-settings');
-            btnTxt.classList.add('hidden'); loader.classList.remove('hidden');
+            const url = document.getElementById('input-supabase-url').value.trim();
+            const key = document.getElementById('input-supabase-key').value.trim();
+            if(!url || !key) return;
 
             try {
                 const testClient = window.supabase.createClient(url, key);
                 const { error } = await testClient.from('transactions').select('id').limit(1);
-                if (error) throw error;
-
+                if (error) {
+                    // ALERT UNTUK MENANGKAP ERROR KONEKSI AWAL
+                    alert("🚨 ERROR KONEKSI SUPABASE:\n\n" + error.message);
+                    throw error;
+                }
                 localStorage.setItem('sb_url', url);
                 localStorage.setItem('sb_key', key);
-                showToast('Database berhasil dihubungkan!');
+                alert("Database berhasil dihubungkan!");
                 await initDatabase();
                 switchTab('dashboard');
             } catch (err) {
-                showToast('Koneksi gagal. Periksa URL, Key, atau Tabel.', 'error');
-            } finally {
-                btnTxt.classList.remove('hidden'); loader.classList.add('hidden');
+                console.error(err);
             }
         });
 
         async function fetchData() {
             if(!isConnected) return;
-            document.getElementById('history-loading').classList.remove('hidden');
-            document.getElementById('history-loading').classList.add('flex');
-            document.getElementById('history-empty').classList.add('hidden');
-            
             try {
                 const { data, error } = await supabaseClient
                     .from('transactions')
@@ -425,35 +222,27 @@
                     .order('date', { ascending: false })
                     .order('id', { ascending: false });
 
-                if (error) throw error;
+                if (error) {
+                    // ALERT UNTUK MENANGKAP ERROR SAAT MENGAMBIL DATA RIWAYAT
+                    alert("🚨 ERROR TARIK DATA DARI SUPABASE:\n\n" + error.message + "\n\n(Tolong fotokan ini ke saya!)");
+                    throw error;
+                }
                 transactions = data || [];
                 renderUI();
             } catch (err) {
                 console.error(err);
-                showToast('Gagal memuat data.', 'error');
-            } finally {
-                document.getElementById('history-loading').classList.add('hidden');
-                document.getElementById('history-loading').classList.remove('flex');
             }
         }
 
-        addForm.addEventListener('submit', async (e) => {
+        document.getElementById('add-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            if(!isConnected) {
-                showToast('Harap hubungkan database di Pengaturan dulu!', 'error');
-                return switchTab('settings');
-            }
+            if(!isConnected) return alert('Hubungkan database dulu!');
 
             const type = document.querySelector('input[name="tx-type"]:checked').value;
-            const amount = parseFloat(inputAmount.value);
-            const category = inputCategory.value;
-            const date = inputDate.value;
-            const desc = inputDesc.value;
-
-            const btnSubmit = document.getElementById('btn-submit-tx');
-            const btnTxt = document.getElementById('txt-submit-tx');
-            const loader = document.getElementById('loader-submit-tx');
-            btnSubmit.disabled = true; btnTxt.classList.add('hidden'); loader.classList.remove('hidden');
+            const amount = parseFloat(document.getElementById('input-amount').value);
+            const category = document.getElementById('input-category').value;
+            const date = document.getElementById('input-date').value;
+            const desc = document.getElementById('input-desc').value;
 
             try {
                 const { data, error } = await supabaseClient
@@ -461,58 +250,27 @@
                     .insert([{ type, amount, category, date, description: desc }])
                     .select();
 
-                if(error) throw error;
+                if(error) {
+                    alert("🚨 ERROR SIMPAN DATA:\n\n" + error.message);
+                    throw error;
+                }
                 transactions.unshift(data[0]);
-                transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
-                showToast('Transaksi berhasil disimpan!');
-                
-                inputAmount.value = ''; inputDesc.value = '';
+                document.getElementById('input-amount').value = ''; 
+                document.getElementById('input-desc').value = '';
                 renderUI();
                 switchTab('dashboard');
             } catch (err) {
-                showToast('Gagal menyimpan transaksi.', 'error');
-            } finally {
-                btnSubmit.disabled = false; btnTxt.classList.remove('hidden'); loader.classList.add('hidden');
+                console.error(err);
             }
         });
 
-        async function deleteTransaction(id) {
-            if(!isConnected) return;
+        async function deleteTx(id) {
             try {
-                const { error } = await supabaseClient.from('transactions').delete().eq('id', id);
-                if (error) throw error;
+                await supabaseClient.from('transactions').delete().eq('id', id);
                 transactions = transactions.filter(t => t.id !== id);
                 renderUI();
-                showToast('Transaksi dihapus.');
-            } catch (err) { showToast('Gagal menghapus.', 'error'); }
+            } catch (err) { console.error(err); }
         }
-
-        function triggerDelete(id) {
-            showConfirm(() => deleteTransaction(id));
-        }
-
-        const formatIDR = (num) => {
-            const safeNum = Number(num) || 0;
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(safeNum);
-        };
-
-        const formatDate = (dateString) => {
-            if (!dateString) return '-';
-            return new Date(dateString).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
-        };
-
-        const getCategoryIcon = (cat, type) => {
-            if(type === 'income') return { icon: 'ph-trend-up', bg: 'bg-emerald-100', text: 'text-emerald-600' };
-            const map = {
-                'Makanan': { icon: 'ph-hamburger', bg: 'bg-orange-100', text: 'text-orange-600' },
-                'Transport': { icon: 'ph-car', bg: 'bg-blue-100', text: 'text-blue-600' },
-                'Belanja': { icon: 'ph-shopping-bag', bg: 'bg-purple-100', text: 'text-purple-600' },
-                'Hiburan': { icon: 'ph-game-controller', bg: 'bg-pink-100', text: 'text-pink-600' },
-                'Gaji': { icon: 'ph-money', bg: 'bg-emerald-100', text: 'text-emerald-600' },
-                'Lainnya': { icon: 'ph-dots-three', bg: 'bg-slate-200', text: 'text-slate-600' }
-            };
-            return map[cat] || map['Lainnya'];
-        };
 
         function renderUI() {
             try {
@@ -523,76 +281,55 @@
                     if (tx.type === 'expense') expense += nominal;
                 });
 
-                document.getElementById('dash-balance').innerText = formatIDR(income - expense);
-                document.getElementById('dash-income').innerText = formatIDR(income);
-                document.getElementById('dash-expense').innerText = formatIDR(expense);
+                document.getElementById('dash-balance').innerText = "Rp " + (income - expense).toLocaleString('id-ID');
+                document.getElementById('dash-income').innerText = "Rp " + income.toLocaleString('id-ID');
+                document.getElementById('dash-expense').innerText = "Rp " + expense.toLocaleString('id-ID');
 
                 const historyList = document.getElementById('history-list');
                 const dashRecent = document.getElementById('dash-recent-list');
-                const emptyHistory = document.getElementById('history-empty');
-                const emptyDash = document.getElementById('dash-empty');
                 
-                document.getElementById('history-count').innerText = `${transactions.length} Data`;
                 historyList.innerHTML = ''; dashRecent.innerHTML = '';
 
-                if (transactions.length === 0) {
-                    emptyHistory.classList.remove('hidden'); emptyHistory.classList.add('flex');
-                    emptyDash.style.display = 'block';
-                } else {
-                    emptyHistory.classList.add('hidden'); emptyHistory.classList.remove('flex');
-                    emptyDash.style.display = 'none';
+                transactions.forEach((tx, index) => {
+                    const sign = tx.type === 'income' ? '+' : '-';
+                    const amountClass = tx.type === 'income' ? 'text-emerald-600' : 'text-slate-800';
+                    const safeAmount = Number(tx.amount) || 0;
+                    const formattedText = safeAmount.toLocaleString('id-ID');
+                    
+                    const itemHTML = `
+                        <div class="flex items-center gap-4 py-4 px-5">
+                            <div class="flex-grow min-w-0">
+                                <p class="text-sm font-bold text-slate-800 truncate">${tx.description || '-'}</p>
+                                <p class="text-[11px] text-slate-400">${tx.date}</p>
+                            </div>
+                            <div class="text-right shrink-0">
+                                <p class="text-sm font-bold ${amountClass}">${sign}Rp ${formattedText}</p>
+                                <button onclick="deleteTx(${tx.id})" class="text-xs text-rose-500 mt-1">Hapus</button>
+                            </div>
+                        </div>
+                    `;
 
-                    transactions.forEach((tx, index) => {
-                        const style = getCategoryIcon(tx.category || 'Lainnya', tx.type);
-                        const sign = tx.type === 'income' ? '+' : '-';
-                        const amountClass = tx.type === 'income' ? 'text-emerald-600' : 'text-slate-800';
-                        const safeAmount = Number(tx.amount) || 0;
-                        const formattedText = formatIDR(safeAmount).replace(/Rp/g, '').trim();
-                        
-                        const itemHTML = `
-                            <div class="flex items-center gap-4 py-4 px-5">
-                                <div class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">
-                                    <i class="ph-fill ${style.icon} text-2xl"></i>
+                    const li = document.createElement('li');
+                    li.innerHTML = itemHTML;
+                    historyList.appendChild(li);
+
+                    if (index < 3) {
+                        const div = document.createElement('div');
+                        div.className = "bg-white p-3 rounded-2xl shadow-sm border border-slate-100";
+                        div.innerHTML = `
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-xs font-bold text-slate-800">${tx.description || '-'}</p>
                                 </div>
-                                <div class="flex-grow min-w-0">
-                                    <p class="text-sm font-bold text-slate-800 truncate">${tx.description || '-'}</p>
-                                    <div class="flex items-center gap-2 mt-0.5">
-                                        <span class="text-[10px] font-medium bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded">${tx.category || 'Lainnya'}</span>
-                                        <span class="text-[11px] text-slate-400">${formatDate(tx.date)}</span>
-                                    </div>
-                                </div>
-                                <div class="text-right shrink-0">
-                                    <p class="text-sm font-bold ${amountClass}">${sign}${formattedText}</p>
-                                    <button onclick="triggerDelete(${tx.id})" class="mt-1 text-xs text-rose-500 hover:underline">Hapus</button>
-                                </div>
+                                <p class="text-xs font-bold ${amountClass}">${sign}Rp ${formattedText}</p>
                             </div>
                         `;
-
-                        const li = document.createElement('li');
-                        li.className = "group hover:bg-slate-50 transition-colors";
-                        li.innerHTML = itemHTML;
-                        historyList.appendChild(li);
-
-                        if (index < 3) {
-                            const div = document.createElement('div');
-                            div.className = "bg-white p-3 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-3";
-                            div.innerHTML = `
-                                <div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">
-                                    <i class="ph-fill ${style.icon} text-xl"></i>
-                                </div>
-                                <div class="flex-grow min-w-0">
-                                    <p class="text-xs font-bold text-slate-800 truncate">${tx.description || '-'}</p>
-                                    <p class="text-[10px] text-slate-400">${formatDate(tx.date)}</p>
-                                </div>
-                                <div class="text-right shrink-0">
-                                    <p class="text-xs font-bold ${amountClass}">${sign}${formattedText}</p>
-                                </div>
-                            `;
-                            dashRecent.appendChild(div);
-                        }
-                    });
-                }
+                        dashRecent.appendChild(div);
+                    }
+                });
             } catch (err) {
+                // ALERT JIKA ERROR SAAT MENGGAMBAR TAMPILAN
+                alert("🚨 ERROR TAMPILAN JAVASCRIPT:\n\n" + err.message + "\n\n(Tolong fotokan ini ke saya!)");
                 console.error("Render Error:", err);
             }
         }
