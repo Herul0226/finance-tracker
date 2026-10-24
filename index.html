@@ -664,7 +664,8 @@
         // UI RENDERING LOGIC
         // ==========================================
         const formatIDR = (num) => {
-            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
+        // Tambahkan Number() agar teks pasti diubah jadi angka dulu
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(Number(num));
         };
 
         const formatDate = (dateString) => {
@@ -691,10 +692,11 @@
             // 1. Calculate Totals
             let income = 0;
             let expense = 0;
-
+        
             transactions.forEach(tx => {
-                if (tx.type === 'income') income += tx.amount;
-                if (tx.type === 'expense') expense += tx.amount;
+                const nominal = Number(tx.amount); // Konversi teks jadi angka murni
+                if (tx.type === 'income') income += nominal;
+                if (tx.type === 'expense') expense += nominal;
             });
 
             const balance = income - expense;
