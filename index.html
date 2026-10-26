@@ -4,15 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Keuanganku - Dashboard Finansial</title>
-    <!-- Tailwind CSS with Custom Config -->
-    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- ==========================================
+         SISTEM OFFLINE-FIRST (FALLBACK LOKAL)
+         Sistem akan mencoba meload file dari folder lokal Anda.
+         Jika belum ada (error), otomatis beralih meminjam dari internet.
+         Gunakan metode 'Ctrl+S -> Webpage Complete' untuk mendownload asetnya.
+    =========================================== -->
+
+    <!-- Tailwind CSS (Offline / Online Fallback) -->
+    <script src="assets/tailwind.js" onerror="this.onerror=null; this.src='https://cdn.tailwindcss.com';"></script>
     <script>
-        tailwind.config = { darkMode: 'class', theme: { extend: {} } }
+        // Memastikan konfigurasi dimuat setelah file JS Tailwind berhasil diakses
+        window.addEventListener('DOMContentLoaded', () => {
+            if (typeof tailwind !== 'undefined') {
+                tailwind.config = { darkMode: 'class', theme: { extend: {} } }
+            }
+        });
     </script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Phosphor Icons -->
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Google Fonts: Inter (Offline / Online Fallback) -->
+    <link href="assets/inter.css" rel="stylesheet" onerror="this.onerror=null; this.href='https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap';">
+
+    <!-- Phosphor Icons (Offline / Online Fallback) -->
+    <link href="assets/phosphor.css" rel="stylesheet" onerror="this.onerror=null; this.href='https://unpkg.com/@phosphor-icons/web';">
 
     <style>
         /* ==================== GLOBAL STYLES ==================== */
@@ -832,7 +847,6 @@
 
         document.getElementById('add-bill-form').addEventListener('submit', (e) => { e.preventDefault(); const amount = Utils.parseRawCurrency(document.getElementById('bill-amount').value); if(amount <= 0) return AppUI.showToast("Nominal tidak valid", 'error'); BillManager.addBill(document.getElementById('bill-name').value, amount, document.getElementById('bill-category-value').value, document.getElementById('bill-date').value); document.getElementById('add-bill-form').reset(); });
         
-        // PENGELOLA EVENT KLIK BAYAR TAGIHAN
         document.getElementById('btn-confirm-pay').addEventListener('click', BillManager.confirmPayBill);
 
         TransactionManager.renderAll(); GoalManager.render(); BillManager.render(); BillManager.checkDueBills(); AppUI.switchTab('dashboard');
