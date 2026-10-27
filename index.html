@@ -13,6 +13,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
+        /* ==================== NATIVE APP FEEL ==================== */
+        * {
+            -webkit-tap-highlight-color: transparent; /* Menghilangkan efek kotak biru/abu saat tombol ditap di HP */
+            -webkit-touch-callout: none; /* Mencegah munculnya pop-up menu saat layar ditahan (long-press) */
+            -webkit-user-select: none; /* Mencegah seleksi teks (Safari) */
+            -moz-user-select: none; /* Mencegah seleksi teks (Firefox) */
+            -ms-user-select: none; /* Mencegah seleksi teks (Edge) */
+            user-select: none; /* Mencegah seleksi teks standar */
+            -webkit-user-drag: none; /* Mencegah elemen bisa di-drag */
+        }
+
+        /* KHUSUS INPUT: Tetap izinkan user untuk menyeleksi dan mengetik teks */
+        input, textarea {
+            -webkit-user-select: auto;
+            -moz-user-select: auto;
+            -ms-user-select: auto;
+            user-select: auto;
+        }
+
         /* ==================== GLOBAL STYLES ==================== */
         html, body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
 
