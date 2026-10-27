@@ -730,144 +730,22 @@
         }
     };
 
-    /** MULTI-GOAL MANAGER */
-    const GoalManager = {
-        saveState: () => localStorage.setItem('keuanganku_goals', JSON.stringify(AppState.savingsGoals)),
-        render: () => {
-            const listEl = document.getElementById('goals-list-container'); const summaryEl = document.getElementById('dash-goals-summary');
-            listEl.innerHTML = ''; summaryEl.innerHTML = ''; let totalSaved = 0;
-
-            if (AppState.savingsGoals.length === 0) {
-                summaryEl.innerHTML = `<div class="flex flex-col items-center justify-center py-6 border border-slate-100 dark:border-slate-700 border-dashed rounded-[1.5rem] bg-slate-50/50 dark:bg-slate-900/50 flex-grow"><p class="text-xs text-slate-400 font-medium">Belum ada target aktif</p></div>`;
-                listEl.innerHTML = `<div class="col-span-full text-center py-16 bg-slate-50/50 dark:bg-slate-900/50 rounded-[2rem] border border-slate-100 dark:border-slate-700 border-dashed flex flex-col items-center justify-center">
-                    <h4 class="font-bold text-slate-700 dark:text-white mb-1">Mulai Bermimpi</h4><p class="text-xs text-slate-500">Buat target menabung pertama Anda.</p></div>`;
-            } else {
-                AppState.savingsGoals.forEach((goal, idx) => {
-                    totalSaved += goal.saved; let persen = Math.min((goal.saved / goal.target) * 100, 100);
-
-                    if(idx < 2) summaryEl.innerHTML += `
-                        <div class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/50 min-w-0">
-                            <div class="min-w-0 flex-grow pr-2"><p class="text-sm font-bold text-slate-800 dark:text-white truncate">${goal.name}</p><p class="text-[10px] font-bold text-slate-400 uppercase truncate">${Math.round(persen)}% Tercapai</p></div>
-                            <span class="text-xs font-bold text-amber-500 bg-amber-100 dark:bg-amber-900/30 px-3 py-1.5 rounded-lg shrink-0">${Utils.formatIDR(goal.saved)}</span>
-                        </div>`;
-
-                    listEl.innerHTML += `<div class="bg-white dark:bg-slate-800 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-[0_8px_30px_rgba(0,0,0,0.04)] flex flex-col justify-between h-full">
-                        <div>
-                            <div class="flex justify-between items-start mb-4 gap-3">
-                                <h3 class="font-bold text-slate-800 dark:text-white text-lg leading-tight truncate flex-grow">${goal.name}</h3>
-                                <button onclick="GoalManager.deleteGoal(${goal.id})" class="shrink-0 w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-rose-500 transition-colors">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                </button>
-                            </div>
-                            <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2.5 mb-3 overflow-hidden"><div class="bg-amber-500 h-2.5 rounded-full transition-all duration-500" style="width: ${persen}%"></div></div>
-                            <div class="flex justify-between items-center text-[10px] md:text-xs font-bold uppercase tracking-wide gap-2"><span class="text-amber-500 text-sm truncate">${Utils.formatIDR(goal.saved)}</span><span class="text-slate-400 shrink-0">/ ${Utils.formatIDR(goal.target)}</span></div>
-                        </div>
-                        <button onclick="GoalManager.openAddModal(${goal.id}, '${goal.name}')" class="w-full bg-amber-50 dark:bg-amber-900/20 text-amber-600 font-bold rounded-xl py-3.5 mt-5 hover:bg-amber-100 transition-colors text-sm">Isi Tabungan</button>
-                    </div>`;
-                });
-            }
-            document.getElementById('goals-total-saved').innerText = Utils.formatIDR(totalSaved);
-        },
-        addGoal: (name, target) => { AppState.savingsGoals.push({ id: Date.now(), name, target, saved: 0 }); GoalManager.saveState(); GoalManager.render(); AppUI.showToast("Target dibuat!"); },
-        deleteGoal: (id) => {
-            AppUI.showConfirm("Hapus Target?", "Uang yang dialokasikan akan dihapus dari sistem.", () => {
-                AppState.savingsGoals = AppState.savingsGoals.filter(g => g.id !== id); GoalManager.saveState(); GoalManager.render();
-            });
-        },
-        openAddModal: (id, name) => { document.getElementById('input-savings-id').value = id; document.getElementById('modal-add-savings-title').innerText = `Isi Tabungan: ${name}`; AppUI.openModal('modal-add-savings'); },
-        addSavings: (id, amount, source, wallet) => { 
-            const goal = AppState.savingsGoals.find(g => g.id == id); 
-            if(goal) { 
-                goal.saved += amount; 
-                GoalManager.saveState(); 
-                GoalManager.render(); 
-                
-                if (source === 'balance') {
-                    const txObj = { 
-                        type: 'expense', 
-                        wallet: wallet, 
-                        amount: amount, 
-                        category: 'Lainnya', 
-                        date: Utils.getTodayDateStr(), 
-                        description: `[Tabungan] ${goal.name}` 
-                    };
-                    LocalDB.addTransaction(txObj); 
-                }
-
-                AppUI.showToast(goal.saved >= goal.target ? "Target tercapai! 🎉" : "Uang ditabung!"); 
-            } 
-        }
-    };
-
-    /** BILLS MANAGER */
-    const BillManager = {
-        saveState: () => localStorage.setItem('keuanganku_bills', JSON.stringify(AppState.recurringBills)),
-        addBill: (name, amount, category, dateNum) => { AppState.recurringBills.push({ id: Date.now().toString(), name, amount, category, date: parseInt(dateNum), lastPaidMonth: null }); BillManager.saveState(); BillManager.render(); BillManager.checkDueBills(); AppUI.showToast("Tagihan ditambahkan."); AppUI.closeModal('modal-add-bill'); },
-        
-        // Fitur Hapus Tagihan Tanpa Bayar
-        deleteBill: (id) => {
-            AppUI.showConfirm("Hapus Tagihan?", "Tagihan rutin ini akan dihapus tanpa harus dibayar.", () => {
-                AppState.recurringBills = AppState.recurringBills.filter(b => b.id !== id); 
-                BillManager.saveState(); 
-                BillManager.render(); 
-                BillManager.checkDueBills(); 
-                AppUI.showToast("Tagihan dihapus.");
-            });
-        },
-
-        checkDueBills: () => {
-            const currentMonthStr = Utils.getCurrentMonthStr(); const currentDay = new Date().getDate();
-            AppState.dueBillsCache = AppState.recurringBills.filter(b => (currentDay >= b.date) && (b.lastPaidMonth !== currentMonthStr));
-            const banner = document.getElementById('reminder-banner');
-            if (AppState.dueBillsCache.length > 0) { document.getElementById('reminder-text').innerText = `Ada ${AppState.dueBillsCache.length} tagihan yang butuh perhatian Anda.`; banner.classList.remove('hidden'); banner.classList.add('flex'); } else { banner.classList.add('hidden'); banner.classList.remove('flex'); }
-        },
-        openPayModal: (id) => { const bill = AppState.recurringBills.find(b => b.id === id); if(!bill) return; AppState.billToPay = bill; document.getElementById('pay-bill-name').innerText = `Bayar ${bill.name}?`; document.getElementById('pay-bill-amount').innerText = Utils.formatIDR(bill.amount); AppUI.openModal('modal-pay-bill'); },
-        confirmPayBill: () => {
-            const bill = AppState.billToPay; if(!bill) return;
-            const chosenWallet = document.querySelector('input[name="pay-bill-wallet"]:checked').value;
-            const txObj = { type: 'expense', wallet: chosenWallet, amount: bill.amount, category: bill.category, date: Utils.getTodayDateStr(), description: `[Otomatis] Tagihan ${bill.name}` };
-            LocalDB.addTransaction(txObj);
-            const billRef = AppState.recurringBills.find(b => b.id === bill.id);
-            if(billRef) billRef.lastPaidMonth = Utils.getCurrentMonthStr();
-            BillManager.saveState(); BillManager.render(); BillManager.checkDueBills(); AppUI.closeModal('modal-pay-bill'); AppUI.showToast(`${bill.name} Lunas!`);
-        },
-        render: () => {
-            const container = document.getElementById('bills-list-container'); container.innerHTML = '';
-            if (AppState.recurringBills.length === 0) { container.innerHTML = `<div class="text-center py-16 bg-slate-50/50 dark:bg-slate-900/50 rounded-[2rem] border border-slate-100 dark:border-slate-700 border-dashed flex flex-col items-center justify-center"><p class="text-sm font-medium text-slate-500">Belum ada tagihan rutin diatur.</p></div>`; return; }
-            const currentMonthStr = Utils.getCurrentMonthStr(); const currentDay = new Date().getDate();
-
-            AppState.recurringBills.forEach(bill => {
-                const isPaidThisMonth = bill.lastPaidMonth === currentMonthStr; const isDue = currentDay >= bill.date;
-                let statusHtml, btnHtml;
-                if (isPaidThisMonth) { 
-                    statusHtml = `<span class="text-[10px] text-emerald-600 bg-emerald-100 dark:bg-emerald-900/30 px-2.5 py-1 rounded font-bold uppercase tracking-wider">Lunas Bulan Ini</span>`; 
-                    btnHtml = `<button onclick="BillManager.deleteBill('${bill.id}')" title="Hapus Tagihan" class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-rose-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>`; 
-                } else if (isDue) { 
-                    statusHtml = `<span class="text-[10px] text-rose-500 bg-rose-100 dark:bg-rose-900/30 px-2.5 py-1 rounded font-bold uppercase tracking-wider">Bayar Sekarang</span>`; 
-                    btnHtml = `<div class="flex gap-2"><button onclick="BillManager.openPayModal('${bill.id}')" class="bg-rose-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md hover:bg-rose-600 transition-colors">Bayar</button><button onclick="BillManager.deleteBill('${bill.id}')" title="Hapus Tagihan" class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-rose-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div>`; 
-                } else { 
-                    statusHtml = `<span class="text-[10px] text-slate-500 bg-slate-100 dark:bg-slate-700 px-2.5 py-1 rounded font-bold uppercase tracking-wider">Tgl ${bill.date}</span>`; 
-                    btnHtml = `<button onclick="BillManager.deleteBill('${bill.id}')" title="Hapus Tagihan" class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-rose-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>`; 
-                }
-
-                const style = Utils.getCategoryStyle(bill.category, 'expense');
-                container.innerHTML += `<div class="flex items-center justify-between p-5 md:p-6 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-[0_4px_20px_rgba(0,0,0,0.03)] rounded-[2rem]">
-                    <div class="flex items-center gap-4 flex-grow min-w-0">
-                        <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">${style.svg}</div>
-                        <div class="min-w-0 flex-grow">
-                            <h4 class="font-bold text-sm md:text-base text-slate-800 dark:text-white truncate">${bill.name}</h4>
-                            <p class="text-xs text-slate-500 font-medium mt-0.5 truncate"><span class="font-bold text-slate-700 dark:text-slate-300 text-sm md:text-base">${Utils.formatIDR(bill.amount)}</span></p>
-                            <div class="mt-1.5">${statusHtml}</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-2 shrink-0 ml-3">${btnHtml}</div>
-                </div>`;
-            });
-        }
-    };
-
     /** TRANSACTIONS MANAGER */
     const TransactionManager = {
+        // FUNGSI BARU: Mendapatkan info saldo tunai dan rekening saat ini secara langsung
+        getBalances: () => {
+            let cash = 0, bank = 0;
+            AppState.transactions.forEach(tx => {
+                const nominal = Number(tx.amount) || 0;
+                if (tx.type === 'income') {
+                    if (tx.wallet === 'cash') cash += nominal; else bank += nominal;
+                } else if (tx.type === 'expense') {
+                    if (tx.wallet === 'cash') cash -= nominal; else bank -= nominal;
+                }
+            });
+            return { cash, bank, total: cash + bank };
+        },
+
         changePage: (delta) => {
             const totalPages = Math.ceil(AppState.transactions.length / AppState.itemsPerPage) || 1;
             AppState.currentPage += delta; if(AppState.currentPage < 1) AppState.currentPage = 1; if(AppState.currentPage > totalPages) AppState.currentPage = totalPages;
@@ -876,23 +754,14 @@
         renderAll: () => { TransactionManager.renderDashboard(); TransactionManager.renderHistory(); TransactionManager.renderRecap(); },
 
         renderDashboard: () => {
-            let totalIncome = 0, totalExpense = 0, currentMonthIncome = 0, currentMonthExpense = 0; 
-            let cashBalance = 0, bankBalance = 0;
+            let currentMonthIncome = 0, currentMonthExpense = 0; 
             const categoryData = {}; const currentMonthStr = Utils.getCurrentMonthStr();
+
+            // Gunakan helper balance yang baru dibuat
+            const balances = TransactionManager.getBalances();
 
             AppState.transactions.forEach(tx => {
                 const nominal = Number(tx.amount) || 0; 
-                const wallet = tx.wallet || 'cash';
-
-                // Hitung Saldo Terpisah Cash & Rekening secara global
-                if (tx.type === 'income') {
-                    if (wallet === 'cash') cashBalance += nominal; else bankBalance += nominal;
-                    totalIncome += nominal;
-                } else if (tx.type === 'expense') {
-                    if (wallet === 'cash') cashBalance -= nominal; else bankBalance -= nominal;
-                    totalExpense += nominal;
-                }
-
                 if(tx.date && tx.date.substring(0, 7) === currentMonthStr) {
                     if (tx.type === 'income') currentMonthIncome += nominal;
                     if (tx.type === 'expense') { 
@@ -903,10 +772,9 @@
                 }
             });
 
-            const totalAvailable = cashBalance + bankBalance;
-            document.getElementById('dash-balance').innerText = Utils.formatIDR(totalAvailable);
-            document.getElementById('dash-cash-balance').innerText = Utils.formatIDR(cashBalance);
-            document.getElementById('dash-bank-balance').innerText = Utils.formatIDR(bankBalance);
+            document.getElementById('dash-balance').innerText = Utils.formatIDR(balances.total);
+            document.getElementById('dash-cash-balance').innerText = Utils.formatIDR(balances.cash);
+            document.getElementById('dash-bank-balance').innerText = Utils.formatIDR(balances.bank);
             document.getElementById('dash-income').innerText = Utils.formatIDR(currentMonthIncome); 
             document.getElementById('dash-expense').innerText = Utils.formatIDR(currentMonthExpense);
 
@@ -994,6 +862,161 @@
         }
     };
 
+    /** MULTI-GOAL MANAGER */
+    const GoalManager = {
+        saveState: () => localStorage.setItem('keuanganku_goals', JSON.stringify(AppState.savingsGoals)),
+        render: () => {
+            const listEl = document.getElementById('goals-list-container'); const summaryEl = document.getElementById('dash-goals-summary');
+            listEl.innerHTML = ''; summaryEl.innerHTML = ''; let totalSaved = 0;
+
+            if (AppState.savingsGoals.length === 0) {
+                summaryEl.innerHTML = `<div class="flex flex-col items-center justify-center py-6 border border-slate-100 dark:border-slate-700 border-dashed rounded-[1.5rem] bg-slate-50/50 dark:bg-slate-900/50 flex-grow"><p class="text-xs text-slate-400 font-medium">Belum ada target aktif</p></div>`;
+                listEl.innerHTML = `<div class="col-span-full text-center py-16 bg-slate-50/50 dark:bg-slate-900/50 rounded-[2rem] border border-slate-100 dark:border-slate-700 border-dashed flex flex-col items-center justify-center">
+                    <h4 class="font-bold text-slate-700 dark:text-white mb-1">Mulai Bermimpi</h4><p class="text-xs text-slate-500">Buat target menabung pertama Anda.</p></div>`;
+            } else {
+                AppState.savingsGoals.forEach((goal, idx) => {
+                    totalSaved += goal.saved; let persen = Math.min((goal.saved / goal.target) * 100, 100);
+
+                    if(idx < 2) summaryEl.innerHTML += `
+                        <div class="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/50 min-w-0">
+                            <div class="min-w-0 flex-grow pr-2"><p class="text-sm font-bold text-slate-800 dark:text-white truncate">${goal.name}</p><p class="text-[10px] font-bold text-slate-400 uppercase truncate">${Math.round(persen)}% Tercapai</p></div>
+                            <span class="text-xs font-bold text-amber-500 bg-amber-100 dark:bg-amber-900/30 px-3 py-1.5 rounded-lg shrink-0">${Utils.formatIDR(goal.saved)}</span>
+                        </div>`;
+
+                    listEl.innerHTML += `<div class="bg-white dark:bg-slate-800 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-[0_8px_30px_rgba(0,0,0,0.04)] flex flex-col justify-between h-full">
+                        <div>
+                            <div class="flex justify-between items-start mb-4 gap-3">
+                                <h3 class="font-bold text-slate-800 dark:text-white text-lg leading-tight truncate flex-grow">${goal.name}</h3>
+                                <button onclick="GoalManager.deleteGoal(${goal.id})" class="shrink-0 w-8 h-8 rounded-full bg-slate-50 dark:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-rose-500 transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                </button>
+                            </div>
+                            <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2.5 mb-3 overflow-hidden"><div class="bg-amber-500 h-2.5 rounded-full transition-all duration-500" style="width: ${persen}%"></div></div>
+                            <div class="flex justify-between items-center text-[10px] md:text-xs font-bold uppercase tracking-wide gap-2"><span class="text-amber-500 text-sm truncate">${Utils.formatIDR(goal.saved)}</span><span class="text-slate-400 shrink-0">/ ${Utils.formatIDR(goal.target)}</span></div>
+                        </div>
+                        <button onclick="GoalManager.openAddModal(${goal.id}, '${goal.name}')" class="w-full bg-amber-50 dark:bg-amber-900/20 text-amber-600 font-bold rounded-xl py-3.5 mt-5 hover:bg-amber-100 transition-colors text-sm">Isi Tabungan</button>
+                    </div>`;
+                });
+            }
+            document.getElementById('goals-total-saved').innerText = Utils.formatIDR(totalSaved);
+        },
+        addGoal: (name, target) => { AppState.savingsGoals.push({ id: Date.now(), name, target, saved: 0 }); GoalManager.saveState(); GoalManager.render(); AppUI.showToast("Target dibuat!"); },
+        deleteGoal: (id) => {
+            AppUI.showConfirm("Hapus Target?", "Uang yang dialokasikan akan dihapus dari sistem.", () => {
+                AppState.savingsGoals = AppState.savingsGoals.filter(g => g.id !== id); GoalManager.saveState(); GoalManager.render();
+            });
+        },
+        openAddModal: (id, name) => { document.getElementById('input-savings-id').value = id; document.getElementById('modal-add-savings-title').innerText = `Isi Tabungan: ${name}`; AppUI.openModal('modal-add-savings'); },
+        addSavings: (id, amount, source, wallet) => { 
+            const goal = AppState.savingsGoals.find(g => g.id == id); 
+            if(goal) { 
+                
+                // VALIDASI: Cek saldo sebelum memotong untuk menabung
+                if (source === 'balance') {
+                    const balances = TransactionManager.getBalances();
+                    const currentBal = wallet === 'cash' ? balances.cash : balances.bank;
+                    
+                    if (amount > currentBal) {
+                        return AppUI.showToast(`Saldo ${wallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup! Sisa: ${Utils.formatIDR(currentBal)}`, "error");
+                    }
+                    
+                    const txObj = { 
+                        type: 'expense', 
+                        wallet: wallet, 
+                        amount: amount, 
+                        category: 'Lainnya', 
+                        date: Utils.getTodayDateStr(), 
+                        description: `[Tabungan] ${goal.name}` 
+                    };
+                    LocalDB.addTransaction(txObj); 
+                }
+
+                // Jika saldo cukup atau pakai uang luar, tabungan bertambah
+                goal.saved += amount; 
+                GoalManager.saveState(); 
+                GoalManager.render(); 
+                AppUI.closeModal('modal-add-savings');
+                AppUI.showToast(goal.saved >= goal.target ? "Target tercapai! 🎉" : "Uang ditabung!"); 
+            } 
+        }
+    };
+
+    /** BILLS MANAGER */
+    const BillManager = {
+        saveState: () => localStorage.setItem('keuanganku_bills', JSON.stringify(AppState.recurringBills)),
+        addBill: (name, amount, category, dateNum) => { AppState.recurringBills.push({ id: Date.now().toString(), name, amount, category, date: parseInt(dateNum), lastPaidMonth: null }); BillManager.saveState(); BillManager.render(); BillManager.checkDueBills(); AppUI.showToast("Tagihan ditambahkan."); AppUI.closeModal('modal-add-bill'); },
+        
+        deleteBill: (id) => {
+            AppUI.showConfirm("Hapus Tagihan?", "Tagihan rutin ini akan dihapus tanpa harus dibayar.", () => {
+                AppState.recurringBills = AppState.recurringBills.filter(b => b.id !== id); 
+                BillManager.saveState(); 
+                BillManager.render(); 
+                BillManager.checkDueBills(); 
+                AppUI.showToast("Tagihan dihapus.");
+            });
+        },
+
+        checkDueBills: () => {
+            const currentMonthStr = Utils.getCurrentMonthStr(); const currentDay = new Date().getDate();
+            AppState.dueBillsCache = AppState.recurringBills.filter(b => (currentDay >= b.date) && (b.lastPaidMonth !== currentMonthStr));
+            const banner = document.getElementById('reminder-banner');
+            if (AppState.dueBillsCache.length > 0) { document.getElementById('reminder-text').innerText = `Ada ${AppState.dueBillsCache.length} tagihan yang butuh perhatian Anda.`; banner.classList.remove('hidden'); banner.classList.add('flex'); } else { banner.classList.add('hidden'); banner.classList.remove('flex'); }
+        },
+        openPayModal: (id) => { const bill = AppState.recurringBills.find(b => b.id === id); if(!bill) return; AppState.billToPay = bill; document.getElementById('pay-bill-name').innerText = `Bayar ${bill.name}?`; document.getElementById('pay-bill-amount').innerText = Utils.formatIDR(bill.amount); AppUI.openModal('modal-pay-bill'); },
+        confirmPayBill: () => {
+            const bill = AppState.billToPay; if(!bill) return;
+            const chosenWallet = document.querySelector('input[name="pay-bill-wallet"]:checked').value;
+            
+            // VALIDASI: Cek saldo sebelum membayar tagihan
+            const balances = TransactionManager.getBalances();
+            const currentBal = chosenWallet === 'cash' ? balances.cash : balances.bank;
+            
+            if (bill.amount > currentBal) {
+                AppUI.closeModal('modal-pay-bill');
+                return AppUI.showToast(`Saldo ${chosenWallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup! Sisa: ${Utils.formatIDR(currentBal)}`, "error");
+            }
+
+            const txObj = { type: 'expense', wallet: chosenWallet, amount: bill.amount, category: bill.category, date: Utils.getTodayDateStr(), description: `[Otomatis] Tagihan ${bill.name}` };
+            LocalDB.addTransaction(txObj);
+            const billRef = AppState.recurringBills.find(b => b.id === bill.id);
+            if(billRef) billRef.lastPaidMonth = Utils.getCurrentMonthStr();
+            BillManager.saveState(); BillManager.render(); BillManager.checkDueBills(); AppUI.closeModal('modal-pay-bill'); AppUI.showToast(`${bill.name} Lunas!`);
+        },
+        render: () => {
+            const container = document.getElementById('bills-list-container'); container.innerHTML = '';
+            if (AppState.recurringBills.length === 0) { container.innerHTML = `<div class="text-center py-16 bg-slate-50/50 dark:bg-slate-900/50 rounded-[2rem] border border-slate-100 dark:border-slate-700 border-dashed flex flex-col items-center justify-center"><p class="text-sm font-medium text-slate-500">Belum ada tagihan rutin diatur.</p></div>`; return; }
+            const currentMonthStr = Utils.getCurrentMonthStr(); const currentDay = new Date().getDate();
+
+            AppState.recurringBills.forEach(bill => {
+                const isPaidThisMonth = bill.lastPaidMonth === currentMonthStr; const isDue = currentDay >= bill.date;
+                let statusHtml, btnHtml;
+                if (isPaidThisMonth) { 
+                    statusHtml = `<span class="text-[10px] text-emerald-600 bg-emerald-100 dark:bg-emerald-900/30 px-2.5 py-1 rounded font-bold uppercase tracking-wider">Lunas Bulan Ini</span>`; 
+                    btnHtml = `<button onclick="BillManager.deleteBill('${bill.id}')" title="Hapus Tagihan" class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-rose-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>`; 
+                } else if (isDue) { 
+                    statusHtml = `<span class="text-[10px] text-rose-500 bg-rose-100 dark:bg-rose-900/30 px-2.5 py-1 rounded font-bold uppercase tracking-wider">Bayar Sekarang</span>`; 
+                    btnHtml = `<div class="flex gap-2"><button onclick="BillManager.openPayModal('${bill.id}')" class="bg-rose-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md hover:bg-rose-600 transition-colors">Bayar</button><button onclick="BillManager.deleteBill('${bill.id}')" title="Hapus Tagihan" class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-rose-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div>`; 
+                } else { 
+                    statusHtml = `<span class="text-[10px] text-slate-500 bg-slate-100 dark:bg-slate-700 px-2.5 py-1 rounded font-bold uppercase tracking-wider">Tgl ${bill.date}</span>`; 
+                    btnHtml = `<button onclick="BillManager.deleteBill('${bill.id}')" title="Hapus Tagihan" class="w-10 h-10 rounded-xl bg-slate-50 dark:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-rose-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>`; 
+                }
+
+                const style = Utils.getCategoryStyle(bill.category, 'expense');
+                container.innerHTML += `<div class="flex items-center justify-between p-5 md:p-6 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 shadow-[0_4px_20px_rgba(0,0,0,0.03)] rounded-[2rem]">
+                    <div class="flex items-center gap-4 flex-grow min-w-0">
+                        <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">${style.svg}</div>
+                        <div class="min-w-0 flex-grow">
+                            <h4 class="font-bold text-sm md:text-base text-slate-800 dark:text-white truncate">${bill.name}</h4>
+                            <p class="text-xs text-slate-500 font-medium mt-0.5 truncate"><span class="font-bold text-slate-700 dark:text-slate-300 text-sm md:text-base">${Utils.formatIDR(bill.amount)}</span></p>
+                            <div class="mt-1.5">${statusHtml}</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0 ml-3">${btnHtml}</div>
+                </div>`;
+            });
+        }
+    };
+
     /** INITIALIZATION */
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('input-date').value = Utils.getTodayDateStr(); document.getElementById('display-date').innerText = Utils.formatDate(Utils.getTodayDateStr()); document.getElementById('display-date').classList.add('text-slate-900', 'dark:text-white');
@@ -1013,7 +1036,6 @@
             const source = document.querySelector('input[name="savings-source"]:checked').value;
             const wallet = document.querySelector('input[name="savings-wallet"]:checked').value;
             GoalManager.addSavings(document.getElementById('input-savings-id').value, added, source, wallet); 
-            AppUI.closeModal('modal-add-savings'); 
         });
 
         document.getElementById('add-form').addEventListener('submit', (e) => {
@@ -1023,6 +1045,17 @@
             
             const type = document.querySelector('input[name="tx-type"]:checked').value;
             const wallet = document.querySelector('input[name="tx-wallet"]:checked').value;
+            
+            // VALIDASI: Cek saldo sebelum menyimpan pengeluaran manual
+            if (type === 'expense') {
+                const balances = TransactionManager.getBalances();
+                const currentBal = wallet === 'cash' ? balances.cash : balances.bank;
+                
+                if (amount > currentBal) {
+                    return AppUI.showToast(`Saldo ${wallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup! Sisa: ${Utils.formatIDR(currentBal)}`, "error");
+                }
+            }
+
             const category = document.getElementById('input-category').value;
             const date = document.getElementById('input-date').value;
             const description = document.getElementById('input-desc').value;
