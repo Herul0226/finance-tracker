@@ -388,7 +388,7 @@
                         </div>
                     </div>
 
-                    <!-- Grid Simetris (Alokasi Pengeluaran & Target Tabungan Dikembalikan spt Semula) -->
+                    <!-- Grid Simetris (Alokasi Pengeluaran & Target Tabungan) -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
                         <!-- Alokasi Pengeluaran -->
                         <div class="bg-white dark:bg-slate-800 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-[0_8px_30px_rgba(0,0,0,0.04)] flex flex-col h-full">
@@ -555,7 +555,7 @@
                                     <input type="hidden" id="filter-category-value" value="all">
                                 </div>
 
-                                <!-- Custom Select: Urutkan (Tampil Penuh di baris baru pada HP, atau menyatu di Desktop) -->
+                                <!-- Custom Select: Urutkan -->
                                 <div class="relative custom-select z-10 col-span-2 md:col-span-1" id="filter-sort-select">
                                     <div class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white text-xs font-bold rounded-xl px-4 py-3 flex items-center justify-between cursor-pointer focus:ring-2 focus:ring-indigo-500 transition-all" onclick="Utils.toggleDropdown('filter-sort-select')">
                                         <div id="filter-sort-display">Terbaru</div>
@@ -692,19 +692,14 @@
         formatCurrencyInputEvent: (e) => { let v = e.target.value.replace(/[^0-9]/g, ''); e.target.value = v ? new Intl.NumberFormat('id-ID').format(v) : ''; },
 
         categoryData: {
-            // Khusus Pengeluaran
             'Makanan': { type: 'expense', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>', colorText: 'text-orange-500', bg: 'bg-orange-100 dark:bg-orange-900/30' },
             'Transport': { type: 'expense', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg>', colorText: 'text-blue-500', bg: 'bg-blue-100 dark:bg-blue-900/30' },
             'Belanja': { type: 'expense', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>', colorText: 'text-purple-500', bg: 'bg-purple-100 dark:bg-purple-900/30' },
             'Hiburan': { type: 'expense', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>', colorText: 'text-pink-500', bg: 'bg-pink-100 dark:bg-pink-900/30' },
             'Tagihan': { type: 'expense', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>', colorText: 'text-rose-500', bg: 'bg-rose-100 dark:bg-rose-900/30' },
-            
-            // Khusus Pemasukan
             'Gaji': { type: 'income', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>', colorText: 'text-emerald-500', bg: 'bg-emerald-100 dark:bg-emerald-900/30' },
             'Bonus': { type: 'income', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>', colorText: 'text-amber-500', bg: 'bg-amber-100 dark:bg-amber-900/30' },
             'Investasi': { type: 'income', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>', colorText: 'text-indigo-500', bg: 'bg-indigo-100 dark:bg-indigo-900/30' },
-            
-            // Berlaku Keduanya
             'Lainnya': { type: 'both', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>', colorText: 'text-slate-500', bg: 'bg-slate-100 dark:bg-slate-700' }
         },
         getCategoryStyle: (cat) => {
@@ -728,7 +723,6 @@
         setupCustomSelects: () => {
             Utils.renderTxCategories('expense', 'tx-category-select');
             
-            // Render manual untuk dropdown filter Kategori di menu Riwayat
             const filterCatOptions = document.getElementById('filter-category-options');
             if(filterCatOptions) {
                 let catHtml = `<div class="px-5 py-3.5 flex items-center gap-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer border-b border-slate-50 dark:border-slate-800 text-sm font-bold text-slate-700 dark:text-slate-200 transition-colors" onclick="Utils.selectOption('filter-category-select', 'all', 'Semua Kategori')">Semua Kategori</div>`;
@@ -749,18 +743,15 @@
             
             const displayContainer = s.querySelector('div[id$="-display"]');
             
-            // Format Khusus jika yang dipilih adalah kategori dgn Ikon
             if (Utils.categoryData[value] && selectId !== 'filter-type-select' && selectId !== 'filter-sort-select') {
                 const style = Utils.categoryData[value];
                 displayContainer.innerHTML = `<div class="flex items-center gap-2"><span class="${style.colorText}">${style.svg}</span> <span class="dark:text-white">${value}</span></div>`;
             } else {
-                // Teks biasa untuk filter lain (Semua Tipe, Terbaru, dll)
                 displayContainer.innerHTML = `<span class="dark:text-white">${displayText || value}</span>`;
             }
             
             s.classList.remove('open');
 
-            // Trigger pembaruan list Riwayat jika dropdown yang ditekan adalah bagian filter
             if (selectId.startsWith('filter-')) {
                 AppState.currentPage = 1;
                 TransactionManager.renderHistory();
@@ -934,7 +925,7 @@
             document.getElementById('dash-income').innerText = Utils.formatIDR(currentMonthIncome); 
             document.getElementById('dash-expense').innerText = Utils.formatIDR(currentMonthExpense);
 
-            // Render Breakdown Pengeluaran
+            // Render Breakdown Alokasi Pengeluaran
             const catListEl = document.getElementById('category-breakdown-list'); catListEl.innerHTML = '';
             if(Object.keys(categoryData).length === 0) {
                 catListEl.innerHTML = `<div class="flex flex-col items-center justify-center py-6 border border-slate-100 dark:border-slate-700 border-dashed rounded-[1.5rem] bg-slate-50/50 dark:bg-slate-900/50 flex-grow"><p class="text-xs text-slate-400 font-medium">Belum ada data</p></div>`;
@@ -974,7 +965,6 @@
             }
         },
 
-        // Logika Filter Riwayat Transaksi
         getFilteredHistory: () => {
             const search = document.getElementById('filter-search').value.toLowerCase();
             const type = document.getElementById('filter-type-value').value;
@@ -1045,7 +1035,6 @@
                 monthlyData[monthYear].count += 1; 
             });
 
-            // Analisis Keuangan Antarbulan (Bulan ini vs Bulan lalu)
             const analysisEl = document.getElementById('recap-analysis');
             const curr = Utils.getCurrentMonthStr();
             const prev = Utils.getPreviousMonthStr();
@@ -1218,23 +1207,19 @@
         document.querySelectorAll('.currency-input').forEach(el => el.addEventListener('input', Utils.formatCurrencyInputEvent)); 
         Utils.setupCustomSelects();
 
-        // Ganti opsi kategori (Pemasukan/Pengeluaran) form transaksi
         document.querySelectorAll('input[name="tx-type"]').forEach(radio => {
             radio.addEventListener('change', (e) => { Utils.renderTxCategories(e.target.value, 'tx-category-select'); });
         });
 
-        // Event listener Pencarian Text untuk Filter
         document.getElementById('filter-search').addEventListener('input', () => { AppState.currentPage = 1; TransactionManager.renderHistory(); });
 
         document.getElementById('btn-confirm-action').addEventListener('click', () => {
             if (AppState.confirmCallback) AppState.confirmCallback(); AppUI.closeConfirm();
         });
 
-        // Form Tabungan
         document.getElementById('form-set-goal').addEventListener('submit', (e) => { e.preventDefault(); const target = Utils.parseRawCurrency(document.getElementById('input-goal-target').value); if(target <= 0) return AppUI.showToast("Harga tidak valid", 'error'); GoalManager.addGoal(document.getElementById('input-goal-name').value, target); AppUI.closeModal('modal-set-goal'); document.getElementById('form-set-goal').reset(); });
         document.getElementById('form-add-savings').addEventListener('submit', (e) => { e.preventDefault(); const added = Utils.parseRawCurrency(document.getElementById('input-add-savings').value); if(added <= 0) return AppUI.showToast("Nominal tidak valid", "error"); const source = document.querySelector('input[name="savings-source"]:checked').value; const wallet = document.querySelector('input[name="savings-wallet"]:checked').value; GoalManager.addSavings(document.getElementById('input-savings-id').value, added, source, wallet); });
 
-        // PENAMBAHAN NOTIF VERIFIKASI PADA TRANSAKSI
         document.getElementById('add-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const amount = Utils.parseRawCurrency(document.getElementById('input-amount').value);
@@ -1244,14 +1229,12 @@
             const wallet = document.querySelector('input[name="tx-wallet"]:checked').value;
             const typeLabel = type === 'expense' ? 'Pengeluaran' : 'Pemasukan';
             
-            // Validasi anti minus untuk pengeluaran
             if (type === 'expense') {
                 const balances = TransactionManager.getBalances();
                 const currentBal = wallet === 'cash' ? balances.cash : balances.bank;
                 if (amount > currentBal) { return AppUI.showToast(`Saldo ${wallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup! Sisa: ${Utils.formatIDR(currentBal)}`, "error"); }
             }
 
-            // Tampilkan Modal Verifikasi sebelum menyimpan
             AppUI.showConfirm(
                 "Simpan Transaksi?", 
                 `Apakah Anda yakin ingin mencatat ${typeLabel} sebesar ${Utils.formatIDR(amount)}?`, 
@@ -1270,13 +1253,12 @@
                         AppUI.switchTab('dashboard');
                     }
                 },
-                "bg-indigo-600 hover:bg-indigo-700", // Style tombol "Ya"
-                "text-indigo-500", // Style ikon popup
-                "bg-indigo-100 dark:bg-indigo-900/30" // Background ikon
+                "bg-indigo-600 hover:bg-indigo-700",
+                "text-indigo-500",
+                "bg-indigo-100 dark:bg-indigo-900/30"
             );
         });
 
-        // Form Tagihan
         document.getElementById('add-bill-form').addEventListener('submit', (e) => { e.preventDefault(); const amount = Utils.parseRawCurrency(document.getElementById('bill-amount').value); if(amount <= 0) return AppUI.showToast("Nominal tidak valid", 'error'); BillManager.addBill(document.getElementById('bill-name').value, amount, document.getElementById('bill-category-value').value, document.getElementById('bill-date').value); document.getElementById('add-bill-form').reset(); });
         document.getElementById('btn-confirm-pay').addEventListener('click', BillManager.confirmPayBill);
 
