@@ -20,7 +20,6 @@
             } 
         }
     </script>
-    <!-- Font Premium: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -30,30 +29,25 @@
         input, textarea, select { -webkit-user-select: auto; -moz-user-select: auto; -ms-user-select: auto; user-select: auto; }
         html, body { scroll-behavior: smooth; }
         
-        /* Animasi Transisi Halaman */
         .view-section { display: none; opacity: 0; transition: opacity 0.3s ease, transform 0.3s ease; transform: translateY(10px); }
         .view-section.active { display: block; opacity: 1; transform: translateY(0); animation: smoothEnter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes smoothEnter { from { opacity: 0; transform: translateY(15px) scale(0.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
         
-        /* Animasi Modal & Toast */
         @keyframes slideDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes popUp { from { transform: scale(0.95) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
         .toast-animate { animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .modal-overlay { backdrop-filter: blur(8px); transition: opacity 0.3s ease; }
         .modal-content { animation: popUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-        /* Scrollbar Elegan */
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
         .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; }
 
-        /* Style Navigasi Desktop & Mobile */
         .nav-btn.active .icon-outline { display: none; }
         .nav-btn.active .icon-fill { display: block; }
         .nav-btn:not(.active) .icon-fill { display: none; }
         
-        /* Indikator Mobile Nav */
         .nav-btn.mobile-nav.active { color: #2563eb; }
         .dark .nav-btn.mobile-nav.active { color: #60a5fa; }
         .nav-indicator { width: 4px; height: 4px; border-radius: 50%; background-color: currentColor; opacity: 0; transform: scale(0); transition: all 0.3s ease; margin-top: 4px; }
@@ -64,18 +58,12 @@
         
         .pb-safe { padding-bottom: calc(env(safe-area-inset-bottom) + 24px); }
 
-        /* Custom Select Transition */
         .custom-select-options { transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); opacity: 0; pointer-events: none; transform: translateY(-15px) scale(0.98); }
         .custom-select.open .custom-select-options { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
         .custom-select.open .caret-icon { transform: rotate(180deg); }
 
-        /* Input Styles Premium */
-        .input-premium {
-            background-color: #f1f5f9; border: 2px solid transparent; transition: all 0.3s ease;
-        }
-        .input-premium:focus {
-            background-color: #ffffff; border-color: #bfdbfe; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); outline: none;
-        }
+        .input-premium { background-color: #f1f5f9; border: 2px solid transparent; transition: all 0.3s ease; }
+        .input-premium:focus { background-color: #ffffff; border-color: #bfdbfe; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); outline: none; }
         .dark .input-premium { background-color: #1e293b; color: #f8fafc; }
         .dark .input-premium:focus { background-color: #0f172a; border-color: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25); }
     </style>
@@ -88,10 +76,9 @@
     }
 </script>
 
-<!-- TOAST NOTIFICATION -->
 <div id="toast-container" class="fixed top-6 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-3 w-11/12 max-w-sm pointer-events-none"></div>
 
-<!-- MODAL: CUSTOM CONFIRMATION -->
+<!-- MODAL CONFIRM -->
 <div id="modal-confirm" class="fixed inset-0 z-[80] flex items-center justify-center hidden">
     <div class="absolute inset-0 bg-slate-900/40 dark:bg-black/60 modal-overlay" onclick="AppUI.closeConfirm()"></div>
     <div class="bg-white dark:bg-slate-900 w-11/12 max-w-sm rounded-[2.5rem] p-8 relative z-10 shadow-2xl modal-content">
@@ -107,7 +94,7 @@
     </div>
 </div>
 
-<!-- MODAL: ATUR ANGGARAN BULANAN -->
+<!-- MODAL ANGGARAN -->
 <div id="modal-set-budget" class="fixed inset-0 z-[60] flex items-center justify-center hidden">
     <div class="absolute inset-0 bg-slate-900/40 dark:bg-black/60 modal-overlay" onclick="AppUI.closeModal('modal-set-budget')"></div>
     <div class="bg-white dark:bg-slate-900 w-11/12 max-w-md rounded-[2.5rem] p-8 relative z-10 modal-content shadow-2xl border border-white/20 dark:border-white/5">
@@ -136,7 +123,7 @@
     </div>
 </div>
 
-<!-- MODAL: KALENDER KUSTOM -->
+<!-- MODAL KALENDER -->
 <div id="modal-datepicker" class="fixed inset-0 z-[70] flex items-center justify-center hidden">
     <div class="absolute inset-0 bg-slate-900/40 dark:bg-black/60 modal-overlay" onclick="AppUI.closeModal('modal-datepicker')"></div>
     <div class="bg-white dark:bg-slate-900 w-11/12 max-w-sm rounded-[2.5rem] p-6 relative z-10 modal-content shadow-2xl">
@@ -156,7 +143,7 @@
     </div>
 </div>
 
-<!-- MODAL: BUAT TARGET TABUNGAN -->
+<!-- MODAL TARGET BARU -->
 <div id="modal-set-goal" class="fixed inset-0 z-[60] flex items-center justify-center hidden">
     <div class="absolute inset-0 bg-slate-900/40 dark:bg-black/60 modal-overlay" onclick="AppUI.closeModal('modal-set-goal')"></div>
     <div class="bg-white dark:bg-slate-900 w-11/12 max-w-md rounded-[2.5rem] p-8 relative z-10 modal-content shadow-2xl border border-white/20 dark:border-white/5">
@@ -179,7 +166,7 @@
     </div>
 </div>
 
-<!-- MODAL: ISI TABUNGAN (TOP UP) -->
+<!-- MODAL ISI TABUNGAN -->
 <div id="modal-add-savings" class="fixed inset-0 z-[60] flex items-center justify-center hidden">
     <div class="absolute inset-0 bg-slate-900/40 dark:bg-black/60 modal-overlay" onclick="AppUI.closeModal('modal-add-savings')"></div>
     <div class="bg-white dark:bg-slate-900 w-11/12 max-w-md rounded-[2.5rem] p-8 relative z-10 modal-content shadow-2xl border border-white/20 dark:border-white/5">
@@ -213,7 +200,7 @@
     </div>
 </div>
 
-<!-- MODAL: TAMBAH TAGIHAN RUTIN -->
+<!-- MODAL TAMBAH TAGIHAN -->
 <div id="modal-add-bill" class="fixed inset-0 z-[60] flex items-center justify-center hidden">
     <div class="absolute inset-0 bg-slate-900/40 dark:bg-black/60 modal-overlay" onclick="AppUI.closeModal('modal-add-bill')"></div>
     <div class="bg-white dark:bg-slate-900 w-11/12 max-w-md rounded-[2.5rem] p-8 relative z-10 modal-content shadow-2xl border border-white/20 dark:border-white/5">
@@ -251,7 +238,7 @@
     </div>
 </div>
 
-<!-- MODAL: BAYAR TAGIHAN -->
+<!-- MODAL BAYAR TAGIHAN -->
 <div id="modal-pay-bill" class="fixed inset-0 z-[60] flex items-center justify-center hidden">
     <div class="absolute inset-0 bg-slate-900/40 dark:bg-black/60 modal-overlay" onclick="AppUI.closeModal('modal-pay-bill')"></div>
     <div class="bg-white dark:bg-slate-900 w-11/12 max-w-sm rounded-[2.5rem] p-8 relative z-10 modal-content shadow-2xl text-center border border-white/20 dark:border-white/5">
@@ -274,10 +261,9 @@
     </div>
 </div>
 
-<!-- MAIN APP WRAPPER -->
 <div class="flex min-h-screen w-full relative">
 
-    <!-- SIDEBAR (DESKTOP) -->
+    <!-- SIDEBAR DESKTOP -->
     <aside class="hidden md:flex flex-col w-[280px] bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800/50 shadow-soft z-30 fixed left-0 top-0 h-[100dvh]">
         <div class="px-8 py-10 flex items-center gap-4">
             <div class="w-12 h-12 rounded-[1rem] bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white shadow-glow-blue">
@@ -314,10 +300,9 @@
         </div>
     </aside>
 
-    <!-- MAIN CONTENT AREA -->
     <div class="md:ml-[280px] flex flex-col w-full min-h-[100dvh]">
         
-        <!-- HEADER PINTAR -->
+        <!-- HEADER -->
         <header class="sticky top-0 z-40 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl px-6 py-4 flex items-center justify-between border-b border-slate-100/50 dark:border-slate-800/30 md:px-10 md:py-6">
             <div class="flex items-center gap-3 md:hidden">
                 <div class="w-10 h-10 rounded-[0.8rem] bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white shadow-glow-blue"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg></div>
@@ -341,7 +326,7 @@
                 <!-- ==================== VIEW: BERANDA ==================== -->
                 <section id="view-dashboard" class="view-section active space-y-8">
 
-                    <!-- Banner Tagihan Jatuh Tempo -->
+                    <!-- Banner Tagihan -->
                     <div id="reminder-banner" class="hidden bg-gradient-to-r from-rose-500 to-orange-500 rounded-[2rem] p-6 text-white shadow-glow-rose flex-col md:flex-row md:items-center justify-between gap-5 transform transition-transform hover:scale-[1.01]">
                         <div class="flex items-center gap-4">
                             <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center shrink-0 backdrop-blur-md"><svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg></div>
@@ -350,12 +335,10 @@
                         <button onclick="AppUI.switchTab('bills')" class="shrink-0 bg-white text-rose-600 font-bold text-sm px-6 py-3.5 rounded-xl hover:bg-rose-50 shadow-sm transition-transform hover:scale-105 active:scale-95">Lihat Tagihan</button>
                     </div>
 
-                    <!-- KARTU SALDO UTAMA (PREMIUM DESIGN) -->
+                    <!-- KARTU SALDO UTAMA -->
                     <div class="bg-gradient-to-br from-slate-900 via-slate-800 to-black rounded-[2.5rem] p-8 md:p-10 text-white shadow-float relative overflow-hidden border border-white/10 group">
-                        <!-- Dekorasi Blur Glow -->
                         <div class="absolute -right-20 -top-20 w-72 h-72 bg-blue-500 rounded-full mix-blend-screen opacity-40 blur-[80px] pointer-events-none transition-transform duration-700 group-hover:scale-110"></div>
                         <div class="absolute -left-10 -bottom-10 w-56 h-56 bg-emerald-400 rounded-full mix-blend-screen opacity-20 blur-[60px] pointer-events-none transition-transform duration-700 group-hover:scale-110"></div>
-                        <!-- Pattern Titik -->
                         <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 20px 20px;"></div>
 
                         <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 relative z-10">
@@ -368,7 +351,6 @@
                                     <div><span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest block mb-1">Di Rekening</span><span class="text-base md:text-lg font-extrabold text-blue-300" id="dash-bank-balance">Rp 0</span></div>
                                 </div>
                             </div>
-                            <!-- Mini Ringkasan Bulan Ini -->
                             <div class="w-full md:w-64 shrink-0 bg-white/5 backdrop-blur-xl rounded-[1.5rem] p-5 border border-white/10 shadow-inner">
                                 <div class="flex justify-between items-center mb-4 pb-4 border-b border-white/10">
                                     <span class="text-[10px] font-bold text-slate-300 uppercase flex items-center gap-2 truncate pr-2 tracking-widest"><div class="w-6 h-6 rounded-md flex items-center justify-center bg-emerald-500/20 shrink-0 text-emerald-400"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg></div>Masuk</span><span class="text-sm font-extrabold text-white shrink-0" id="dash-income">Rp 0</span>
@@ -395,6 +377,7 @@
                                 <h3 class="font-extrabold text-slate-800 dark:text-white text-base flex items-center tracking-tight"><span class="w-8 h-8 rounded-full bg-amber-50 dark:bg-amber-500/10 text-amber-500 flex items-center justify-center mr-3"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span> Impian Anda</h3>
                                 <svg class="w-5 h-5 text-slate-300 group-hover:text-blue-500 transition-colors transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
                             </div>
+                            <!-- SUMMARY GOALS DIPERJELAS -->
                             <div id="dash-goals-summary" class="space-y-4 flex flex-col justify-center flex-grow"></div>
                         </div>
                     </div>
@@ -441,13 +424,11 @@
                     <div class="md:hidden mb-6 px-1"><h2 class="text-3xl font-extrabold tracking-tight text-slate-800 dark:text-white">Catat Transaksi</h2></div>
                     <form id="add-form" class="bg-white dark:bg-slate-900 p-8 md:p-10 rounded-[2.5rem] shadow-soft border border-slate-100 dark:border-slate-800 max-w-2xl mx-auto space-y-8">
                         
-                        <!-- Pilihan Tipe -->
                         <div class="bg-slate-100 dark:bg-slate-800 p-1.5 rounded-[1.25rem] flex gap-1 relative">
                             <label class="flex-1 cursor-pointer"><input type="radio" name="tx-type" value="expense" class="peer hidden" checked><div class="text-center py-4 rounded-[1rem] text-sm font-bold peer-checked:bg-white dark:peer-checked:bg-slate-700 peer-checked:text-rose-500 peer-checked:shadow text-slate-500 transition-all flex justify-center items-center gap-2">Pengeluaran</div></label>
                             <label class="flex-1 cursor-pointer"><input type="radio" name="tx-type" value="income" class="peer hidden"><div class="text-center py-4 rounded-[1rem] text-sm font-bold peer-checked:bg-white dark:peer-checked:bg-slate-700 peer-checked:text-emerald-500 peer-checked:shadow text-slate-500 transition-all flex justify-center items-center gap-2">Pemasukan</div></label>
                         </div>
                         
-                        <!-- Nominal -->
                         <div>
                             <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-3 uppercase tracking-widest text-center">Jumlah Nominal</label>
                             <div class="relative max-w-sm mx-auto">
@@ -456,9 +437,7 @@
                             </div>
                         </div>
 
-                        <!-- Grid Opsi -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative">
-                            <!-- Kategori -->
                             <div class="relative z-30">
                                 <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-widest">Kategori</label>
                                 <div class="relative custom-select" id="tx-category-select">
@@ -469,7 +448,6 @@
                                     <input type="hidden" id="input-category" value="Makanan">
                                 </div>
                             </div>
-                            <!-- Dompet -->
                             <div class="relative z-20">
                                 <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-widest">Sumber Dana</label>
                                 <div class="grid grid-cols-2 gap-2 h-[56px]">
@@ -480,7 +458,6 @@
                         </div>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
-                            <!-- Tanggal -->
                             <div>
                                 <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-widest">Tanggal</label>
                                 <div class="w-full input-premium text-slate-700 dark:text-white font-semibold rounded-2xl px-5 py-4 flex justify-between items-center cursor-pointer" onclick="CalendarManager.open('input-date')">
@@ -488,7 +465,6 @@
                                 </div>
                                 <input type="hidden" id="input-date" required>
                             </div>
-                            <!-- Catatan -->
                             <div>
                                 <label class="block text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase tracking-widest">Catatan</label>
                                 <input type="text" id="input-desc" placeholder="Tulis keterangan singkat" required class="w-full input-premium text-slate-700 dark:text-white font-semibold rounded-2xl px-5 py-4">
@@ -499,26 +475,23 @@
                     </form>
                 </section>
 
-                <!-- ==================== VIEW: RIWAYAT & FILTER ==================== -->
+                <!-- ==================== VIEW: RIWAYAT ==================== -->
                 <section id="view-history" class="view-section">
                     <div class="md:hidden mb-4 flex justify-between items-end px-1"><div><h2 class="text-3xl font-extrabold tracking-tight text-slate-800 dark:text-white">Riwayat</h2></div><button onclick="AppUI.switchTab('recap')" class="text-[11px] font-bold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-4 py-2.5 rounded-xl uppercase tracking-widest shadow-sm">Rekap</button></div>
                     
-                    <!-- PENCARIAN & FILTER -->
                     <div class="bg-white dark:bg-slate-900 rounded-[2rem] p-5 mb-6 shadow-soft border border-slate-100 dark:border-slate-800 relative z-20">
                         <div class="flex items-center gap-3">
                             <div class="relative flex-grow">
                                 <svg class="w-5 h-5 absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                                 <input type="text" id="filter-search" placeholder="Cari deskripsi, nominal..." class="w-full input-premium text-slate-700 dark:text-white text-sm font-semibold rounded-[1rem] pl-12 pr-5 py-4">
                             </div>
-                            <button onclick="Utils.toggleAdvancedFilter()" id="btn-toggle-filter" class="shrink-0 w-14 h-14 bg-slate-100 dark:bg-slate-800 rounded-[1rem] text-slate-500 flex items-center justify-center transition-colors hover:bg-slate-200 dark:hover:bg-slate-700">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+                            <button onclick="Utils.toggleAdvancedFilter()" id="btn-toggle-filter" class="shrink-0 w-14 h-14 bg-slate-100 dark:bg-slate-800 rounded-[1rem] text-slate-50 flex items-center justify-center transition-colors hover:bg-slate-200 dark:hover:bg-slate-700">
+                                <svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
                             </button>
                         </div>
                         
-                        <!-- Panel Filter Lanjutan -->
                         <div id="advanced-filter-panel" class="hidden mt-5 pt-5 border-t border-slate-100 dark:border-slate-800">
                             <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-                                <!-- Periode -->
                                 <div class="relative custom-select z-50 md:col-span-1" id="filter-period-select">
                                     <div class="w-full input-premium text-slate-700 dark:text-white text-xs font-bold rounded-xl px-4 py-3.5 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('filter-period-select')"><div id="filter-period-display">Bulan Ini</div><svg class="w-4 h-4 text-slate-400 caret-icon" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
                                     <div class="custom-select-options absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden">
@@ -528,7 +501,6 @@
                                     </div>
                                     <input type="hidden" id="filter-period-value" value="this_month">
                                 </div>
-                                <!-- Tipe -->
                                 <div class="relative custom-select z-40" id="filter-type-select">
                                     <div class="w-full input-premium text-slate-700 dark:text-white text-xs font-bold rounded-xl px-4 py-3.5 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('filter-type-select')"><div id="filter-type-display">Semua Tipe</div><svg class="w-4 h-4 text-slate-400 caret-icon" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
                                     <div class="custom-select-options absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden">
@@ -538,7 +510,6 @@
                                     </div>
                                     <input type="hidden" id="filter-type-value" value="all">
                                 </div>
-                                <!-- Dompet -->
                                 <div class="relative custom-select z-30" id="filter-wallet-select">
                                     <div class="w-full input-premium text-slate-700 dark:text-white text-xs font-bold rounded-xl px-4 py-3.5 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('filter-wallet-select')"><div id="filter-wallet-display">Semua Sumber</div><svg class="w-4 h-4 text-slate-400 caret-icon" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
                                     <div class="custom-select-options absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden">
@@ -548,13 +519,11 @@
                                     </div>
                                     <input type="hidden" id="filter-wallet-value" value="all">
                                 </div>
-                                <!-- Kategori -->
                                 <div class="relative custom-select z-20" id="filter-category-select">
                                     <div class="w-full input-premium text-slate-700 dark:text-white text-xs font-bold rounded-xl px-4 py-3.5 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('filter-category-select')"><div id="filter-category-display">Semua Kategori</div><svg class="w-4 h-4 text-slate-400 caret-icon" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
                                     <div class="custom-select-options absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden max-h-48 overflow-y-auto custom-scrollbar" id="filter-category-options"></div>
                                     <input type="hidden" id="filter-category-value" value="all">
                                 </div>
-                                <!-- Urutkan -->
                                 <div class="relative custom-select z-10" id="filter-sort-select">
                                     <div class="w-full input-premium text-slate-700 dark:text-white text-xs font-bold rounded-xl px-4 py-3.5 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('filter-sort-select')"><div id="filter-sort-display">Terbaru</div><svg class="w-4 h-4 text-slate-400 caret-icon" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
                                     <div class="custom-select-options absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden">
@@ -586,7 +555,7 @@
                     </div>
                 </section>
 
-                <!-- ==================== VIEW: REKAP & ANALISIS ==================== -->
+                <!-- ==================== VIEW: REKAP ==================== -->
                 <section id="view-recap" class="view-section">
                     <div class="mb-6 flex justify-between items-center px-1"><h2 class="text-3xl font-extrabold tracking-tight text-slate-800 dark:text-white">Rekap & Analisis</h2><button onclick="AppUI.switchTab('history')" class="text-[11px] font-bold bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 px-4 py-2.5 rounded-xl uppercase tracking-widest transition-colors hover:bg-blue-100">Kembali</button></div>
                     <div id="recap-analysis" class="mb-8"></div>
@@ -597,7 +566,6 @@
                 <section id="view-settings" class="view-section space-y-6">
                     <div class="mb-2 px-1"><h2 class="text-3xl font-extrabold tracking-tight text-slate-800 dark:text-white">Pengaturan</h2><p class="text-sm font-medium text-slate-500 mt-1">Konfigurasi dan kelola data Anda.</p></div>
                     
-                    <!-- PENGATURAN ANGGARAN -->
                     <div class="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-soft flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
                         <div class="w-20 h-20 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500 rounded-[1.5rem] flex items-center justify-center shrink-0"><svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg></div>
                         <div class="flex-grow">
@@ -607,7 +575,6 @@
                         <button onclick="AppUI.openModal('modal-set-budget'); Utils.renderTxCategories('expense', 'budget-category-select'); BudgetManager.populateModal(document.getElementById('input-budget-category').value);" class="w-full md:w-auto shrink-0 bg-emerald-600 text-white font-bold px-6 py-3.5 rounded-xl hover:bg-emerald-700 transition-transform hover:scale-[1.02] shadow-sm text-sm">Kelola Anggaran</button>
                     </div>
 
-                    <!-- BACKUP & RESTORE DATA -->
                     <div class="bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-soft text-center md:text-left flex flex-col md:flex-row items-center gap-6">
                         <div class="w-20 h-20 bg-blue-50 dark:bg-blue-500/10 text-blue-500 rounded-[1.5rem] flex items-center justify-center shrink-0"><svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg></div>
                         <div class="flex-grow">
@@ -639,7 +606,7 @@
     </div>
 </div>
 
-<!-- BOTTOM NAV (MOBILE) PREMIUM FROSTED -->
+<!-- BOTTOM NAV (MOBILE) -->
 <nav class="md:hidden fixed bottom-0 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl border-t border-slate-100/50 dark:border-slate-800/50 z-50 pb-safe shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
     <div class="grid grid-cols-5 h-[72px] items-center justify-items-center px-2">
         <button onclick="AppUI.switchTab('dashboard')" class="nav-btn nav-btn-dashboard mobile-nav active flex flex-col items-center justify-center w-full h-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors">
@@ -770,11 +737,7 @@
             
             document.getElementById(`view-${tabId}`).classList.add('active'); if(document.getElementById('desktop-page-title')) document.getElementById('desktop-page-title').innerText = titles[tabId];
             
-            if(tabId !== 'add' && tabId !== 'settings' && tabId !== 'recap') { 
-                document.querySelectorAll(`.nav-btn-${tabId}`).forEach(el => { 
-                    el.classList.add('active'); 
-                }); 
-            } window.scrollTo({ top: 0, behavior: 'smooth' });
+            if(tabId !== 'add' && tabId !== 'settings' && tabId !== 'recap') { document.querySelectorAll(`.nav-btn-${tabId}`).forEach(el => { el.classList.add('active'); }); } window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     };
 
@@ -801,7 +764,6 @@
     const LocalDB = {
         saveTx: () => localStorage.setItem('keuanganku_tx', JSON.stringify(AppState.transactions)),
         addTransaction: (txData) => { const newTx = { ...txData, id: Date.now() }; AppState.transactions.unshift(newTx); AppState.transactions.sort((a, b) => new Date(b.date) - new Date(a.date)); LocalDB.saveTx(); AppState.currentPage = 1; TransactionManager.renderAll(); return true; },
-        deleteTransaction: (id) => { AppUI.showConfirm("Hapus Transaksi?", "Transaksi ini akan dihapus permanen.", () => { AppState.transactions = AppState.transactions.filter(t => t.id !== id); LocalDB.saveTx(); TransactionManager.renderAll(); AppUI.showToast("Transaksi dihapus."); }); },
         hardReset: () => { AppUI.showConfirm("Reset Total Aplikasi?", "Seluruh data akan hilang selamanya.", () => { localStorage.clear(); location.reload(); }); }
     };
 
@@ -877,7 +839,8 @@
             const paginated = filteredData.slice((AppState.currentPage - 1) * AppState.itemsPerPage, ((AppState.currentPage - 1) * AppState.itemsPerPage) + AppState.itemsPerPage);
             paginated.forEach((tx) => { 
                 const style = Utils.getCategoryStyle(tx.category); const sign = tx.type === 'income' ? '+' : '-'; const walletText = tx.wallet === 'bank' ? 'Rekening' : 'Cash';
-                historyList.innerHTML += `<li class="group flex items-center gap-4 py-5 px-6 md:px-8 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"><div class="w-14 h-14 rounded-[1.25rem] flex items-center justify-center shrink-0 ${style.bg} ${style.text} group-hover:scale-110 transition-transform">${style.svg}</div><div class="flex-grow min-w-0"><p class="text-sm md:text-base font-extrabold tracking-tight text-slate-800 dark:text-white truncate">${tx.description || '-'}</p><div class="flex items-center gap-2 mt-1"><span class="text-[10px] font-bold bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 px-2.5 py-0.5 rounded tracking-widest uppercase">${tx.category || 'Lainnya'}</span><span class="text-[10px] font-bold bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 px-2.5 py-0.5 rounded tracking-widest uppercase">${walletText}</span><span class="text-[11px] font-semibold text-slate-400 shrink-0 ml-1">${Utils.formatDate(tx.date)}</span></div></div><div class="text-right shrink-0 ml-2"><p class="text-base md:text-lg font-extrabold tracking-tight ${tx.type === 'income' ? 'text-emerald-500' : 'text-slate-800 dark:text-white'}">${sign}${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p><button onclick="LocalDB.deleteTransaction(${tx.id})" class="text-[10px] font-extrabold text-rose-500 mt-1 uppercase tracking-widest hover:underline opacity-0 group-hover:opacity-100 transition-opacity">Hapus</button></div></li>`;
+                // TOMBOL HAPUS SUDAH DIHILANGKAN DARI SINI
+                historyList.innerHTML += `<li class="group flex items-center gap-4 py-5 px-6 md:px-8 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"><div class="w-14 h-14 rounded-[1.25rem] flex items-center justify-center shrink-0 ${style.bg} ${style.text} group-hover:scale-110 transition-transform">${style.svg}</div><div class="flex-grow min-w-0"><p class="text-sm md:text-base font-extrabold tracking-tight text-slate-800 dark:text-white truncate">${tx.description || '-'}</p><div class="flex items-center gap-2 mt-1"><span class="text-[10px] font-bold bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 px-2.5 py-0.5 rounded tracking-widest uppercase">${tx.category || 'Lainnya'}</span><span class="text-[10px] font-bold bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 px-2.5 py-0.5 rounded tracking-widest uppercase">${walletText}</span><span class="text-[11px] font-semibold text-slate-400 shrink-0 ml-1">${Utils.formatDate(tx.date)}</span></div></div><div class="text-right shrink-0 ml-2"><p class="text-base md:text-lg font-extrabold tracking-tight ${tx.type === 'income' ? 'text-emerald-500' : 'text-slate-800 dark:text-white'}">${sign}${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p></div></li>`;
             });
         },
         renderRecap: () => {
@@ -926,7 +889,9 @@
             } else {
                 AppState.savingsGoals.forEach((goal, idx) => {
                     totalSaved += goal.saved; let persen = Math.min((goal.saved / goal.target) * 100, 100);
-                    if(idx < 2) summaryEl.innerHTML += `<div class="flex items-center justify-between p-4 rounded-[1.25rem] bg-slate-50 dark:bg-slate-800/50 min-w-0 border border-slate-100 dark:border-slate-800 transition-colors group-hover:bg-white dark:group-hover:bg-slate-800"><div class="min-w-0 flex-grow pr-3"><p class="text-sm font-extrabold text-slate-800 dark:text-white tracking-tight truncate">${goal.name}</p><p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest truncate mt-0.5">Terkumpul</p></div><span class="text-xs font-extrabold text-amber-500 bg-amber-50 dark:bg-amber-500/10 px-3 py-1.5 rounded-lg shrink-0">${Utils.formatIDR(goal.saved)}</span></div>`;
+                    // MERUBAH TAMPILAN GOALS DI BERANDA AGAR LEBIH DETAIL DAN JELAS
+                    if(idx < 2) summaryEl.innerHTML += `<div class="p-4 rounded-[1.25rem] bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 transition-colors group-hover:bg-white dark:group-hover:bg-slate-800"><div class="flex justify-between items-center mb-2"><p class="text-sm font-extrabold text-slate-800 dark:text-white tracking-tight truncate">${goal.name}</p><span class="text-[10px] font-bold text-amber-500 bg-amber-50 dark:bg-amber-500/10 px-2 py-0.5 rounded uppercase">${Math.round(persen)}%</span></div><div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5 mb-2 overflow-hidden"><div class="bg-gradient-to-r from-amber-400 to-orange-500 h-1.5 rounded-full transition-all duration-700" style="width: ${persen}%"></div></div><div class="flex justify-between text-[10px] font-bold tracking-widest"><span class="text-amber-500 truncate pr-2">${Utils.formatIDR(goal.saved)}</span><span class="text-slate-400 shrink-0">/ ${Utils.formatIDR(goal.target)}</span></div></div>`;
+                    
                     listEl.innerHTML += `<div class="bg-white dark:bg-slate-900 p-7 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 shadow-soft hover:shadow-float hover:-translate-y-1 transition-all flex flex-col justify-between h-full group"><div><div class="flex justify-between items-start mb-6 gap-3"><h3 class="font-extrabold text-slate-800 dark:text-white text-xl tracking-tight truncate flex-grow">${goal.name}</h3><button onclick="GoalManager.deleteGoal(${goal.id})" class="shrink-0 w-10 h-10 rounded-[1rem] bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-rose-500 transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div><div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-3 mb-4 overflow-hidden"><div class="bg-gradient-to-r from-amber-400 to-orange-500 h-3 rounded-full transition-all duration-700" style="width: ${persen}%"></div></div><div class="flex justify-between items-center text-[11px] font-bold uppercase tracking-widest gap-2"><span class="text-amber-500 text-sm truncate tracking-tight">${Utils.formatIDR(goal.saved)}</span><span class="text-slate-400 shrink-0">/ ${Utils.formatIDR(goal.target)}</span></div></div><button onclick="GoalManager.openAddModal(${goal.id}, '${goal.name}')" class="w-full bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-extrabold rounded-2xl py-4 mt-6 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-sm border border-slate-200 dark:border-slate-700">Isi Tabungan</button></div>`;
                 });
             }
