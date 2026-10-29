@@ -32,7 +32,9 @@
     <style>
         * { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-user-drag: none; }
         input, textarea, select { -webkit-user-select: auto; user-select: auto; }
-        html, body { scroll-behavior: smooth; overflow-x: hidden; background-color: #F9F8F4; }
+        
+        /* Mengunci pantulan scroll agar terasa seperti Native App */
+        html, body { scroll-behavior: smooth; overflow-x: hidden; background-color: #F9F8F4; overscroll-behavior: none; }
         .dark body { background-color: #09090B; } 
         
         .view-section { display: none; opacity: 0; transition: opacity 0.2s ease, transform 0.2s ease; transform: translateY(5px); }
@@ -74,35 +76,24 @@
         .custom-select.open .custom-select-options { opacity: 1; pointer-events: auto; transform: translateY(0); }
         .custom-select.open .caret-icon { transform: rotate(180deg); }
 
-        /* Clean Inputs */
+        /* Clean Inputs Fix (Anti Teks Hitam di Dark Mode) */
         .input-premium { background-color: #ffffff; border: 1px solid #EBEAE4; transition: all 0.2s ease; color: #27272A; }
         .input-premium:focus { border-color: #1B2E22; box-shadow: 0 0 0 3px rgba(27, 46, 34, 0.1); outline: none; }
         
-        /* STRICT DARK MODE INPUT FIX (Ensuring font is never black) */
-        .dark .input-premium, .dark input, .dark textarea { 
-            background-color: #18181B !important; 
-            border-color: #27272A !important; 
-            color: #F4F4F5 !important; 
-        }
-        .dark .input-premium:focus, .dark input:focus { 
-            border-color: #3B82F6 !important; 
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2) !important; 
-        }
-        .dark input::placeholder { color: #A1A1AA !important; }
+        .dark .input-premium { background-color: #18181B; border-color: #27272A; color: #F4F4F5; }
+        .dark .input-premium:focus { border-color: #3B82F6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
+        
+        input::placeholder { color: #A1A1AA; }
+        .dark input::placeholder { color: #52525B; }
 
-        /* Fix Autofill/Copy Paste Box (Light & Dark) */
+        /* Fix Autofill Browser */
         input:-webkit-autofill,
         input:-webkit-autofill:hover, 
         input:-webkit-autofill:focus {
             -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
-            -webkit-text-fill-color: inherit !important;
             transition: background-color 5000s ease-in-out 0s;
         }
-        .dark input:-webkit-autofill,
-        .dark input:-webkit-autofill:hover, 
-        .dark input:-webkit-autofill:focus {
-            -webkit-text-fill-color: #F4F4F5 !important;
-        }
+        .dark input:-webkit-autofill { -webkit-text-fill-color: #F4F4F5 !important; }
     </style>
 </head>
 <body class="text-zinc-800 dark:text-zinc-100 antialiased transition-colors duration-300 min-h-screen flex">
@@ -128,7 +119,7 @@
     </div>
 </div>
 
-<!-- MODAL ANGGARAN (Scroll removed to fix overflow sliding trap) -->
+<!-- MODAL ANGGARAN -->
 <div id="modal-set-budget" class="fixed inset-0 z-[60] flex items-center justify-center hidden px-4">
     <div class="absolute inset-0 bg-zinc-900/40 dark:bg-black/60 modal-overlay" onclick="AppUI.closeModal('modal-set-budget')"></div>
     <div class="bg-white dark:bg-zinc-900 w-full max-w-md rounded-[24px] p-6 relative z-10 shadow-float border border-brand-border dark:border-zinc-800 overflow-visible">
@@ -139,7 +130,7 @@
                 <label class="block text-[10px] font-bold text-zinc-500 mb-1 uppercase tracking-widest">Kategori</label>
                 <div class="w-full input-premium text-zinc-700 dark:text-white text-xs font-semibold rounded-xl px-3.5 py-3 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('budget-category-select')">
                     <div class="flex items-center gap-2 min-w-0" id="budget-category-display"><span>Makanan</span></div>
-                    <svg class="w-5 h-5 text-zinc-400 caret-icon transition-transform shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    <svg class="w-5 h-5 text-zinc-400 caret-icon transition-transform shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
                 </div>
                 <div class="custom-select-options absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 rounded-xl shadow-lg overflow-hidden z-[100] max-h-48 overflow-y-auto custom-scrollbar"></div>
                 <input type="hidden" id="input-budget-category" value="Makanan">
@@ -162,9 +153,9 @@
     <div class="absolute inset-0 bg-zinc-900/40 dark:bg-black/60 modal-overlay" onclick="AppUI.closeModal('modal-datepicker')"></div>
     <div class="bg-white dark:bg-zinc-900 w-full max-w-sm rounded-[24px] p-6 relative z-10 shadow-float border border-brand-border dark:border-zinc-800 overflow-visible">
         <div class="flex justify-between items-center mb-5">
-            <button onclick="CalendarManager.changeMonth(-1)" class="w-9 h-9 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center hover:bg-zinc-200 shrink-0"><svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg></button>
+            <button onclick="CalendarManager.changeMonth(-1)" class="w-9 h-9 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center hover:bg-zinc-200 shrink-0"><svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg></button>
             <h3 id="cal-month-year" class="font-extrabold text-zinc-900 dark:text-white text-xs tracking-tight truncate px-2">Bulan Tahun</h3>
-            <button onclick="CalendarManager.changeMonth(1)" class="w-9 h-9 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center hover:bg-zinc-200 shrink-0"><svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button>
+            <button onclick="CalendarManager.changeMonth(1)" class="w-9 h-9 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center hover:bg-zinc-200 shrink-0"><svg class="w-5 h-5 shrink-0 text-zinc-600 dark:text-zinc-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button>
         </div>
         <div class="grid grid-cols-7 gap-1 text-center text-[9px] font-bold text-zinc-400 uppercase tracking-widest mb-2">
             <div>MIN</div><div>SEN</div><div>SEL</div><div>RAB</div><div>KAM</div><div>JUM</div><div>SAB</div>
@@ -231,7 +222,7 @@
     </div>
 </div>
 
-<!-- MODAL TAMBAH TAGIHAN (Scroll removed to fix overflow sliding trap) -->
+<!-- MODAL TAMBAH TAGIHAN -->
 <div id="modal-add-bill" class="fixed inset-0 z-[60] flex items-center justify-center hidden px-4">
     <div class="absolute inset-0 bg-zinc-900/40 dark:bg-black/60 modal-overlay" onclick="AppUI.closeModal('modal-add-bill')"></div>
     <div class="bg-white dark:bg-zinc-900 w-full max-w-md rounded-[24px] p-6 relative z-10 shadow-float border border-brand-border dark:border-zinc-800 overflow-visible">
@@ -255,9 +246,8 @@
                 <label class="block text-[10px] font-bold text-zinc-500 mb-1 uppercase tracking-widest">Kategori</label>
                 <div class="w-full input-premium text-zinc-700 dark:text-white text-xs font-semibold rounded-xl px-3.5 py-3 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('bill-category-select')">
                     <div class="flex items-center gap-2 min-w-0" id="bill-category-display"><span>Tagihan</span></div>
-                    <svg class="w-5 h-5 text-zinc-400 caret-icon transition-transform shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                    <svg class="w-5 h-5 text-zinc-400 caret-icon transition-transform shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
                 </div>
-                <!-- Dropdown will safely overflow the modal due to overflow-visible -->
                 <div class="custom-select-options absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 rounded-xl shadow-lg overflow-hidden z-[100] max-h-48 overflow-y-auto custom-scrollbar"></div>
                 <input type="hidden" id="bill-category-value" value="Tagihan">
             </div>
@@ -305,29 +295,29 @@
 
         <nav class="flex-grow px-3 py-2 space-y-1 overflow-y-auto custom-scrollbar">
             <button onclick="AppUI.switchTab('dashboard')" class="nav-btn nav-btn-dashboard desktop-nav w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-zinc-500 hover:bg-brand-bg dark:hover:bg-zinc-900 transition-all text-xs font-semibold active">
-                <svg class="w-5 h-5 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                <svg class="w-5 h-5 icon-fill shrink-0" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> <span class="truncate">Beranda</span>
+                <svg class="w-5 h-5 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <svg class="w-5 h-5 icon-fill shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> <span class="truncate">Beranda</span>
             </button>
             <button onclick="AppUI.switchTab('wallet')" class="nav-btn nav-btn-wallet desktop-nav w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-zinc-500 hover:bg-brand-bg dark:hover:bg-zinc-900 transition-all text-xs font-semibold">
                 <svg class="w-5 h-5 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2v-5zm-5 0h.01M16 12a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
                 <svg class="w-5 h-5 icon-fill shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M21 7v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2zm-5 5h.01M16 12a1 1 0 10-2 0 1 1 0 002 0z"/></svg> <span class="truncate">Dompet</span>
             </button>
             <button onclick="AppUI.switchTab('recap')" class="nav-btn nav-btn-recap desktop-nav w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-zinc-500 hover:bg-brand-bg dark:hover:bg-zinc-900 transition-all text-xs font-semibold">
-                <svg class="w-5 h-5 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                <svg class="w-5 h-5 icon-fill shrink-0" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-10 14H7v-6h2v6zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg> <span class="truncate">Rekap Bulanan</span>
+                <svg class="w-5 h-5 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                <svg class="w-5 h-5 icon-fill shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-10 14H7v-6h2v6zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg> <span class="truncate">Rekap Bulanan</span>
             </button>
             <button onclick="AppUI.switchTab('history')" class="nav-btn nav-btn-history desktop-nav w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-zinc-500 hover:bg-brand-bg dark:hover:bg-zinc-900 transition-all text-xs font-semibold">
-                <svg class="w-5 h-5 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
-                <svg class="w-5 h-5 icon-fill shrink-0" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg> <span class="truncate">Riwayat</span>
+                <svg class="w-5 h-5 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                <svg class="w-5 h-5 icon-fill shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg> <span class="truncate">Riwayat</span>
             </button>
             <button onclick="AppUI.switchTab('goals')" class="nav-btn nav-btn-goals desktop-nav w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-zinc-500 hover:bg-brand-bg dark:hover:bg-zinc-900 transition-all text-xs font-semibold">
-                <svg class="w-5 h-5 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <svg class="w-5 h-5 icon-fill shrink-0" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg> <span class="truncate">Target Impian</span>
+                <svg class="w-5 h-5 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+                <svg class="w-5 h-5 icon-fill shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> <span class="truncate">Target Impian</span>
             </button>
         </nav>
         <div class="p-4 shrink-0">
             <button onclick="AppUI.switchTab('add')" class="w-full bg-brand-dark dark:bg-blue-600 text-white font-bold rounded-xl py-3.5 hover:opacity-90 transition-opacity flex justify-center items-center gap-2 text-xs">
-                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg> <span class="truncate">Catat Transaksi</span>
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg> <span class="truncate">Catat Transaksi</span>
             </button>
         </div>
     </aside>
@@ -346,11 +336,11 @@
             <div class="hidden md:block min-w-0"><h2 id="desktop-page-title" class="text-lg font-extrabold tracking-tight text-zinc-900 dark:text-white truncate">Beranda</h2></div>
             <div class="flex items-center gap-2 shrink-0">
                 <button onclick="ThemeManager.toggle()" class="w-10 h-10 rounded-full bg-white dark:bg-zinc-900 text-zinc-500 flex items-center justify-center hover:bg-zinc-50 border border-brand-border dark:border-zinc-800 transition-colors">
-                    <svg class="w-5 h-5 shrink-0 dark:hidden" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-                    <svg class="w-5 h-5 shrink-0 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <svg class="w-5 h-5 shrink-0 dark:hidden" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                    <svg class="w-5 h-5 shrink-0 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                 </button>
                 <button onclick="AppUI.switchTab('settings')" class="w-10 h-10 rounded-full bg-white dark:bg-zinc-900 text-zinc-500 flex items-center justify-center hover:bg-zinc-50 border border-brand-border dark:border-zinc-800 transition-colors">
-                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 </button>
             </div>
         </header>
@@ -363,7 +353,7 @@
 
                     <div id="reminder-banner" class="hidden bg-red-50 dark:bg-red-500/10 rounded-2xl p-3.5 text-red-600 dark:text-red-400 flex-col md:flex-row md:items-center justify-between gap-3 border border-red-100 dark:border-red-500/20">
                         <div class="flex items-center gap-3 min-w-0">
-                            <div class="w-10 h-10 bg-white/50 dark:bg-zinc-800 rounded-xl flex items-center justify-center shrink-0"><svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg></div>
+                            <div class="w-10 h-10 bg-white/50 dark:bg-zinc-800 rounded-xl flex items-center justify-center shrink-0"><svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg></div>
                             <div class="min-w-0 flex-1"><h4 class="font-bold text-sm tracking-tight truncate">Tagihan Menunggu</h4><p class="text-[11px] truncate mt-0.5" id="reminder-text">Ada tagihan rutin yang harus dibayar.</p></div>
                         </div>
                         <button onclick="AppUI.switchTab('wallet')" class="shrink-0 bg-red-600 text-white font-bold text-xs px-4 py-2.5 rounded-lg hover:opacity-90">Lihat Tagihan</button>
@@ -375,7 +365,7 @@
                         <h2 class="text-3xl md:text-4xl font-extrabold tracking-tighter truncate w-full mb-5" id="dash-balance">Rp 0</h2>
                         
                         <div class="flex gap-2.5 justify-center w-full">
-                            <button onclick="AppUI.switchTab('wallet')" class="bg-white/20 hover:bg-white/30 text-white text-xs font-bold py-2.5 px-4 rounded-xl backdrop-blur-sm transition-colors flex-1 max-w-[130px]">Rincian Saldo</button>
+                            <button onclick="AppUI.switchTab('wallet')" class="bg-white/20 hover:bg-white/30 text-white text-xs font-bold py-2.5 px-4 rounded-xl backdrop-blur-sm transition-colors flex-1 max-w-[130px]">Rincian</button>
                             <button onclick="AppUI.switchTab('add')" class="bg-white text-brand-dark dark:text-blue-600 text-xs font-bold py-2.5 px-4 rounded-xl transition-colors flex-1 max-w-[130px] shadow-sm">+ Catat</button>
                         </div>
                     </div>
@@ -383,8 +373,8 @@
                     <!-- Target Impian Ringkas -->
                     <div class="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-brand-border dark:border-zinc-800 shadow-sm cursor-pointer hover:border-zinc-300 transition-colors flex flex-col min-w-0" onclick="AppUI.switchTab('goals')">
                         <div class="flex justify-between items-center mb-3">
-                            <h3 class="font-extrabold text-zinc-900 dark:text-white text-xs flex items-center"><span class="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mr-2.5 shrink-0"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span> Target Impian</h3>
-                            <svg class="w-5 h-5 text-zinc-300 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7-7"/></svg>
+                            <h3 class="font-extrabold text-zinc-900 dark:text-white text-xs flex items-center"><span class="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mr-2.5 shrink-0"><svg class="w-4 h-4 shrink-0 text-zinc-600 dark:text-zinc-300" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg></span> Target Impian</h3>
+                            <svg class="w-5 h-5 text-zinc-300 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7-7"/></svg>
                         </div>
                         <div id="dash-goals-summary" class="space-y-2.5 flex flex-col justify-center min-w-0"></div>
                     </div>
@@ -450,7 +440,7 @@
                     <div class="pt-2 pb-2">
                         <div class="flex justify-between items-center px-1 mb-3 min-w-0">
                             <h2 class="text-base font-extrabold tracking-tight text-zinc-900 dark:text-white truncate">Tagihan Rutin</h2>
-                            <button onclick="AppUI.openModal('modal-add-bill'); Utils.renderTxCategories('expense', 'bill-category-select')" class="shrink-0 bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-white font-bold text-[10px] px-3 py-1.5 rounded-lg flex items-center gap-1.5 hover:opacity-90 transition-opacity"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg> Tambah</button>
+                            <button onclick="AppUI.openModal('modal-add-bill'); Utils.renderTxCategories('expense', 'bill-category-select')" class="shrink-0 bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-white font-bold text-[10px] px-3 py-1.5 rounded-lg flex items-center gap-1.5 hover:opacity-90 transition-opacity"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg> Tambah</button>
                         </div>
                         <div id="bills-list-container" class="space-y-2 min-w-0 overflow-visible"></div>
                     </div>
@@ -464,7 +454,7 @@
 
                     <div class="flex items-center gap-2.5 px-1">
                         <div class="w-10 h-10 bg-brand-light dark:bg-blue-600/20 text-brand-dark dark:text-blue-400 rounded-xl flex items-center justify-center shrink-0">
-                            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
                         </div>
                         <h3 class="font-extrabold text-sm text-zinc-900 dark:text-white uppercase tracking-wider">Performa Keuangan</h3>
                     </div>
@@ -482,18 +472,18 @@
                     <div class="bg-white dark:bg-zinc-900 rounded-2xl p-3 mb-3 shadow-sm border border-brand-border dark:border-zinc-800 relative z-20 min-w-0">
                         <div class="flex items-center gap-2 min-w-0">
                             <div class="relative flex-grow min-w-0">
-                                <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                                <svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                                 <input type="text" id="filter-search" placeholder="Cari transaksi..." class="w-full input-premium text-zinc-700 dark:text-white text-sm font-semibold rounded-xl pl-9 pr-3 py-2.5">
                             </div>
                             <button onclick="Utils.toggleAdvancedFilter()" id="btn-toggle-filter" class="shrink-0 w-11 h-11 bg-zinc-50 dark:bg-zinc-800 rounded-xl text-zinc-500 flex items-center justify-center transition-colors hover:bg-zinc-100">
-                                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+                                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
                             </button>
                         </div>
                         
                         <div id="advanced-filter-panel" class="hidden mt-3 pt-3 border-t border-brand-border dark:border-zinc-800 min-w-0">
                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 min-w-0">
                                 <div class="relative custom-select z-50 min-w-0" id="filter-period-select">
-                                    <div class="w-full input-premium text-zinc-700 dark:text-white text-[10px] font-bold rounded-lg px-2.5 py-2.5 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('filter-period-select')"><div id="filter-period-display" class="truncate pr-1">Bulan Ini</div><svg class="w-4 h-4 text-zinc-400 caret-icon shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
+                                    <div class="w-full input-premium text-zinc-700 dark:text-white text-[10px] font-bold rounded-lg px-2.5 py-2.5 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('filter-period-select')"><div id="filter-period-display" class="truncate pr-1">Bulan Ini</div><svg class="w-4 h-4 text-zinc-400 caret-icon shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
                                     <div class="custom-select-options absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 rounded-lg shadow-lg overflow-hidden max-h-48 overflow-y-auto custom-scrollbar">
                                         <div class="px-3 py-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-xs font-bold dark:text-white" onclick="Utils.selectOption('filter-period-select', 'this_month', 'Bulan Ini')">Bulan Ini</div>
                                         <div class="px-3 py-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-xs font-bold dark:text-white" onclick="Utils.selectOption('filter-period-select', 'last_month', 'Bulan Lalu')">Bulan Lalu</div>
@@ -502,7 +492,7 @@
                                     <input type="hidden" id="filter-period-value" value="this_month">
                                 </div>
                                 <div class="relative custom-select z-40 min-w-0" id="filter-type-select">
-                                    <div class="w-full input-premium text-zinc-700 dark:text-white text-[10px] font-bold rounded-lg px-2.5 py-2.5 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('filter-type-select')"><div id="filter-type-display" class="truncate pr-1">Semua Tipe</div><svg class="w-4 h-4 text-zinc-400 caret-icon shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
+                                    <div class="w-full input-premium text-zinc-700 dark:text-white text-[10px] font-bold rounded-lg px-2.5 py-2.5 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('filter-type-select')"><div id="filter-type-display" class="truncate pr-1">Semua Tipe</div><svg class="w-4 h-4 text-zinc-400 caret-icon shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
                                     <div class="custom-select-options absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 rounded-lg shadow-lg overflow-hidden max-h-48 overflow-y-auto custom-scrollbar">
                                         <div class="px-3 py-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-xs font-bold dark:text-white" onclick="Utils.selectOption('filter-type-select', 'all', 'Semua Tipe')">Semua Tipe</div>
                                         <div class="px-3 py-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-xs font-bold dark:text-white" onclick="Utils.selectOption('filter-type-select', 'income', 'Pemasukan')">Pemasukan</div>
@@ -511,7 +501,7 @@
                                     <input type="hidden" id="filter-type-value" value="all">
                                 </div>
                                 <div class="relative custom-select z-30 min-w-0" id="filter-category-select">
-                                    <div class="w-full input-premium text-zinc-700 dark:text-white text-[10px] font-bold rounded-lg px-2.5 py-2.5 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('filter-category-select')"><div id="filter-category-display" class="truncate pr-1">Kategori</div><svg class="w-4 h-4 text-zinc-400 caret-icon shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
+                                    <div class="w-full input-premium text-zinc-700 dark:text-white text-[10px] font-bold rounded-lg px-2.5 py-2.5 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('filter-category-select')"><div id="filter-category-display" class="truncate pr-1">Kategori</div><svg class="w-4 h-4 text-zinc-400 caret-icon shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
                                     <div class="custom-select-options absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 rounded-lg shadow-lg overflow-hidden max-h-48 overflow-y-auto custom-scrollbar" id="filter-category-options"></div>
                                     <input type="hidden" id="filter-category-value" value="all">
                                 </div>
@@ -540,7 +530,7 @@
                             <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-0.5 truncate">Total Terkumpul</p>
                             <h3 class="text-2xl font-extrabold tracking-tighter text-zinc-900 dark:text-white truncate" id="goals-total-saved">Rp 0</h3>
                         </div>
-                        <button onclick="AppUI.openModal('modal-set-goal')" class="shrink-0 bg-brand-dark dark:bg-blue-600 text-white font-bold text-sm px-4 py-3 rounded-xl flex justify-center items-center gap-2 hover:opacity-90 transition-opacity"><svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg> Target Baru</button>
+                        <button onclick="AppUI.openModal('modal-set-goal')" class="shrink-0 bg-brand-dark dark:bg-blue-600 text-white font-bold text-sm px-4 py-3 rounded-xl flex justify-center items-center gap-2 hover:opacity-90 transition-opacity"><svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg> Target Baru</button>
                     </div>
                     <div id="goals-list-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-stretch min-w-0"></div>
                 </section>
@@ -568,7 +558,7 @@
                                 <label class="block text-[10px] font-bold text-zinc-500 mb-1 uppercase tracking-widest truncate">Kategori</label>
                                 <div class="relative custom-select" id="tx-category-select">
                                     <div class="w-full input-premium text-zinc-700 dark:text-white text-sm font-semibold rounded-xl px-4 py-3.5 flex justify-between items-center cursor-pointer" onclick="Utils.toggleDropdown('tx-category-select')">
-                                        <div class="flex items-center gap-2.5 min-w-0" id="tx-category-display"><span>Makanan</span></div><svg class="w-5 h-5 text-zinc-400 caret-icon transition-transform shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                                        <div class="flex items-center gap-2.5 min-w-0" id="tx-category-display"><span>Makanan</span></div><svg class="w-5 h-5 text-zinc-400 caret-icon transition-transform shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
                                     </div>
                                     <div class="custom-select-options absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 rounded-xl shadow-lg overflow-hidden z-[100] max-h-48 overflow-y-auto custom-scrollbar"></div>
                                     <input type="hidden" id="input-category" value="Makanan">
@@ -587,7 +577,7 @@
                             <div class="min-w-0">
                                 <label class="block text-[10px] font-bold text-zinc-500 mb-1 uppercase tracking-widest truncate">Tanggal</label>
                                 <div class="w-full input-premium text-zinc-700 dark:text-white text-sm font-semibold rounded-xl px-4 py-3.5 flex justify-between items-center cursor-pointer" onclick="CalendarManager.open('input-date')">
-                                    <span id="display-date" class="truncate pr-2">Pilih Tanggal</span><svg class="w-5 h-5 text-zinc-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                    <span id="display-date" class="truncate pr-2">Pilih Tanggal</span><svg class="w-5 h-5 text-zinc-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                 </div>
                                 <input type="hidden" id="input-date" required>
                             </div>
@@ -606,7 +596,7 @@
                     <div class="mb-1 px-1 min-w-0"><h2 class="text-lg font-extrabold tracking-tight text-zinc-900 dark:text-white truncate">Pengaturan</h2></div>
 
                     <div class="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-brand-border dark:border-zinc-800 shadow-sm flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left min-w-0">
-                        <div class="w-12 h-12 bg-zinc-50 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 rounded-xl flex items-center justify-center shrink-0"><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg></div>
+                        <div class="w-12 h-12 bg-zinc-50 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 rounded-xl flex items-center justify-center shrink-0"><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg></div>
                         <div class="flex-grow min-w-0">
                             <h3 class="font-bold text-zinc-900 dark:text-white text-sm mb-0.5 truncate">Anggaran Bulanan</h3>
                             <p class="text-xs text-zinc-500">Atur batas pengeluaran kategori.</p>
@@ -615,7 +605,7 @@
                     </div>
 
                     <div class="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-brand-border dark:border-zinc-800 shadow-sm text-center sm:text-left flex flex-col sm:flex-row items-center gap-3 min-w-0">
-                        <div class="w-12 h-12 bg-zinc-50 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 rounded-xl flex items-center justify-center shrink-0"><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg></div>
+                        <div class="w-12 h-12 bg-zinc-50 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 rounded-xl flex items-center justify-center shrink-0"><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg></div>
                         <div class="flex-grow min-w-0">
                             <h3 class="font-bold text-zinc-900 dark:text-white text-sm mb-0.5 truncate">Cadangkan Data</h3>
                             <p class="text-xs text-zinc-500">Ekspor JSON/CSV & Impor ke HP baru.</p>
@@ -631,7 +621,7 @@
                     </div>
 
                     <div class="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-brand-border dark:border-zinc-800 shadow-sm text-center sm:text-left flex flex-col sm:flex-row items-center gap-3 min-w-0">
-                        <div class="w-12 h-12 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-xl flex items-center justify-center shrink-0"><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></div>
+                        <div class="w-12 h-12 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-xl flex items-center justify-center shrink-0"><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></div>
                         <div class="flex-grow min-w-0">
                             <h3 class="font-bold text-zinc-900 dark:text-white text-sm mb-0.5 truncate">Hapus Semua Data</h3>
                             <p class="text-xs text-zinc-500">Menghapus permanen seluruh data.</p>
@@ -647,29 +637,29 @@
 <!-- BOTTOM NAV (MOBILE) -->
 <nav class="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 w-[94%] max-w-md bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border border-brand-border dark:border-zinc-800 rounded-[26px] z-50 shadow-float px-2 py-2 flex justify-between items-center gap-1">
     <button onclick="AppUI.switchTab('dashboard')" class="nav-btn nav-btn-dashboard mobile-nav active flex-1">
-        <svg class="w-6 h-6 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-        <svg class="w-6 h-6 shrink-0 icon-fill" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-        <span class="text-[10px] font-bold tracking-tight leading-none">Home</span>
+        <svg class="w-6 h-6 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        <svg class="w-6 h-6 shrink-0 icon-fill" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        <span class="text-[10px] font-bold tracking-tight leading-none mt-1">Home</span>
     </button>
     <button onclick="AppUI.switchTab('wallet')" class="nav-btn nav-btn-wallet mobile-nav flex-1">
         <svg class="w-6 h-6 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2v-5zm-5 0h.01M16 12a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
         <svg class="w-6 h-6 shrink-0 icon-fill" fill="currentColor" viewBox="0 0 24 24"><path d="M21 7v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2zm-5 5h.01M16 12a1 1 0 10-2 0 1 1 0 002 0z"/></svg>
-        <span class="text-[10px] font-bold tracking-tight leading-none">Dompet</span>
+        <span class="text-[10px] font-bold tracking-tight leading-none mt-1">Dompet</span>
     </button>
     <button onclick="AppUI.switchTab('add')" class="nav-btn nav-btn-add mobile-nav flex-1">
-        <svg class="w-6 h-6 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-        <svg class="w-6 h-6 shrink-0 icon-fill" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-        <span class="text-[10px] font-bold tracking-tight leading-none">Catat</span>
+        <svg class="w-6 h-6 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        <svg class="w-6 h-6 shrink-0 icon-fill" fill="currentColor" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        <span class="text-[10px] font-bold tracking-tight leading-none mt-1">Catat</span>
     </button>
     <button onclick="AppUI.switchTab('recap')" class="nav-btn nav-btn-recap mobile-nav flex-1">
-        <svg class="w-6 h-6 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-        <svg class="w-6 h-6 shrink-0 icon-fill" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-10 14H7v-6h2v6zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
-        <span class="text-[10px] font-bold tracking-tight leading-none">Rekap</span>
+        <svg class="w-6 h-6 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        <svg class="w-6 h-6 shrink-0 icon-fill" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-10 14H7v-6h2v6zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+        <span class="text-[10px] font-bold tracking-tight leading-none mt-1">Rekap</span>
     </button>
     <button onclick="AppUI.switchTab('history')" class="nav-btn nav-btn-history mobile-nav flex-1">
-        <svg class="w-6 h-6 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
-        <svg class="w-6 h-6 shrink-0 icon-fill" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-        <span class="text-[10px] font-bold tracking-tight leading-none">Riwayat</span>
+        <svg class="w-6 h-6 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+        <svg class="w-6 h-6 shrink-0 icon-fill" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        <span class="text-[10px] font-bold tracking-tight leading-none mt-1">Riwayat</span>
     </button>
 </nav>
 
@@ -687,7 +677,7 @@
         formatCurrencyInputEvent: (e) => { let v = e.target.value.replace(/[^0-9]/g, ''); e.target.value = v ? new Intl.NumberFormat('id-ID').format(v) : ''; },
         toggleAdvancedFilter: () => { const p = document.getElementById('advanced-filter-panel'); p.classList.toggle('hidden'); document.getElementById('btn-toggle-filter').classList.toggle('bg-zinc-100'); },
 
-        // ICON SIZE INCREASED TO w-5 h-5
+        // Ikon dengan viewBox absolut presisi
         categoryData: {
             'Makanan': { type: 'expense', svg: '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a7 7 0 00-7 7v1h14v-1a7 7 0 00-7-7zM5 13h14v2a4 4 0 01-4 4H9a4 4 0 01-4-4v-2z" /></svg>', colorText: 'text-orange-600 dark:text-orange-500', bg: 'bg-orange-50 dark:bg-orange-500/10' },
             'Transport': { type: 'expense', svg: '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V9a2 2 0 012-2h8a2 2 0 012 2v5a2 2 0 01-2 2h-2m-4 0v2m0-2v-2m4 2h.01M9 16h.01" /></svg>', colorText: 'text-sky-600 dark:text-sky-500', bg: 'bg-sky-50 dark:bg-sky-500/10' },
@@ -704,7 +694,7 @@
         renderTxCategories: (txType, containerId = 'tx-category-select') => {
             const container = document.querySelector(`#${containerId} .custom-select-options`); let html = ''; 
             const cats = Object.keys(Utils.categoryData).filter(c => Utils.categoryData[c].type === txType || Utils.categoryData[c].type === 'both');
-            cats.forEach(cat => { const style = Utils.categoryData[cat]; html += `<div class="px-3.5 py-3 flex items-center gap-3 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer border-b border-brand-border dark:border-zinc-800 transition-colors min-w-0" onclick="Utils.selectOption('${containerId}', '${cat}', '${cat}')"><div class="${style.colorText} shrink-0 flex items-center">${style.svg}</div><span class="font-bold text-zinc-700 dark:text-zinc-200 text-xs truncate">${cat}</span></div>`; });
+            cats.forEach(cat => { const style = Utils.categoryData[cat]; html += `<div class="px-3.5 py-3 flex items-center gap-3 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer border-b border-brand-border dark:border-zinc-800 transition-colors min-w-0" onclick="Utils.selectOption('${containerId}', '${cat}', '${cat}')"><div class="${style.colorText} shrink-0 w-6 h-6 flex items-center justify-center">${style.svg}</div><span class="font-bold text-zinc-700 dark:text-zinc-200 text-xs truncate">${cat}</span></div>`; });
             if(container) container.innerHTML = html; Utils.selectOption(containerId, cats[0], cats[0]);
         },
         setupCustomSelects: () => {
@@ -712,7 +702,7 @@
             const filterCatOptions = document.getElementById('filter-category-options');
             if(filterCatOptions) {
                 let catHtml = `<div class="px-3 py-2.5 flex items-center gap-2 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer border-b border-brand-border dark:border-zinc-800 text-xs font-bold text-zinc-700 dark:text-zinc-200 transition-colors min-w-0" onclick="Utils.selectOption('filter-category-select', 'all', 'Kategori')"><span class="truncate">Semua Kategori</span></div>`;
-                Object.keys(Utils.categoryData).forEach(cat => { const style = Utils.categoryData[cat]; catHtml += `<div class="px-3 py-2.5 flex items-center gap-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer border-b border-brand-border dark:border-zinc-800 transition-colors min-w-0" onclick="Utils.selectOption('filter-category-select', '${cat}', '${cat}')"><div class="${style.colorText} shrink-0 flex items-center">${style.svg}</div><span class="font-bold text-zinc-700 dark:text-zinc-200 text-xs truncate">${cat}</span></div>`; });
+                Object.keys(Utils.categoryData).forEach(cat => { const style = Utils.categoryData[cat]; catHtml += `<div class="px-3 py-2.5 flex items-center gap-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer border-b border-brand-border dark:border-zinc-800 transition-colors min-w-0" onclick="Utils.selectOption('filter-category-select', '${cat}', '${cat}')"><div class="${style.colorText} shrink-0 w-6 h-6 flex items-center justify-center">${style.svg}</div><span class="font-bold text-zinc-700 dark:text-zinc-200 text-xs truncate">${cat}</span></div>`; });
                 filterCatOptions.innerHTML = catHtml;
             }
             document.addEventListener('click', (e) => { if(!e.target.closest('.custom-select')) document.querySelectorAll('.custom-select').forEach(el => el.classList.remove('open')); });
@@ -721,7 +711,7 @@
             const s = document.getElementById(selectId); if(!s) return;
             s.querySelector('input[type="hidden"]').value = value;
             const displayContainer = s.querySelector('div[id$="-display"]');
-            if (Utils.categoryData[value] && !selectId.startsWith('filter-')) { const style = Utils.categoryData[value]; displayContainer.innerHTML = `<div class="flex items-center gap-2.5 min-w-0"><div class="${style.colorText} shrink-0 flex items-center">${style.svg}</div> <span class="dark:text-white font-bold text-sm truncate">${value}</span></div>`; } 
+            if (Utils.categoryData[value] && !selectId.startsWith('filter-')) { const style = Utils.categoryData[value]; displayContainer.innerHTML = `<div class="flex items-center gap-2.5 min-w-0"><div class="${style.colorText} shrink-0 w-6 h-6 flex items-center justify-center">${style.svg}</div> <span class="dark:text-white font-bold text-sm truncate">${value}</span></div>`; } 
             else { displayContainer.innerHTML = `<span class="dark:text-white font-bold truncate pr-1">${displayText || value}</span>`; }
             s.classList.remove('open');
             if (selectId.startsWith('filter-')) { AppState.currentPage = 1; TransactionManager.renderHistory(); }
@@ -755,12 +745,16 @@
             c.appendChild(t); setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(-20px) scale(0.9)'; t.style.transition = 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'; setTimeout(() => t.remove(), 300); }, 3000);
         },
         showConfirm: (title, message, callback) => {
-            document.getElementById('confirm-title').innerText = title; document.getElementById('confirm-msg').innerText = message; AppState.confirmCallback = callback; document.getElementById('modal-confirm').classList.remove('hidden');
+            document.getElementById('confirm-title').innerText = title; document.getElementById('confirm-msg').innerText = message; AppState.confirmCallback = callback; AppUI.openModal('modal-confirm');
         },
-        closeConfirm: () => { document.getElementById('modal-confirm').classList.add('hidden'); AppState.confirmCallback = null; },
-        openModal: (id) => document.getElementById(id).classList.remove('hidden'),
+        closeConfirm: () => { AppUI.closeModal('modal-confirm'); AppState.confirmCallback = null; },
+        openModal: (id) => {
+            document.getElementById(id).classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Mengunci background scroll
+        },
         closeModal: (id) => { 
             document.getElementById(id).classList.add('hidden'); 
+            document.body.style.overflow = ''; // Membuka background scroll
             if(id === 'modal-add-savings') { document.getElementById('input-add-savings').value = ''; document.querySelector('input[name="savings-source"][value="external"]').checked = true; }
         },
         switchTab: (tabId) => {
@@ -970,7 +964,7 @@
                     totalSaved += goal.saved; let persen = Math.min((goal.saved / goal.target) * 100, 100);
                     if(idx < 2) summaryEl.innerHTML += `<div class="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/50 border border-brand-border dark:border-zinc-800 min-w-0"><div class="flex justify-between items-center mb-1.5 gap-2 min-w-0"><p class="text-xs font-bold text-zinc-800 dark:text-white tracking-tight truncate">${goal.name}</p><span class="text-[9px] font-bold text-brand-dark dark:text-blue-400 bg-brand-light dark:bg-blue-600/20 px-1.5 py-0.5 rounded uppercase shrink-0">${Math.round(persen)}%</span></div><div class="w-full bg-zinc-200 dark:bg-zinc-700 rounded-full h-2 mb-1.5 overflow-hidden"><div class="bg-brand-dark dark:bg-blue-500 h-2 rounded-full" style="width: ${persen}%"></div></div><div class="flex justify-between text-[9px] font-bold tracking-widest gap-2 min-w-0"><span class="text-zinc-900 dark:text-white truncate text-left">${Utils.formatIDR(goal.saved)}</span><span class="text-zinc-400 truncate text-right">/ ${Utils.formatIDR(goal.target)}</span></div></div>`;
                     
-                    listEl.innerHTML += `<div class="bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-brand-border dark:border-zinc-800 shadow-sm flex flex-col justify-between h-full min-w-0"><div><div class="flex justify-between items-start mb-3.5 gap-2 min-w-0"><h3 class="font-extrabold text-zinc-900 dark:text-white text-sm tracking-tight truncate flex-grow">${goal.name}</h3><button onclick="GoalManager.deleteGoal(${goal.id})" class="shrink-0 w-8 h-8 rounded-lg bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div><div class="w-full bg-zinc-100 dark:bg-zinc-800 rounded-full h-2 mb-2.5 overflow-hidden"><div class="bg-brand-dark dark:bg-blue-500 h-2 rounded-full" style="width: ${persen}%"></div></div><div class="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest gap-2 min-w-0"><span class="text-zinc-900 dark:text-white text-sm truncate tracking-tight">${Utils.formatIDR(goal.saved)}</span><span class="text-zinc-400 truncate text-right">/ ${Utils.formatIDR(goal.target)}</span></div></div><button onclick="GoalManager.openAddModal(${goal.id}, '${goal.name}')" class="w-full bg-brand-light dark:bg-blue-600/20 text-brand-dark dark:text-blue-400 font-bold rounded-xl py-2.5 mt-4 hover:opacity-80 transition-opacity text-xs shrink-0">Isi Tabungan</button></div>`;
+                    listEl.innerHTML += `<div class="bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-brand-border dark:border-zinc-800 shadow-sm flex flex-col justify-between h-full min-w-0"><div><div class="flex justify-between items-start mb-3.5 gap-2 min-w-0"><h3 class="font-extrabold text-zinc-900 dark:text-white text-sm tracking-tight truncate flex-grow">${goal.name}</h3><button onclick="GoalManager.deleteGoal(${goal.id})" class="shrink-0 w-8 h-8 rounded-lg bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div><div class="w-full bg-zinc-100 dark:bg-zinc-800 rounded-full h-2 mb-2.5 overflow-hidden"><div class="bg-brand-dark dark:bg-blue-500 h-2 rounded-full" style="width: ${persen}%"></div></div><div class="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest gap-2 min-w-0"><span class="text-zinc-900 dark:text-white text-sm truncate tracking-tight">${Utils.formatIDR(goal.saved)}</span><span class="text-zinc-400 truncate text-right">/ ${Utils.formatIDR(goal.target)}</span></div></div><button onclick="GoalManager.openAddModal(${goal.id}, '${goal.name}')" class="w-full bg-brand-light dark:bg-blue-600/20 text-brand-dark dark:text-blue-400 font-bold rounded-xl py-2.5 mt-4 hover:opacity-80 transition-opacity text-xs shrink-0">Isi Tabungan</button></div>`;
                 });
             }
             document.getElementById('goals-total-saved').innerText = Utils.formatIDR(totalSaved);
@@ -1023,9 +1017,9 @@
             AppState.recurringBills.forEach(bill => {
                 const isPaidThisMonth = bill.lastPaidMonth === currentMonthStr; const isDue = currentDay >= bill.date;
                 let statusHtml, btnHtml;
-                if (isPaidThisMonth) { statusHtml = `<span class="text-[9px] text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 px-2 py-1 rounded font-bold uppercase tracking-widest shrink-0">Lunas Bulan Ini</span>`; btnHtml = `<button onclick="BillManager.deleteBill('${bill.id}')" class="w-9 h-9 rounded-lg bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-red-500 transition-colors shrink-0"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>`; } 
-                else if (isDue) { statusHtml = `<span class="text-[9px] text-red-600 bg-red-50 dark:bg-red-500/10 border border-red-100 dark:border-red-500/20 px-2 py-1 rounded font-bold uppercase tracking-widest shrink-0">Bayar Sekarang</span>`; btnHtml = `<div class="flex gap-1.5 shrink-0"><button onclick="BillManager.openPayModal('${bill.id}')" class="bg-red-600 text-white font-bold text-[11px] px-3.5 py-2 rounded-lg hover:opacity-90 transition-opacity shrink-0">Bayar</button><button onclick="BillManager.deleteBill('${bill.id}')" class="w-9 h-9 rounded-lg bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-red-500 transition-colors shrink-0"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div>`; } 
-                else { statusHtml = `<span class="text-[9px] text-zinc-500 bg-zinc-100 dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 px-2 py-1 rounded font-bold uppercase tracking-widest shrink-0">Tgl ${bill.date}</span>`; btnHtml = `<button onclick="BillManager.deleteBill('${bill.id}')" class="w-9 h-9 rounded-lg bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-red-500 transition-colors shrink-0"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>`; }
+                if (isPaidThisMonth) { statusHtml = `<span class="text-[9px] text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 px-2 py-1 rounded font-bold uppercase tracking-widest shrink-0">Lunas Bulan Ini</span>`; btnHtml = `<button onclick="BillManager.deleteBill('${bill.id}')" class="w-9 h-9 rounded-lg bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-red-500 transition-colors shrink-0"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>`; } 
+                else if (isDue) { statusHtml = `<span class="text-[9px] text-red-600 bg-red-50 dark:bg-red-500/10 border border-red-100 dark:border-red-500/20 px-2 py-1 rounded font-bold uppercase tracking-widest shrink-0">Bayar Sekarang</span>`; btnHtml = `<div class="flex gap-1.5 shrink-0"><button onclick="BillManager.openPayModal('${bill.id}')" class="bg-red-600 text-white font-bold text-[11px] px-3.5 py-2 rounded-lg hover:opacity-90 transition-opacity shrink-0">Bayar</button><button onclick="BillManager.deleteBill('${bill.id}')" class="w-9 h-9 rounded-lg bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-red-500 transition-colors shrink-0"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div>`; } 
+                else { statusHtml = `<span class="text-[9px] text-zinc-500 bg-zinc-100 dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 px-2 py-1 rounded font-bold uppercase tracking-widest shrink-0">Tgl ${bill.date}</span>`; btnHtml = `<button onclick="BillManager.deleteBill('${bill.id}')" class="w-9 h-9 rounded-lg bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-red-500 transition-colors shrink-0"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>`; }
                 const style = Utils.getCategoryStyle(bill.category);
                 container.innerHTML += `<div class="flex items-center justify-between gap-3 p-4 bg-white dark:bg-zinc-900 border border-brand-border dark:border-zinc-800 shadow-sm rounded-2xl min-w-0"><div class="flex items-center gap-3 flex-grow min-w-0"><div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">${style.svg}</div><div class="min-w-0 flex-grow"><h4 class="font-bold text-sm text-zinc-900 dark:text-white truncate tracking-tight">${bill.name}</h4><p class="text-xs mt-0.5 truncate"><span class="font-extrabold text-zinc-700 dark:text-zinc-300 tracking-tight">${Utils.formatIDR(bill.amount)}</span></p><div class="mt-1.5 flex">${statusHtml}</div></div></div><div class="flex items-center justify-end gap-1.5 shrink-0">${btnHtml}</div></div>`;
             });
