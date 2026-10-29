@@ -13,7 +13,7 @@
                     fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
                     colors: {
                         'brand-bg': '#F9F8F4',
-                        'brand-dark': '#1B2E22',
+                        'brand-dark': '#1B2E22', 
                         'brand-light': '#E8EDE7',
                         'brand-border': '#EBEAE4'
                     },
@@ -33,7 +33,7 @@
         * { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-user-drag: none; }
         input, textarea, select { -webkit-user-select: auto; user-select: auto; }
         html, body { scroll-behavior: smooth; overflow-x: hidden; background-color: #F9F8F4; }
-        .dark body { background-color: #09090B; } /* zinc-950 */
+        .dark body { background-color: #09090B; } 
         
         .view-section { display: none; opacity: 0; transition: opacity 0.2s ease, transform 0.2s ease; transform: translateY(5px); }
         .view-section.active { display: block; opacity: 1; transform: translateY(0); animation: smoothEnter 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
@@ -57,15 +57,16 @@
             padding: 8px 12px; 
             border-radius: 20px; 
             color: #71717A; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
         }
         .mobile-nav.active { background-color: #E8EDE7; color: #1B2E22; }
         .dark .mobile-nav { color: #A1A1AA; }
-        .dark .mobile-nav.active { background-color: #27272A; color: #F4F4F5; }
+        /* Dark mode pill becomes blue tinted */
+        .dark .mobile-nav.active { background-color: rgba(37, 99, 235, 0.2); color: #60A5FA; }
 
         /* Desktop Sidebar Active */
         .desktop-nav.active { background-color: #E8EDE7; color: #1B2E22; font-weight: 700; }
-        .dark .desktop-nav.active { background-color: #27272A; color: #F4F4F5; }
+        .dark .desktop-nav.active { background-color: rgba(37, 99, 235, 0.15); color: #60A5FA; }
         
         .pb-safe { padding-bottom: calc(env(safe-area-inset-bottom) + 80px); }
 
@@ -77,7 +78,7 @@
         .input-premium { background-color: #ffffff; border: 1px solid #EBEAE4; transition: all 0.2s ease; }
         .input-premium:focus { border-color: #1B2E22; box-shadow: 0 0 0 3px rgba(27, 46, 34, 0.1); outline: none; }
         .dark .input-premium { background-color: #18181B; border-color: #27272A; color: #F4F4F5; }
-        .dark .input-premium:focus { border-color: #F4F4F5; box-shadow: 0 0 0 3px rgba(244, 244, 245, 0.1); }
+        .dark .input-premium:focus { border-color: #3B82F6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
     </style>
 </head>
 <body class="text-zinc-800 dark:text-zinc-100 antialiased transition-colors duration-300 min-h-screen flex">
@@ -98,7 +99,7 @@
         <p class="text-sm text-center text-zinc-500 dark:text-zinc-400 mb-8 leading-relaxed" id="confirm-msg">Apakah Anda yakin?</p>
         <div class="flex gap-3">
             <button onclick="AppUI.closeConfirm()" class="flex-1 bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 font-bold rounded-xl py-3.5 text-sm hover:bg-zinc-200 transition-colors">Batal</button>
-            <button id="btn-confirm-action" class="flex-1 bg-brand-dark text-white font-bold rounded-xl py-3.5 text-sm hover:opacity-90 transition-opacity">Ya, Lanjut</button>
+            <button id="btn-confirm-action" class="flex-1 bg-brand-dark dark:bg-blue-600 text-white font-bold rounded-xl py-3.5 text-sm hover:opacity-90 transition-opacity">Ya, Lanjut</button>
         </div>
     </div>
 </div>
@@ -126,7 +127,7 @@
             <div class="flex gap-3 pt-2">
                 <button type="button" id="btn-delete-budget" onclick="BudgetManager.deleteCurrent()" class="hidden flex-1 bg-red-50 dark:bg-red-500/10 text-red-600 font-bold rounded-xl py-3.5 text-sm hover:bg-red-100 transition-colors">Hapus</button>
                 <button type="button" onclick="AppUI.closeModal('modal-set-budget')" class="flex-1 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 font-bold rounded-xl py-3.5 text-sm hover:bg-zinc-200 transition-colors">Batal</button>
-                <button type="submit" class="flex-[1.5] bg-brand-dark text-white font-bold rounded-xl py-3.5 hover:opacity-90 transition-opacity text-sm">Simpan</button>
+                <button type="submit" class="flex-[1.5] bg-brand-dark dark:bg-blue-600 text-white font-bold rounded-xl py-3.5 hover:opacity-90 transition-opacity text-sm">Simpan</button>
             </div>
         </form>
     </div>
@@ -147,7 +148,7 @@
         <div id="cal-days" class="grid grid-cols-7 gap-1 text-center"></div>
         <div class="mt-5 flex gap-3">
             <button onclick="AppUI.closeModal('modal-datepicker')" class="flex-1 py-3 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 rounded-xl font-bold text-sm">Batal</button>
-            <button onclick="CalendarManager.setToday()" class="flex-1 py-3 bg-brand-light dark:bg-zinc-700 text-brand-dark dark:text-white rounded-xl font-bold text-sm">Hari Ini</button>
+            <button onclick="CalendarManager.setToday()" class="flex-1 py-3 bg-brand-light dark:bg-blue-600/20 text-brand-dark dark:text-blue-400 rounded-xl font-bold text-sm">Hari Ini</button>
         </div>
     </div>
 </div>
@@ -168,7 +169,7 @@
             </div>
             <div class="flex gap-3 pt-2">
                 <button type="button" onclick="AppUI.closeModal('modal-set-goal')" class="flex-1 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 font-bold rounded-xl py-3.5 text-sm hover:bg-zinc-200 transition-colors">Batal</button>
-                <button type="submit" class="flex-1 bg-brand-dark text-white font-bold rounded-xl py-3.5 hover:opacity-90 transition-opacity text-sm">Simpan</button>
+                <button type="submit" class="flex-1 bg-brand-dark dark:bg-blue-600 text-white font-bold rounded-xl py-3.5 hover:opacity-90 transition-opacity text-sm">Simpan</button>
             </div>
         </form>
     </div>
@@ -188,19 +189,19 @@
             <div>
                 <label class="block text-[11px] font-bold text-zinc-500 mb-1.5 uppercase tracking-widest">Sumber Dana</label>
                 <div class="bg-zinc-100 dark:bg-zinc-800 p-1 rounded-xl flex gap-1">
-                    <label class="flex-1 cursor-pointer"><input type="radio" name="savings-source" value="external" class="peer hidden" checked><div class="text-center py-2.5 rounded-lg text-xs font-bold peer-checked:bg-white dark:peer-checked:bg-zinc-700 peer-checked:text-brand-dark dark:peer-checked:text-white peer-checked:shadow-sm text-zinc-500 transition-all">Dana Luar</div></label>
-                    <label class="flex-1 cursor-pointer"><input type="radio" name="savings-source" value="balance" class="peer hidden"><div class="text-center py-2.5 rounded-lg text-xs font-bold peer-checked:bg-white dark:peer-checked:bg-zinc-700 peer-checked:text-brand-dark dark:peer-checked:text-white peer-checked:shadow-sm text-zinc-500 transition-all">Potong Saldo</div></label>
+                    <label class="flex-1 cursor-pointer"><input type="radio" name="savings-source" value="external" class="peer hidden" checked><div class="text-center py-2.5 rounded-lg text-xs font-bold peer-checked:bg-white dark:peer-checked:bg-zinc-700 peer-checked:text-brand-dark dark:peer-checked:text-blue-400 peer-checked:shadow-sm text-zinc-500 transition-all">Dana Luar</div></label>
+                    <label class="flex-1 cursor-pointer"><input type="radio" name="savings-source" value="balance" class="peer hidden"><div class="text-center py-2.5 rounded-lg text-xs font-bold peer-checked:bg-white dark:peer-checked:bg-zinc-700 peer-checked:text-brand-dark dark:peer-checked:text-blue-400 peer-checked:shadow-sm text-zinc-500 transition-all">Potong Saldo</div></label>
                 </div>
             </div>
             <div id="savings-wallet-wrapper">
                 <div class="grid grid-cols-2 gap-2 mt-2">
-                    <label class="cursor-pointer"><input type="radio" name="savings-wallet" value="cash" class="peer hidden" checked><div class="text-center py-3 rounded-xl text-xs font-bold bg-zinc-50 dark:bg-zinc-800 peer-checked:bg-brand-dark peer-checked:text-white border border-transparent transition-all">Cash</div></label>
-                    <label class="cursor-pointer"><input type="radio" name="savings-wallet" value="bank" class="peer hidden"><div class="text-center py-3 rounded-xl text-xs font-bold bg-zinc-50 dark:bg-zinc-800 peer-checked:bg-brand-dark peer-checked:text-white border border-transparent transition-all">Rekening</div></label>
+                    <label class="cursor-pointer"><input type="radio" name="savings-wallet" value="cash" class="peer hidden" checked><div class="text-center py-3 rounded-xl text-xs font-bold bg-zinc-50 dark:bg-zinc-800 peer-checked:bg-brand-dark dark:peer-checked:bg-blue-600 peer-checked:text-white border border-transparent transition-all">Cash</div></label>
+                    <label class="cursor-pointer"><input type="radio" name="savings-wallet" value="bank" class="peer hidden"><div class="text-center py-3 rounded-xl text-xs font-bold bg-zinc-50 dark:bg-zinc-800 peer-checked:bg-brand-dark dark:peer-checked:bg-blue-600 peer-checked:text-white border border-transparent transition-all">Rekening</div></label>
                 </div>
             </div>
             <div class="flex gap-3 pt-2">
                 <button type="button" onclick="AppUI.closeModal('modal-add-savings')" class="flex-1 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 font-bold rounded-xl py-3.5 text-sm hover:bg-zinc-200 transition-colors">Batal</button>
-                <button type="submit" class="flex-1 bg-brand-dark text-white font-bold rounded-xl py-3.5 hover:opacity-90 transition-opacity text-sm">Simpan</button>
+                <button type="submit" class="flex-1 bg-brand-dark dark:bg-blue-600 text-white font-bold rounded-xl py-3.5 hover:opacity-90 transition-opacity text-sm">Simpan</button>
             </div>
         </form>
     </div>
@@ -237,7 +238,7 @@
             </div>
             <div class="flex gap-3 pt-2">
                 <button type="button" onclick="AppUI.closeModal('modal-add-bill')" class="flex-1 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 font-bold rounded-xl py-3.5 text-sm hover:bg-zinc-200 transition-colors">Batal</button>
-                <button type="submit" class="flex-1 bg-brand-dark text-white font-bold rounded-xl py-3.5 hover:opacity-90 transition-opacity text-sm">Simpan</button>
+                <button type="submit" class="flex-1 bg-brand-dark dark:bg-blue-600 text-white font-bold rounded-xl py-3.5 hover:opacity-90 transition-opacity text-sm">Simpan</button>
             </div>
         </form>
     </div>
@@ -252,13 +253,13 @@
         <div class="mb-6 text-left">
             <label class="block text-[11px] font-bold text-zinc-500 mb-2 uppercase tracking-widest text-center">Bayar Menggunakan</label>
             <div class="grid grid-cols-2 gap-2">
-                <label class="cursor-pointer"><input type="radio" name="pay-bill-wallet" value="cash" class="peer hidden" checked><div class="text-center py-3 rounded-xl text-xs font-bold bg-zinc-50 dark:bg-zinc-800 peer-checked:bg-brand-dark peer-checked:text-white transition-all border border-transparent">Cash</div></label>
-                <label class="cursor-pointer"><input type="radio" name="pay-bill-wallet" value="bank" class="peer hidden"><div class="text-center py-3 rounded-xl text-xs font-bold bg-zinc-50 dark:bg-zinc-800 peer-checked:bg-brand-dark peer-checked:text-white transition-all border border-transparent">Rekening</div></label>
+                <label class="cursor-pointer"><input type="radio" name="pay-bill-wallet" value="cash" class="peer hidden" checked><div class="text-center py-3 rounded-xl text-xs font-bold bg-zinc-50 dark:bg-zinc-800 peer-checked:bg-brand-dark dark:peer-checked:bg-blue-600 peer-checked:text-white transition-all border border-transparent">Cash</div></label>
+                <label class="cursor-pointer"><input type="radio" name="pay-bill-wallet" value="bank" class="peer hidden"><div class="text-center py-3 rounded-xl text-xs font-bold bg-zinc-50 dark:bg-zinc-800 peer-checked:bg-brand-dark dark:peer-checked:bg-blue-600 peer-checked:text-white transition-all border border-transparent">Rekening</div></label>
             </div>
         </div>
         <div class="flex gap-3">
             <button onclick="AppUI.closeModal('modal-pay-bill')" class="flex-1 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 font-bold rounded-xl py-3.5 text-sm hover:bg-zinc-200 transition-colors">Batal</button>
-            <button id="btn-confirm-pay" class="flex-1 bg-brand-dark text-white font-bold rounded-xl py-3.5 hover:opacity-90 transition-opacity text-sm">Lunasi</button>
+            <button id="btn-confirm-pay" class="flex-1 bg-brand-dark dark:bg-blue-600 text-white font-bold rounded-xl py-3.5 hover:opacity-90 transition-opacity text-sm">Lunasi</button>
         </div>
     </div>
 </div>
@@ -269,8 +270,8 @@
     <!-- SIDEBAR DESKTOP -->
     <aside class="hidden md:flex flex-col w-[260px] bg-white dark:bg-zinc-950 border-r border-brand-border dark:border-zinc-800 z-30 fixed left-0 top-0 h-full">
         <div class="px-6 py-8 flex items-center gap-3 shrink-0">
-            <div class="w-10 h-10 rounded-xl bg-brand-dark text-white flex items-center justify-center shrink-0">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+            <div class="w-10 h-10 rounded-xl bg-brand-dark dark:bg-blue-600 text-white flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
             </div>
             <div class="min-w-0">
                 <h1 class="text-lg font-extrabold tracking-tight text-zinc-900 dark:text-white leading-none mb-1 truncate">Keuanganku</h1>
@@ -282,6 +283,10 @@
                 <svg class="w-5 h-5 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 <svg class="w-5 h-5 icon-fill shrink-0" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> <span class="truncate">Beranda</span>
             </button>
+            <button onclick="AppUI.switchTab('wallet')" class="nav-btn nav-btn-wallet desktop-nav w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-zinc-500 hover:bg-brand-bg dark:hover:bg-zinc-900 transition-all text-sm font-semibold">
+                <svg class="w-5 h-5 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2v-5zm-5 0h.01M16 12a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
+                <svg class="w-5 h-5 icon-fill shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M21 7v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2zm-5 5h.01M16 12a1 1 0 10-2 0 1 1 0 002 0z"/></svg> <span class="truncate">Dompet & Analisis</span>
+            </button>
             <button onclick="AppUI.switchTab('history')" class="nav-btn nav-btn-history desktop-nav w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-zinc-500 hover:bg-brand-bg dark:hover:bg-zinc-900 transition-all text-sm font-semibold">
                 <svg class="w-5 h-5 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
                 <svg class="w-5 h-5 icon-fill shrink-0" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg> <span class="truncate">Riwayat</span>
@@ -290,95 +295,68 @@
                 <svg class="w-5 h-5 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 <svg class="w-5 h-5 icon-fill shrink-0" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg> <span class="truncate">Target Impian</span>
             </button>
-            <button onclick="AppUI.switchTab('bills')" class="nav-btn nav-btn-bills desktop-nav w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-zinc-500 hover:bg-brand-bg dark:hover:bg-zinc-900 transition-all text-sm font-semibold">
-                <svg class="w-5 h-5 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                <svg class="w-5 h-5 icon-fill shrink-0" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg> <span class="truncate">Tagihan Rutin</span>
-            </button>
         </nav>
         <div class="p-5 shrink-0">
-            <button onclick="AppUI.switchTab('add')" class="w-full bg-brand-dark text-white font-bold rounded-xl py-3.5 hover:opacity-90 transition-opacity flex justify-center items-center gap-2 text-sm">
+            <button onclick="AppUI.switchTab('add')" class="w-full bg-brand-dark dark:bg-blue-600 text-white font-bold rounded-xl py-3.5 hover:opacity-90 transition-opacity flex justify-center items-center gap-2 text-sm">
                 <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg> <span class="truncate">Catat Transaksi</span>
             </button>
         </div>
     </aside>
 
-    <!-- MAIN CONTENT AREA - Lebar dibatasi agar tidak melar -->
+    <!-- MAIN CONTENT AREA -->
     <div class="md:ml-[260px] flex flex-col flex-1 min-w-0 min-h-[100dvh]">
         
         <!-- HEADER -->
         <header class="sticky top-0 z-40 bg-[#F9F8F4]/90 dark:bg-zinc-950/90 backdrop-blur-xl px-5 py-4 flex items-center justify-between border-b border-brand-border dark:border-zinc-800 md:px-8 shrink-0">
             <div class="flex items-center gap-3 md:hidden min-w-0">
-                <div class="w-9 h-9 rounded-lg bg-brand-dark flex items-center justify-center text-white shrink-0"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg></div>
+                <div class="w-9 h-9 rounded-lg bg-brand-dark dark:bg-blue-600 flex items-center justify-center text-white shrink-0"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg></div>
                 <h1 class="text-lg font-extrabold tracking-tight text-zinc-900 dark:text-white truncate">Keuanganku</h1>
             </div>
             <div class="hidden md:block min-w-0"><h2 id="desktop-page-title" class="text-xl font-extrabold tracking-tight text-zinc-900 dark:text-white truncate">Beranda</h2></div>
             <div class="flex items-center gap-2 shrink-0">
                 <button onclick="ThemeManager.toggle()" class="w-9 h-9 rounded-full bg-white dark:bg-zinc-900 text-zinc-500 flex items-center justify-center hover:bg-zinc-50 border border-brand-border dark:border-zinc-800 transition-colors">
-                    <svg class="w-4 h-4 dark:hidden" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-                    <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <svg class="w-4 h-4 shrink-0 dark:hidden" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                    <svg class="w-4 h-4 shrink-0 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                 </button>
                 <button onclick="AppUI.switchTab('settings')" class="w-9 h-9 rounded-full bg-white dark:bg-zinc-900 text-zinc-500 flex items-center justify-center hover:bg-zinc-50 border border-brand-border dark:border-zinc-800 transition-colors">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 </button>
             </div>
         </header>
 
         <main class="flex-1 p-4 sm:p-6 pb-safe w-full min-w-0">
-            <!-- Batas Lebar Maksimal 2xl (max 672px) agar konten ramping dan estetik -->
+            <!-- Batas Lebar Maksimal 2xl (max 672px) agar konten bersih, tidak melar -->
             <div class="max-w-2xl mx-auto w-full min-w-0">
 
-                <!-- ==================== VIEW: BERANDA ==================== -->
+                <!-- ==================== VIEW: BERANDA (MINIMALIST) ==================== -->
                 <section id="view-dashboard" class="view-section active space-y-5">
 
                     <div id="reminder-banner" class="hidden bg-red-50 dark:bg-red-500/10 rounded-2xl p-4 md:p-5 text-red-600 dark:text-red-400 flex-col md:flex-row md:items-center justify-between gap-4 border border-red-100 dark:border-red-500/20">
                         <div class="flex items-center gap-3 min-w-0">
-                            <div class="w-10 h-10 bg-white/50 dark:bg-zinc-800 rounded-xl flex items-center justify-center shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg></div>
+                            <div class="w-10 h-10 bg-white/50 dark:bg-zinc-800 rounded-xl flex items-center justify-center shrink-0"><svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg></div>
                             <div class="min-w-0 flex-1"><h4 class="font-bold text-sm tracking-tight truncate">Tagihan Menunggu</h4><p class="text-xs mt-0.5 truncate" id="reminder-text">Ada tagihan rutin yang harus dibayar.</p></div>
                         </div>
-                        <button onclick="AppUI.switchTab('bills')" class="shrink-0 bg-red-600 text-white font-bold text-xs px-5 py-2.5 rounded-lg hover:opacity-90">Lihat</button>
+                        <button onclick="AppUI.switchTab('wallet')" class="shrink-0 bg-red-600 text-white font-bold text-xs px-5 py-2.5 rounded-lg hover:opacity-90">Lihat</button>
                     </div>
 
-                    <!-- KARTU SALDO UTAMA (MINIMALIST) -->
-                    <div class="bg-brand-dark dark:bg-zinc-900 rounded-3xl p-6 md:p-8 text-white shadow-soft relative overflow-hidden">
-                        <div class="flex flex-col gap-6 relative z-10">
-                            <div class="min-w-0 flex-grow w-full">
-                                <p class="text-zinc-300 text-[10px] md:text-xs font-bold tracking-widest uppercase mb-1">Total Saldo Aktif</p>
-                                <h2 class="text-3xl md:text-5xl font-extrabold tracking-tighter truncate w-full" id="dash-balance">Rp 0</h2>
-                                
-                                <div class="flex flex-wrap items-center gap-5 mt-5">
-                                    <div class="min-w-0"><span class="text-[10px] text-zinc-400 font-bold uppercase tracking-widest block mb-0.5 truncate">Uang Tunai</span><span class="text-sm font-bold text-zinc-100 truncate block" id="dash-cash-balance">Rp 0</span></div>
-                                    <div class="w-px h-6 bg-zinc-700"></div>
-                                    <div class="min-w-0"><span class="text-[10px] text-zinc-400 font-bold uppercase tracking-widest block mb-0.5 truncate">Di Rekening</span><span class="text-sm font-bold text-zinc-100 truncate block" id="dash-bank-balance">Rp 0</span></div>
-                                </div>
-                            </div>
-                            
-                            <div class="w-full bg-white/5 rounded-2xl p-4 border border-white/10 flex flex-row justify-between gap-4">
-                                <div class="flex-1 min-w-0">
-                                    <span class="text-[10px] font-bold text-zinc-400 uppercase block mb-1">Masuk Bulan Ini</span>
-                                    <span class="text-sm md:text-base font-extrabold text-emerald-400 truncate block" id="dash-income">Rp 0</span>
-                                </div>
-                                <div class="w-px bg-white/10"></div>
-                                <div class="flex-1 min-w-0">
-                                    <span class="text-[10px] font-bold text-zinc-400 uppercase block mb-1">Keluar Bulan Ini</span>
-                                    <span class="text-sm md:text-base font-extrabold text-white truncate block" id="dash-expense">Rp 0</span>
-                                </div>
-                            </div>
+                    <!-- KARTU SALDO SANGAT BERSIH -->
+                    <div class="bg-brand-dark dark:bg-blue-600 rounded-3xl p-6 md:p-8 text-white shadow-soft relative overflow-hidden flex flex-col justify-center items-center text-center">
+                        <p class="text-white/70 text-[10px] md:text-xs font-bold tracking-widest uppercase mb-2">Total Saldo Aktif</p>
+                        <h2 class="text-4xl md:text-5xl font-extrabold tracking-tighter truncate w-full mb-6" id="dash-balance">Rp 0</h2>
+                        
+                        <div class="flex gap-3 justify-center w-full">
+                            <button onclick="AppUI.switchTab('wallet')" class="bg-white/20 hover:bg-white/30 text-white text-xs font-bold py-2.5 px-5 rounded-xl backdrop-blur-sm transition-colors flex-1 max-w-[140px]">Rincian Saldo</button>
+                            <button onclick="AppUI.switchTab('add')" class="bg-white text-brand-dark dark:text-blue-600 text-xs font-bold py-2.5 px-5 rounded-xl transition-colors flex-1 max-w-[140px] shadow-sm">+ Catat</button>
                         </div>
                     </div>
 
-                    <!-- Grid Anggaran & Tabungan -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch">
-                        <div class="bg-white dark:bg-zinc-900 p-5 rounded-3xl border border-brand-border dark:border-zinc-800 shadow-sm flex flex-col h-full min-w-0">
-                            <h3 class="font-extrabold text-zinc-900 dark:text-white text-sm flex items-center mb-4"><span class="w-7 h-7 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mr-2"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/><path stroke-linecap="round" stroke-linejoin="round" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/></svg></span> Anggaran Bulanan</h3>
-                            <div id="dashboard-budgets-list" class="space-y-3 flex-grow flex flex-col justify-center min-w-0"></div>
+                    <!-- Target Impian Singkat -->
+                    <div class="bg-white dark:bg-zinc-900 p-5 rounded-3xl border border-brand-border dark:border-zinc-800 shadow-sm cursor-pointer hover:border-zinc-300 transition-colors flex flex-col min-w-0" onclick="AppUI.switchTab('goals')">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-extrabold text-zinc-900 dark:text-white text-sm flex items-center"><span class="w-7 h-7 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mr-2"><svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span> Impian Anda</h3>
+                            <svg class="w-4 h-4 text-zinc-300 group-hover:text-zinc-500 transition-colors shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7-7"/></svg>
                         </div>
-                        <div class="bg-white dark:bg-zinc-900 p-5 rounded-3xl border border-brand-border dark:border-zinc-800 shadow-sm cursor-pointer flex flex-col h-full min-w-0 group hover:border-zinc-300 transition-colors" onclick="AppUI.switchTab('goals')">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="font-extrabold text-zinc-900 dark:text-white text-sm flex items-center"><span class="w-7 h-7 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mr-2"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span> Impian Anda</h3>
-                                <svg class="w-4 h-4 text-zinc-300 group-hover:text-zinc-500 transition-colors" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7-7"/></svg>
-                            </div>
-                            <div id="dash-goals-summary" class="space-y-3 flex flex-col justify-center flex-grow min-w-0"></div>
-                        </div>
+                        <div id="dash-goals-summary" class="space-y-3 flex flex-col justify-center flex-grow min-w-0"></div>
                     </div>
 
                     <!-- Transaksi Terakhir -->
@@ -388,10 +366,66 @@
                             <button onclick="AppUI.switchTab('history')" class="text-[10px] font-bold text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-300 transition-colors">Lihat Semua</button>
                         </div>
                         <div class="text-center py-10 bg-white dark:bg-zinc-900 rounded-3xl border border-brand-border dark:border-zinc-800 hidden flex-col items-center justify-center" id="dash-empty">
-                            <p class="text-xs font-medium text-zinc-500">Belum ada transaksi bulan ini.</p>
+                            <p class="text-xs font-medium text-zinc-500">Belum ada transaksi.</p>
                         </div>
-                        <!-- Daftar vertikal ringkas -->
                         <div id="dash-recent-list" class="space-y-2 min-w-0"></div>
+                    </div>
+                </section>
+
+                <!-- ==================== VIEW: DOMPET & ANALISIS (HALAMAN BARU) ==================== -->
+                <section id="view-wallet" class="view-section space-y-5">
+                    <div class="md:hidden mb-2 px-1 min-w-0"><h2 class="text-xl font-extrabold tracking-tight text-zinc-900 dark:text-white truncate">Dompet & Analisis</h2></div>
+                    
+                    <!-- Rincian Saldo Box -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-white dark:bg-zinc-900 p-5 rounded-3xl border border-brand-border dark:border-zinc-800 shadow-sm flex flex-col justify-center text-center">
+                            <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1 truncate">Uang Tunai</p>
+                            <p class="text-lg font-extrabold text-zinc-900 dark:text-white truncate" id="wallet-cash">Rp 0</p>
+                        </div>
+                        <div class="bg-white dark:bg-zinc-900 p-5 rounded-3xl border border-brand-border dark:border-zinc-800 shadow-sm flex flex-col justify-center text-center">
+                            <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1 truncate">Di Rekening</p>
+                            <p class="text-lg font-extrabold text-zinc-900 dark:text-white truncate" id="wallet-bank">Rp 0</p>
+                        </div>
+                    </div>
+
+                    <!-- Arus Kas Bulan Ini -->
+                    <div class="bg-white dark:bg-zinc-900 p-6 rounded-3xl border border-brand-border dark:border-zinc-800 shadow-sm">
+                        <h3 class="font-extrabold text-zinc-900 dark:text-white text-sm mb-4">Arus Kas Bulan Ini</h3>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs font-bold text-zinc-500">Total Pemasukan</span>
+                            <span class="text-sm font-extrabold text-emerald-600 dark:text-emerald-400" id="wallet-income">Rp 0</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-xs font-bold text-zinc-500">Total Pengeluaran</span>
+                            <span class="text-sm font-extrabold text-red-600 dark:text-red-400" id="wallet-expense">Rp 0</span>
+                        </div>
+                        <div class="h-px w-full bg-brand-border dark:bg-zinc-800 mb-4"></div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-zinc-900 dark:text-white">Sisa Tersimpan</span>
+                            <span class="text-base font-extrabold" id="wallet-margin">Rp 0</span>
+                        </div>
+                    </div>
+
+                    <!-- Anggaran Bulanan -->
+                    <div class="bg-white dark:bg-zinc-900 p-5 rounded-3xl border border-brand-border dark:border-zinc-800 shadow-sm flex flex-col min-w-0">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-extrabold text-zinc-900 dark:text-white text-sm">Anggaran Kategori</h3>
+                            <button onclick="AppUI.switchTab('settings')" class="text-[10px] font-bold text-brand-dark dark:text-blue-400 bg-brand-light dark:bg-blue-600/20 px-2 py-1 rounded">Atur</button>
+                        </div>
+                        <div id="dashboard-budgets-list" class="space-y-3 flex-grow min-w-0"></div>
+                    </div>
+
+                    <!-- Analisis Historis -->
+                    <div id="recap-analysis" class="min-w-0"></div>
+                    <div id="recap-list" class="space-y-4 min-w-0"></div>
+                    
+                    <!-- Tagihan Rutin -->
+                    <div class="pt-4">
+                        <div class="flex justify-between items-end px-1 mb-4 min-w-0">
+                            <div class="min-w-0 flex-1 pr-3"><h2 class="text-xl font-extrabold tracking-tight text-zinc-900 dark:text-white truncate">Tagihan Rutin</h2></div>
+                            <button onclick="AppUI.openModal('modal-add-bill'); Utils.renderTxCategories('expense', 'bill-category-select')" class="shrink-0 bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-white font-bold text-xs px-4 py-2 rounded-xl flex items-center gap-1.5 hover:opacity-90 transition-opacity"><svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg> Tambah</button>
+                        </div>
+                        <div id="bills-list-container" class="space-y-3 min-w-0"></div>
                     </div>
                 </section>
 
@@ -403,18 +437,9 @@
                             <p class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1 truncate">Total Dana Terkumpul</p>
                             <h3 class="text-2xl font-extrabold tracking-tighter text-zinc-900 dark:text-white truncate" id="goals-total-saved">Rp 0</h3>
                         </div>
-                        <button onclick="AppUI.openModal('modal-set-goal')" class="shrink-0 bg-brand-dark text-white font-bold text-xs px-5 py-3 rounded-xl flex justify-center items-center gap-2 hover:opacity-90 transition-opacity"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg> Target Baru</button>
+                        <button onclick="AppUI.openModal('modal-set-goal')" class="shrink-0 bg-brand-dark dark:bg-blue-600 text-white font-bold text-xs px-5 py-3 rounded-xl flex justify-center items-center gap-2 hover:opacity-90 transition-opacity"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg> Target Baru</button>
                     </div>
                     <div id="goals-list-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch min-w-0"></div>
-                </section>
-
-                <!-- ==================== VIEW: TAGIHAN RUTIN ==================== -->
-                <section id="view-bills" class="view-section space-y-5">
-                    <div class="flex justify-between items-end px-1 min-w-0">
-                        <div class="min-w-0 flex-1 pr-3"><h2 class="text-xl font-extrabold tracking-tight text-zinc-900 dark:text-white truncate">Tagihan Rutin</h2></div>
-                        <button onclick="AppUI.openModal('modal-add-bill'); Utils.renderTxCategories('expense', 'bill-category-select')" class="shrink-0 bg-brand-dark text-white font-bold text-xs px-5 py-2.5 rounded-xl flex items-center gap-2 hover:opacity-90 transition-opacity"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg> Tambah</button>
-                    </div>
-                    <div id="bills-list-container" class="space-y-3 min-w-0"></div>
                 </section>
 
                 <!-- ==================== VIEW: TAMBAH TRANSAKSI ==================== -->
@@ -431,7 +456,7 @@
                             <label class="block text-[11px] font-bold text-zinc-500 mb-2 uppercase tracking-widest text-center truncate">Jumlah Nominal</label>
                             <div class="relative max-w-[250px] mx-auto">
                                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none shrink-0"><span class="text-zinc-400 font-extrabold text-lg">Rp</span></div>
-                                <input type="text" inputmode="numeric" id="input-amount" placeholder="0" required class="currency-input w-full bg-transparent border-b-2 border-zinc-200 dark:border-zinc-700 focus:border-brand-dark dark:focus:border-white text-zinc-900 dark:text-white text-3xl font-extrabold tracking-tighter pl-12 pr-2 py-2 text-center outline-none transition-colors">
+                                <input type="text" inputmode="numeric" id="input-amount" placeholder="0" required class="currency-input w-full bg-transparent border-b-2 border-zinc-200 dark:border-zinc-700 focus:border-brand-dark dark:focus:border-blue-500 text-zinc-900 dark:text-white text-3xl font-extrabold tracking-tighter pl-12 pr-2 py-2 text-center outline-none transition-colors">
                             </div>
                         </div>
 
@@ -449,8 +474,8 @@
                             <div class="relative z-20 min-w-0">
                                 <label class="block text-[11px] font-bold text-zinc-500 mb-1.5 uppercase tracking-widest truncate">Sumber Dana</label>
                                 <div class="grid grid-cols-2 gap-2 h-[48px]">
-                                    <label class="cursor-pointer h-full"><input type="radio" name="tx-wallet" value="cash" class="peer hidden" checked><div class="h-full flex items-center justify-center rounded-xl text-xs font-bold bg-zinc-50 dark:bg-zinc-800 peer-checked:bg-brand-dark peer-checked:text-white text-zinc-600 dark:text-zinc-300 transition-all border border-transparent">Cash</div></label>
-                                    <label class="cursor-pointer h-full"><input type="radio" name="tx-wallet" value="bank" class="peer hidden"><div class="h-full flex items-center justify-center rounded-xl text-xs font-bold bg-zinc-50 dark:bg-zinc-800 peer-checked:bg-brand-dark peer-checked:text-white text-zinc-600 dark:text-zinc-300 transition-all border border-transparent">Rekening</div></label>
+                                    <label class="cursor-pointer h-full"><input type="radio" name="tx-wallet" value="cash" class="peer hidden" checked><div class="h-full flex items-center justify-center rounded-xl text-xs font-bold bg-zinc-50 dark:bg-zinc-800 peer-checked:bg-brand-dark dark:peer-checked:bg-blue-600 peer-checked:text-white text-zinc-600 dark:text-zinc-300 transition-all border border-transparent">Cash</div></label>
+                                    <label class="cursor-pointer h-full"><input type="radio" name="tx-wallet" value="bank" class="peer hidden"><div class="h-full flex items-center justify-center rounded-xl text-xs font-bold bg-zinc-50 dark:bg-zinc-800 peer-checked:bg-brand-dark dark:peer-checked:bg-blue-600 peer-checked:text-white text-zinc-600 dark:text-zinc-300 transition-all border border-transparent">Rekening</div></label>
                                 </div>
                             </div>
                         </div>
@@ -469,7 +494,7 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="w-full bg-brand-dark text-white font-bold rounded-xl py-4 hover:opacity-90 transition-opacity mt-4 text-sm">Simpan Transaksi</button>
+                        <button type="submit" class="w-full bg-brand-dark dark:bg-blue-600 text-white font-bold rounded-xl py-4 hover:opacity-90 transition-opacity mt-4 text-sm">Simpan Transaksi</button>
                     </form>
                 </section>
 
@@ -477,17 +502,16 @@
                 <section id="view-history" class="view-section">
                     <div class="md:hidden mb-4 flex justify-between items-end px-1 min-w-0">
                         <div class="min-w-0"><h2 class="text-xl font-extrabold tracking-tight text-zinc-900 dark:text-white truncate">Riwayat</h2></div>
-                        <button onclick="AppUI.switchTab('recap')" class="text-[10px] font-bold bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 px-3 py-2 rounded-lg uppercase tracking-widest shrink-0 ml-2">Rekap</button>
                     </div>
                     
                     <div class="bg-white dark:bg-zinc-900 rounded-3xl p-4 mb-4 shadow-sm border border-brand-border dark:border-zinc-800 relative z-20 min-w-0">
                         <div class="flex items-center gap-2 min-w-0">
                             <div class="relative flex-grow min-w-0">
                                 <svg class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                                <input type="text" id="filter-search" placeholder="Cari..." class="w-full input-premium text-zinc-700 dark:text-white text-sm font-semibold rounded-xl pl-9 pr-3 py-3">
+                                <input type="text" id="filter-search" placeholder="Cari transaksi..." class="w-full input-premium text-zinc-700 dark:text-white text-sm font-semibold rounded-xl pl-9 pr-3 py-3">
                             </div>
                             <button onclick="Utils.toggleAdvancedFilter()" id="btn-toggle-filter" class="shrink-0 w-12 h-12 bg-zinc-50 dark:bg-zinc-800 rounded-xl text-zinc-500 flex items-center justify-center transition-colors hover:bg-zinc-100">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+                                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
                             </button>
                         </div>
                         
@@ -496,18 +520,18 @@
                                 <div class="relative custom-select z-50 min-w-0" id="filter-period-select">
                                     <div class="w-full input-premium text-zinc-700 dark:text-white text-[11px] font-bold rounded-lg px-3 py-2.5 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('filter-period-select')"><div id="filter-period-display" class="truncate pr-1">Bulan Ini</div><svg class="w-3.5 h-3.5 text-zinc-400 caret-icon shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
                                     <div class="custom-select-options absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 rounded-lg shadow-lg overflow-hidden max-h-48 overflow-y-auto custom-scrollbar">
-                                        <div class="px-3 py-2.5 hover:bg-zinc-50 cursor-pointer text-[11px] font-bold dark:text-white" onclick="Utils.selectOption('filter-period-select', 'this_month', 'Bulan Ini')">Bulan Ini</div>
-                                        <div class="px-3 py-2.5 hover:bg-zinc-50 cursor-pointer text-[11px] font-bold dark:text-white" onclick="Utils.selectOption('filter-period-select', 'last_month', 'Bulan Lalu')">Bulan Lalu</div>
-                                        <div class="px-3 py-2.5 hover:bg-zinc-50 cursor-pointer text-[11px] font-bold dark:text-white" onclick="Utils.selectOption('filter-period-select', 'all', 'Semua Waktu')">Semua Waktu</div>
+                                        <div class="px-3 py-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-[11px] font-bold dark:text-white" onclick="Utils.selectOption('filter-period-select', 'this_month', 'Bulan Ini')">Bulan Ini</div>
+                                        <div class="px-3 py-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-[11px] font-bold dark:text-white" onclick="Utils.selectOption('filter-period-select', 'last_month', 'Bulan Lalu')">Bulan Lalu</div>
+                                        <div class="px-3 py-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-[11px] font-bold dark:text-white" onclick="Utils.selectOption('filter-period-select', 'all', 'Semua Waktu')">Semua Waktu</div>
                                     </div>
                                     <input type="hidden" id="filter-period-value" value="this_month">
                                 </div>
                                 <div class="relative custom-select z-40 min-w-0" id="filter-type-select">
                                     <div class="w-full input-premium text-zinc-700 dark:text-white text-[11px] font-bold rounded-lg px-3 py-2.5 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('filter-type-select')"><div id="filter-type-display" class="truncate pr-1">Semua Tipe</div><svg class="w-3.5 h-3.5 text-zinc-400 caret-icon shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
                                     <div class="custom-select-options absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 rounded-lg shadow-lg overflow-hidden max-h-48 overflow-y-auto custom-scrollbar">
-                                        <div class="px-3 py-2.5 hover:bg-zinc-50 cursor-pointer text-[11px] font-bold dark:text-white" onclick="Utils.selectOption('filter-type-select', 'all', 'Semua Tipe')">Semua Tipe</div>
-                                        <div class="px-3 py-2.5 hover:bg-zinc-50 cursor-pointer text-[11px] font-bold dark:text-white" onclick="Utils.selectOption('filter-type-select', 'income', 'Pemasukan')">Pemasukan</div>
-                                        <div class="px-3 py-2.5 hover:bg-zinc-50 cursor-pointer text-[11px] font-bold dark:text-white" onclick="Utils.selectOption('filter-type-select', 'expense', 'Pengeluaran')">Pengeluaran</div>
+                                        <div class="px-3 py-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-[11px] font-bold dark:text-white" onclick="Utils.selectOption('filter-type-select', 'all', 'Semua Tipe')">Semua Tipe</div>
+                                        <div class="px-3 py-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-[11px] font-bold dark:text-white" onclick="Utils.selectOption('filter-type-select', 'income', 'Pemasukan')">Pemasukan</div>
+                                        <div class="px-3 py-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-[11px] font-bold dark:text-white" onclick="Utils.selectOption('filter-type-select', 'expense', 'Pengeluaran')">Pengeluaran</div>
                                     </div>
                                     <input type="hidden" id="filter-type-value" value="all">
                                 </div>
@@ -523,45 +547,34 @@
                     <div class="bg-white dark:bg-zinc-900 rounded-3xl shadow-sm border border-brand-border dark:border-zinc-800 overflow-hidden flex flex-col min-h-[350px] min-w-0">
                         <div class="hidden md:flex justify-between items-center p-5 border-b border-brand-border dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 min-w-0">
                             <h3 class="font-extrabold text-zinc-800 dark:text-white tracking-tight truncate">Daftar Transaksi</h3>
-                            <button onclick="AppUI.switchTab('recap')" class="text-xs font-bold bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 px-4 py-2 rounded-lg border border-brand-border dark:border-zinc-700 shrink-0 ml-4 hover:bg-zinc-50 transition-colors">Lihat Analisis</button>
                         </div>
                         <div id="history-empty" class="flex-col items-center justify-center py-20 text-zinc-400 hidden flex-grow bg-zinc-50/50 dark:bg-zinc-950/50 min-w-0">
-                            <p class="text-sm font-medium text-zinc-500">Tidak ada riwayat.</p>
+                            <p class="text-sm font-medium text-zinc-500">Tidak ada riwayat yang sesuai.</p>
                         </div>
                         <ul id="history-list" class="divide-y divide-brand-border dark:divide-zinc-800/50 flex-grow min-w-0"></ul>
                         <div id="pagination-controls" class="hidden flex justify-between items-center p-4 border-t border-brand-border dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 min-w-0">
-                            <button onclick="TransactionManager.changePage(-1)" id="btn-prev" class="px-4 py-2 text-[11px] font-bold text-zinc-600 dark:text-zinc-300 bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 rounded-lg disabled:opacity-40 transition-colors hover:bg-zinc-50 shrink-0">Sebelumnya</button>
+                            <button onclick="TransactionManager.changePage(-1)" id="btn-prev" class="px-4 py-2 text-[11px] font-bold text-zinc-600 dark:text-zinc-300 bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 rounded-lg disabled:opacity-40 transition-colors hover:bg-zinc-50 shrink-0">Sebelum</button>
                             <span id="page-info" class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest truncate px-2 text-center">Hal 1/1</span>
-                            <button onclick="TransactionManager.changePage(1)" id="btn-next" class="px-4 py-2 text-[11px] font-bold text-zinc-600 dark:text-zinc-300 bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 rounded-lg disabled:opacity-40 transition-colors hover:bg-zinc-50 shrink-0">Selanjutnya</button>
+                            <button onclick="TransactionManager.changePage(1)" id="btn-next" class="px-4 py-2 text-[11px] font-bold text-zinc-600 dark:text-zinc-300 bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 rounded-lg disabled:opacity-40 transition-colors hover:bg-zinc-50 shrink-0">Selanjut</button>
                         </div>
                     </div>
-                </section>
-
-                <!-- ==================== VIEW: REKAP ==================== -->
-                <section id="view-recap" class="view-section">
-                    <div class="mb-4 flex justify-between items-center px-1 min-w-0">
-                        <div class="min-w-0"><h2 class="text-xl font-extrabold tracking-tight text-zinc-900 dark:text-white truncate">Rekap & Analisis</h2></div>
-                        <button onclick="AppUI.switchTab('history')" class="text-[10px] font-bold bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 px-3 py-2 rounded-lg uppercase tracking-widest transition-colors hover:bg-zinc-200 shrink-0 ml-2">Kembali</button>
-                    </div>
-                    <div id="recap-analysis" class="mb-5 min-w-0"></div>
-                    <div id="recap-list" class="space-y-4 min-w-0"></div>
                 </section>
 
                 <!-- ==================== VIEW: SETTINGS ==================== -->
                 <section id="view-settings" class="view-section space-y-4">
                     <div class="mb-2 px-1 min-w-0"><h2 class="text-xl font-extrabold tracking-tight text-zinc-900 dark:text-white truncate">Pengaturan</h2></div>
-                    
+
                     <div class="bg-white dark:bg-zinc-900 p-6 rounded-3xl border border-brand-border dark:border-zinc-800 shadow-sm flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left min-w-0">
-                        <div class="w-14 h-14 bg-zinc-50 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 rounded-xl flex items-center justify-center shrink-0"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg></div>
+                        <div class="w-14 h-14 bg-zinc-50 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 rounded-xl flex items-center justify-center shrink-0"><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg></div>
                         <div class="flex-grow min-w-0">
                             <h3 class="font-bold text-zinc-900 dark:text-white text-sm mb-0.5 truncate">Anggaran Bulanan</h3>
                             <p class="text-[11px] text-zinc-500">Atur batas pengeluaran kategori.</p>
                         </div>
-                        <button onclick="AppUI.openModal('modal-set-budget'); Utils.renderTxCategories('expense', 'budget-category-select'); BudgetManager.populateModal(document.getElementById('input-budget-category').value);" class="w-full sm:w-auto shrink-0 bg-brand-dark text-white font-bold px-4 py-2.5 rounded-xl hover:opacity-90 text-xs">Kelola Anggaran</button>
+                        <button onclick="AppUI.openModal('modal-set-budget'); Utils.renderTxCategories('expense', 'budget-category-select'); BudgetManager.populateModal(document.getElementById('input-budget-category').value);" class="w-full sm:w-auto shrink-0 bg-brand-dark dark:bg-blue-600 text-white font-bold px-4 py-2.5 rounded-xl hover:opacity-90 text-xs">Kelola Anggaran</button>
                     </div>
 
                     <div class="bg-white dark:bg-zinc-900 p-6 rounded-3xl border border-brand-border dark:border-zinc-800 shadow-sm text-center sm:text-left flex flex-col sm:flex-row items-center gap-4 min-w-0">
-                        <div class="w-14 h-14 bg-zinc-50 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 rounded-xl flex items-center justify-center shrink-0"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg></div>
+                        <div class="w-14 h-14 bg-zinc-50 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 rounded-xl flex items-center justify-center shrink-0"><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg></div>
                         <div class="flex-grow min-w-0">
                             <h3 class="font-bold text-zinc-900 dark:text-white text-sm mb-0.5 truncate">Cadangkan Data</h3>
                             <p class="text-[11px] text-zinc-500">Ekspor JSON/CSV & Impor ke perangkat baru.</p>
@@ -577,7 +590,7 @@
                     </div>
 
                     <div class="bg-white dark:bg-zinc-900 p-6 rounded-3xl border border-brand-border dark:border-zinc-800 shadow-sm text-center sm:text-left flex flex-col sm:flex-row items-center gap-4 min-w-0">
-                        <div class="w-14 h-14 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-xl flex items-center justify-center shrink-0"><svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></div>
+                        <div class="w-14 h-14 bg-red-50 dark:bg-red-500/10 text-red-500 rounded-xl flex items-center justify-center shrink-0"><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></div>
                         <div class="flex-grow min-w-0">
                             <h3 class="font-bold text-zinc-900 dark:text-white text-sm mb-0.5 truncate">Hapus Semua Data</h3>
                             <p class="text-[11px] text-zinc-500">Menghapus permanen data di HP ini.</p>
@@ -592,30 +605,30 @@
 
 <!-- BOTTOM NAV (MOBILE) - STYLE FLOATING PILL -->
 <nav class="md:hidden fixed bottom-5 left-1/2 -translate-x-1/2 w-max max-w-[95%] bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-brand-border dark:border-zinc-800 rounded-[28px] z-50 shadow-float px-2 py-1.5 flex justify-center items-center gap-1 sm:gap-2">
-    <button onclick="AppUI.switchTab('dashboard')" class="nav-btn nav-btn-dashboard mobile-nav active">
-        <svg class="w-5 h-5 mb-0.5 icon-outline" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-        <svg class="w-5 h-5 mb-0.5 icon-fill" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    <button onclick="AppUI.switchTab('dashboard')" class="nav-btn nav-btn-dashboard mobile-nav active flex-1">
+        <svg class="w-5 h-5 shrink-0 mb-0.5 icon-outline" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        <svg class="w-5 h-5 shrink-0 mb-0.5 icon-fill" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
         <span class="text-[9px] font-bold tracking-wide leading-none">Home</span>
     </button>
-    <button onclick="AppUI.switchTab('history')" class="nav-btn nav-btn-history mobile-nav">
-        <svg class="w-5 h-5 mb-0.5 icon-outline" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
-        <svg class="w-5 h-5 mb-0.5 icon-fill" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-        <span class="text-[9px] font-bold tracking-wide leading-none">Riwayat</span>
+    <button onclick="AppUI.switchTab('wallet')" class="nav-btn nav-btn-wallet mobile-nav flex-1">
+        <svg class="w-5 h-5 shrink-0 mb-0.5 icon-outline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2v-5zm-5 0h.01M16 12a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
+        <svg class="w-5 h-5 shrink-0 mb-0.5 icon-fill" fill="currentColor" viewBox="0 0 24 24"><path d="M21 7v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2zm-5 5h.01M16 12a1 1 0 10-2 0 1 1 0 002 0z"/></svg>
+        <span class="text-[9px] font-bold tracking-wide leading-none">Dompet</span>
     </button>
-    <button onclick="AppUI.switchTab('add')" class="nav-btn nav-btn-add mobile-nav">
-        <svg class="w-5 h-5 mb-0.5 icon-outline" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-        <svg class="w-5 h-5 mb-0.5 icon-fill" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+    <button onclick="AppUI.switchTab('add')" class="nav-btn nav-btn-add mobile-nav flex-1">
+        <svg class="w-5 h-5 shrink-0 mb-0.5 icon-outline" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        <svg class="w-5 h-5 shrink-0 mb-0.5 icon-fill" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
         <span class="text-[9px] font-bold tracking-wide leading-none">Catat</span>
     </button>
-    <button onclick="AppUI.switchTab('goals')" class="nav-btn nav-btn-goals mobile-nav">
-        <svg class="w-5 h-5 mb-0.5 icon-outline" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        <svg class="w-5 h-5 mb-0.5 icon-fill" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+    <button onclick="AppUI.switchTab('goals')" class="nav-btn nav-btn-goals mobile-nav flex-1">
+        <svg class="w-5 h-5 shrink-0 mb-0.5 icon-outline" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <svg class="w-5 h-5 shrink-0 mb-0.5 icon-fill" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
         <span class="text-[9px] font-bold tracking-wide leading-none">Target</span>
     </button>
-    <button onclick="AppUI.switchTab('bills')" class="nav-btn nav-btn-bills mobile-nav">
-        <svg class="w-5 h-5 mb-0.5 icon-outline" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-        <svg class="w-5 h-5 mb-0.5 icon-fill" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-        <span class="text-[9px] font-bold tracking-wide leading-none">Tagihan</span>
+    <button onclick="AppUI.switchTab('history')" class="nav-btn nav-btn-history mobile-nav flex-1">
+        <svg class="w-5 h-5 shrink-0 mb-0.5 icon-outline" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+        <svg class="w-5 h-5 shrink-0 mb-0.5 icon-fill" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        <span class="text-[9px] font-bold tracking-wide leading-none">Riwayat</span>
     </button>
 </nav>
 
@@ -629,12 +642,12 @@
         getCurrentMonthStr: () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`; },
         getPreviousMonthStr: () => { const d = new Date(); d.setMonth(d.getMonth() - 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`; },
         getTodayDateStr: () => { const d = new Date(); const m = String(d.getMonth() + 1).padStart(2, '0'); const day = String(d.getDate()).padStart(2, '0'); return `${d.getFullYear()}-${m}-${day}`; },
-        parseRawCurrency: (str) => parseFloat(str.replace(/[^0-9]/g, '')) || 0,
+        parseRawCurrency: (str) => parseFloat(String(str).replace(/[^0-9]/g, '')) || 0,
         formatCurrencyInputEvent: (e) => { let v = e.target.value.replace(/[^0-9]/g, ''); e.target.value = v ? new Intl.NumberFormat('id-ID').format(v) : ''; },
         toggleAdvancedFilter: () => { const p = document.getElementById('advanced-filter-panel'); p.classList.toggle('hidden'); document.getElementById('btn-toggle-filter').classList.toggle('bg-zinc-100'); },
 
         categoryData: {
-            // Ikon yang disesuaikan & relevan
+            // Icon Alignment Fixed (wrapped shrink-0 inside flex)
             'Makanan': { type: 'expense', svg: '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a7 7 0 00-7 7v1h14v-1a7 7 0 00-7-7zM5 13h14v2a4 4 0 01-4 4H9a4 4 0 01-4-4v-2z" /></svg>', colorText: 'text-orange-600 dark:text-orange-500', bg: 'bg-orange-50 dark:bg-orange-500/10' },
             'Transport': { type: 'expense', svg: '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V9a2 2 0 012-2h8a2 2 0 012 2v5a2 2 0 01-2 2h-2m-4 0v2m0-2v-2m4 2h.01M9 16h.01" /></svg>', colorText: 'text-sky-600 dark:text-sky-500', bg: 'bg-sky-50 dark:bg-sky-500/10' },
             'Belanja': { type: 'expense', svg: '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>', colorText: 'text-purple-600 dark:text-purple-500', bg: 'bg-purple-50 dark:bg-purple-500/10' },
@@ -650,7 +663,7 @@
         renderTxCategories: (txType, containerId = 'tx-category-select') => {
             const container = document.querySelector(`#${containerId} .custom-select-options`); let html = ''; 
             const cats = Object.keys(Utils.categoryData).filter(c => Utils.categoryData[c].type === txType || Utils.categoryData[c].type === 'both');
-            cats.forEach(cat => { const style = Utils.categoryData[cat]; html += `<div class="px-4 py-2.5 flex items-center gap-3 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer border-b border-brand-border dark:border-zinc-800 transition-colors min-w-0" onclick="Utils.selectOption('${containerId}', '${cat}', '${cat}')"><span class="${style.colorText} shrink-0">${style.svg}</span><span class="font-bold text-zinc-700 dark:text-zinc-200 text-[13px] truncate">${cat}</span></div>`; });
+            cats.forEach(cat => { const style = Utils.categoryData[cat]; html += `<div class="px-4 py-2.5 flex items-center gap-3 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer border-b border-brand-border dark:border-zinc-800 transition-colors min-w-0" onclick="Utils.selectOption('${containerId}', '${cat}', '${cat}')"><div class="${style.colorText} shrink-0 flex items-center">${style.svg}</div><span class="font-bold text-zinc-700 dark:text-zinc-200 text-[13px] truncate">${cat}</span></div>`; });
             if(container) container.innerHTML = html; Utils.selectOption(containerId, cats[0], cats[0]);
         },
         setupCustomSelects: () => {
@@ -658,7 +671,7 @@
             const filterCatOptions = document.getElementById('filter-category-options');
             if(filterCatOptions) {
                 let catHtml = `<div class="px-3 py-2.5 flex items-center gap-2 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer border-b border-brand-border dark:border-zinc-800 text-[11px] font-bold text-zinc-700 dark:text-zinc-200 transition-colors min-w-0" onclick="Utils.selectOption('filter-category-select', 'all', 'Kategori')"><span class="truncate">Semua Kategori</span></div>`;
-                Object.keys(Utils.categoryData).forEach(cat => { const style = Utils.categoryData[cat]; catHtml += `<div class="px-3 py-2.5 flex items-center gap-2 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer border-b border-brand-border dark:border-zinc-800 transition-colors min-w-0" onclick="Utils.selectOption('filter-category-select', '${cat}', '${cat}')"><span class="${style.colorText} shrink-0">${style.svg}</span><span class="font-bold text-zinc-700 dark:text-zinc-200 text-[11px] truncate">${cat}</span></div>`; });
+                Object.keys(Utils.categoryData).forEach(cat => { const style = Utils.categoryData[cat]; catHtml += `<div class="px-3 py-2.5 flex items-center gap-2 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer border-b border-brand-border dark:border-zinc-800 transition-colors min-w-0" onclick="Utils.selectOption('filter-category-select', '${cat}', '${cat}')"><div class="${style.colorText} shrink-0 flex items-center">${style.svg}</div><span class="font-bold text-zinc-700 dark:text-zinc-200 text-[11px] truncate">${cat}</span></div>`; });
                 filterCatOptions.innerHTML = catHtml;
             }
             document.addEventListener('click', (e) => { if(!e.target.closest('.custom-select')) document.querySelectorAll('.custom-select').forEach(el => el.classList.remove('open')); });
@@ -667,7 +680,7 @@
             const s = document.getElementById(selectId); if(!s) return;
             s.querySelector('input[type="hidden"]').value = value;
             const displayContainer = s.querySelector('div[id$="-display"]');
-            if (Utils.categoryData[value] && !selectId.startsWith('filter-')) { const style = Utils.categoryData[value]; displayContainer.innerHTML = `<div class="flex items-center gap-2 min-w-0"><span class="${style.colorText} shrink-0">${style.svg}</span> <span class="dark:text-white font-bold text-[13px] truncate">${value}</span></div>`; } 
+            if (Utils.categoryData[value] && !selectId.startsWith('filter-')) { const style = Utils.categoryData[value]; displayContainer.innerHTML = `<div class="flex items-center gap-2 min-w-0"><div class="${style.colorText} shrink-0 flex items-center">${style.svg}</div> <span class="dark:text-white font-bold text-[13px] truncate">${value}</span></div>`; } 
             else { displayContainer.innerHTML = `<span class="dark:text-white font-bold truncate pr-1">${displayText || value}</span>`; }
             s.classList.remove('open');
             if (selectId.startsWith('filter-')) { AppState.currentPage = 1; TransactionManager.renderHistory(); }
@@ -690,7 +703,7 @@
             const daysContainer = document.getElementById('cal-days'); daysContainer.innerHTML = '';
             const firstDay = new Date(CalendarManager.currentDate.getFullYear(), CalendarManager.currentDate.getMonth(), 1).getDay(); const totalDays = new Date(CalendarManager.currentDate.getFullYear(), CalendarManager.currentDate.getMonth() + 1, 0).getDate();
             for (let i = 0; i < firstDay; i++) daysContainer.innerHTML += `<div></div>`;
-            for (let i = 1; i <= totalDays; i++) { const isSelected = (i === CalendarManager.selectedDate.getDate() && CalendarManager.currentDate.getMonth() === CalendarManager.selectedDate.getMonth() && CalendarManager.currentDate.getFullYear() === CalendarManager.selectedDate.getFullYear()); const style = isSelected ? "bg-brand-dark text-white font-bold rounded-lg shadow-sm" : "text-zinc-700 dark:text-zinc-300 font-medium hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg cursor-pointer transition-colors"; daysContainer.innerHTML += `<div onclick="CalendarManager.selectDay(${i})" class="aspect-square flex items-center justify-center text-xs ${style}">${i}</div>`; }
+            for (let i = 1; i <= totalDays; i++) { const isSelected = (i === CalendarManager.selectedDate.getDate() && CalendarManager.currentDate.getMonth() === CalendarManager.selectedDate.getMonth() && CalendarManager.currentDate.getFullYear() === CalendarManager.selectedDate.getFullYear()); const style = isSelected ? "bg-brand-dark dark:bg-blue-600 text-white font-bold rounded-lg shadow-sm" : "text-zinc-700 dark:text-zinc-300 font-medium hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg cursor-pointer transition-colors"; daysContainer.innerHTML += `<div onclick="CalendarManager.selectDay(${i})" class="aspect-square flex items-center justify-center text-xs ${style}">${i}</div>`; }
         }
     };
 
@@ -710,13 +723,17 @@
             if(id === 'modal-add-savings') { document.getElementById('input-add-savings').value = ''; document.querySelector('input[name="savings-source"][value="external"]').checked = true; }
         },
         switchTab: (tabId) => {
-            const titles = { 'dashboard': 'Beranda', 'history': 'Riwayat', 'add': 'Catat Transaksi', 'recap': 'Rekap', 'settings': 'Pengaturan', 'goals': 'Target Impian', 'bills': 'Tagihan Rutin' };
+            const titles = { 'dashboard': 'Beranda', 'wallet': 'Dompet & Analisis', 'history': 'Riwayat Transaksi', 'add': 'Catat Transaksi', 'settings': 'Pengaturan', 'goals': 'Target Impian' };
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active')); 
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
             
-            document.getElementById(`view-${tabId}`).classList.add('active'); if(document.getElementById('desktop-page-title')) document.getElementById('desktop-page-title').innerText = titles[tabId];
+            const viewTarget = document.getElementById(`view-${tabId}`);
+            if(viewTarget) viewTarget.classList.add('active'); 
             
-            if(tabId !== 'recap' && tabId !== 'settings') { document.querySelectorAll(`.nav-btn-${tabId}`).forEach(el => { el.classList.add('active'); }); } window.scrollTo({ top: 0, behavior: 'smooth' });
+            if(document.getElementById('desktop-page-title')) document.getElementById('desktop-page-title').innerText = titles[tabId] || 'Beranda';
+            
+            document.querySelectorAll(`.nav-btn-${tabId}`).forEach(el => { el.classList.add('active'); });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     };
 
@@ -742,86 +759,95 @@
 
     const LocalDB = {
         saveTx: () => localStorage.setItem('keuanganku_tx', JSON.stringify(AppState.transactions)),
-        addTransaction: (txData) => { const newTx = { ...txData, id: Date.now() }; AppState.transactions.unshift(newTx); AppState.transactions.sort((a, b) => new Date(b.date) - new Date(a.date)); LocalDB.saveTx(); AppState.currentPage = 1; TransactionManager.renderAll(); return true; },
+        addTransaction: (txData) => { 
+            const newTx = { ...txData, id: Date.now() }; 
+            AppState.transactions.unshift(newTx); 
+            AppState.transactions.sort((a, b) => new Date(b.date) - new Date(a.date)); 
+            LocalDB.saveTx(); 
+            AppState.currentPage = 1; 
+            // Defensive Rendering Catch
+            try { TransactionManager.renderAll(); } catch(err) { console.error("Error Render All", err); }
+            return true; 
+        },
         hardReset: () => { AppUI.showConfirm("Reset Total Aplikasi?", "Seluruh data akan hilang selamanya.", () => { localStorage.clear(); location.reload(); }); }
     };
 
     const BackupManager = {
         exportJSON: () => { const data = { tx: AppState.transactions, goals: AppState.savingsGoals, bills: AppState.recurringBills, budgets: AppState.budgets }; const blob = new Blob([JSON.stringify(data)], {type: "application/json"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `Keuanganku_FullBackup_${Utils.getTodayDateStr()}.json`; a.click(); AppUI.showToast("JSON berhasil diunduh."); },
-        exportCSV: () => { if(AppState.transactions.length === 0) return AppUI.showToast("Tidak ada data", "error"); const headers = ["Tanggal", "Tipe", "Kategori", "Dompet", "Nominal", "Deskripsi"]; const csvRows = [headers.join(",")]; AppState.transactions.forEach(tx => { const row = [ tx.date, tx.type === 'income' ? 'Pemasukan' : 'Pengeluaran', tx.category || 'Lainnya', tx.wallet === 'cash' ? 'Cash' : 'Rekening', tx.amount, `"${(tx.description || '').replace(/"/g, '""')}"` ]; csvRows.push(row.join(",")); }); const blob = new Blob([csvRows.join("\n")], {type: "text/csv"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `Keuanganku_Riwayat_${Utils.getTodayDateStr()}.csv`; a.click(); AppUI.showToast("CSV berhasil diunduh."); },
+        exportCSV: () => { if(AppState.transactions.length === 0) return AppUI.showToast("Tidak ada data", "error"); const headers = ["Tanggal", "Tipe", "Kategori", "Dompet", "Nominal", "Deskripsi"]; const csvRows = [headers.join(",")]; AppState.transactions.forEach(tx => { if(!tx) return; const amt = tx.amount || 0; const row = [ tx.date, tx.type === 'income' ? 'Pemasukan' : 'Pengeluaran', tx.category || 'Lainnya', tx.wallet === 'cash' ? 'Cash' : 'Rekening', amt, `"${(tx.description || '').replace(/"/g, '""')}"` ]; csvRows.push(row.join(",")); }); const blob = new Blob([csvRows.join("\n")], {type: "text/csv"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `Keuanganku_Riwayat_${Utils.getTodayDateStr()}.csv`; a.click(); AppUI.showToast("CSV berhasil diunduh."); },
         importJSON: (e) => { const file = e.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = (ev) => { try { const data = JSON.parse(ev.target.result); AppUI.showConfirm("Pulihkan Data?", "Data saat ini akan TERTEMPA oleh backup. Lanjutkan?", () => { if(data.tx) localStorage.setItem('keuanganku_tx', JSON.stringify(data.tx)); if(data.goals) localStorage.setItem('keuanganku_goals', JSON.stringify(data.goals)); if(data.bills) localStorage.setItem('keuanganku_bills', JSON.stringify(data.bills)); if(data.budgets) localStorage.setItem('keuanganku_budgets', JSON.stringify(data.budgets)); location.reload(); }); } catch(err) { AppUI.showToast("Gagal membaca file.", "error"); } }; reader.readAsText(file); e.target.value = ''; }
     };
 
     const TransactionManager = {
-        getBalances: () => { let cash = 0, bank = 0; AppState.transactions.forEach(tx => { const nominal = Number(tx.amount) || 0; if (tx.type === 'income') { if (tx.wallet === 'cash') cash += nominal; else bank += nominal; } else if (tx.type === 'expense') { if (tx.wallet === 'cash') cash -= nominal; else bank -= nominal; } }); return { cash, bank, total: cash + bank }; },
+        getBalances: () => { let cash = 0, bank = 0; AppState.transactions.forEach(tx => { if(!tx) return; const nominal = Number(tx.amount) || 0; if (tx.type === 'income') { if (tx.wallet === 'cash') cash += nominal; else bank += nominal; } else if (tx.type === 'expense') { if (tx.wallet === 'cash') cash -= nominal; else bank -= nominal; } }); return { cash, bank, total: cash + bank }; },
         changePage: (delta) => { const filteredData = TransactionManager.getFilteredHistory(); const totalPages = Math.ceil(filteredData.length / AppState.itemsPerPage) || 1; AppState.currentPage += delta; if(AppState.currentPage < 1) AppState.currentPage = 1; if(AppState.currentPage > totalPages) AppState.currentPage = totalPages; TransactionManager.renderHistory(); window.scrollTo({ top: 0, behavior: 'smooth' }); },
-        renderAll: () => { TransactionManager.renderDashboard(); TransactionManager.renderHistory(); TransactionManager.renderRecap(); },
+        renderAll: () => { TransactionManager.renderDashboard(); TransactionManager.renderHistory(); TransactionManager.renderWalletAndRecap(); },
+        
         renderDashboard: () => {
-            let currentMonthIncome = 0, currentMonthExpense = 0; const categoryData = {}; const currentMonthStr = Utils.getCurrentMonthStr(); const balances = TransactionManager.getBalances();
-            AppState.transactions.forEach(tx => { const nominal = Number(tx.amount) || 0; if(tx.date && tx.date.substring(0, 7) === currentMonthStr) { if (tx.type === 'income') currentMonthIncome += nominal; if (tx.type === 'expense') { currentMonthExpense += nominal; const cat = tx.category || 'Lainnya'; categoryData[cat] = (categoryData[cat] || 0) + nominal; } } });
-            document.getElementById('dash-balance').innerText = Utils.formatIDR(balances.total); document.getElementById('dash-cash-balance').innerText = Utils.formatIDR(balances.cash); document.getElementById('dash-bank-balance').innerText = Utils.formatIDR(balances.bank); document.getElementById('dash-income').innerText = Utils.formatIDR(currentMonthIncome); document.getElementById('dash-expense').innerText = Utils.formatIDR(currentMonthExpense);
-            
-            const budgetListEl = document.getElementById('dashboard-budgets-list'); budgetListEl.innerHTML = '';
-            if(Object.keys(AppState.budgets).length === 0) { budgetListEl.innerHTML = `<div class="flex flex-col items-center justify-center py-4 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 flex-grow min-w-0 border border-brand-border dark:border-zinc-800"><p class="text-[11px] text-zinc-400 font-semibold">Belum ada anggaran.</p></div>`; } 
-            else {
-                Object.keys(AppState.budgets).forEach(cat => {
-                    const limit = AppState.budgets[cat]; const spent = categoryData[cat] || 0; const persen = Math.min((spent / limit) * 100, 100);
-                    let barColor = 'bg-brand-dark', warningHtml = '';
-                    if (persen >= 100) { barColor = 'bg-red-500'; warningHtml = `<span class="text-[9px] font-bold text-red-500 bg-red-50 dark:bg-red-500/10 px-1.5 py-0.5 rounded ml-1 uppercase shrink-0">Over</span>`; } else if (persen >= 80) { barColor = 'bg-amber-500'; }
-                    const style = Utils.getCategoryStyle(cat);
-                    budgetListEl.innerHTML += `<div class="p-3 rounded-[16px] bg-zinc-50 dark:bg-zinc-800/50 border border-brand-border dark:border-zinc-800 min-w-0"><div class="flex justify-between items-center mb-2.5 min-w-0"><div class="flex items-center gap-2 min-w-0"><span class="${style.colorText} shrink-0 w-4 h-4">${style.svg.replace('w-5 h-5', 'w-full h-full')}</span><span class="text-xs font-bold text-zinc-800 dark:text-white tracking-tight truncate">${cat}</span>${warningHtml}</div><span class="text-[11px] font-bold shrink-0 pl-1 ${persen >= 100 ? 'text-red-500' : 'text-zinc-700 dark:text-zinc-300'}">${Utils.formatIDR(spent)}</span></div><div class="w-full bg-zinc-200 dark:bg-zinc-700 rounded-full h-1.5 mb-1.5 overflow-hidden"><div class="${barColor} h-1.5 rounded-full" style="width: ${persen}%"></div></div><div class="flex justify-between text-[9px] font-bold text-zinc-400 uppercase tracking-widest gap-2 min-w-0"><span class="truncate text-left">Sisa: ${Utils.formatIDR(Math.max(limit - spent, 0))}</span><span class="truncate text-right">Batas: ${Utils.formatIDR(limit)}</span></div></div>`;
-                });
-            }
+            const balances = TransactionManager.getBalances();
+            document.getElementById('dash-balance').innerText = Utils.formatIDR(balances.total);
 
+            // Aktivitas Terakhir
             const dashRecent = document.getElementById('dash-recent-list'); dashRecent.innerHTML = '';
             if (AppState.transactions.length === 0) { document.getElementById('dash-empty').classList.remove('hidden'); document.getElementById('dash-empty').classList.add('flex'); } 
             else {
                 document.getElementById('dash-empty').classList.add('hidden'); document.getElementById('dash-empty').classList.remove('flex');
-                AppState.transactions.slice(0, 5).forEach((tx) => { const style = Utils.getCategoryStyle(tx.category || 'Lainnya'); const sign = tx.type === 'income' ? '+' : '-'; const walletBadge = tx.wallet === 'bank' ? '<span class="text-[9px] bg-brand-light dark:bg-zinc-700 text-brand-dark dark:text-zinc-300 font-bold px-1.5 py-0.5 rounded ml-1 tracking-wider shrink-0">Rekening</span>' : '<span class="text-[9px] bg-zinc-100 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-300 font-bold px-1.5 py-0.5 rounded ml-1 tracking-wider shrink-0">Cash</span>'; dashRecent.innerHTML += `<div onclick="AppUI.switchTab('history')" class="group bg-white dark:bg-zinc-900 p-4 rounded-[20px] shadow-sm border border-brand-border dark:border-zinc-800 flex items-center gap-3 cursor-pointer hover:border-zinc-300 transition-colors min-w-0"><div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">${style.svg}</div><div class="flex-grow min-w-0"><p class="text-[13px] font-bold text-zinc-800 dark:text-white truncate">${tx.description || '-'}</p><div class="flex items-center mt-0.5 min-w-0"><span class="text-[10px] font-medium text-zinc-400 truncate shrink-0">${Utils.formatDate(tx.date)}</span> ${walletBadge}</div></div><div class="text-right shrink-0 ml-1"><p class="text-sm font-bold tracking-tight ${tx.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-zinc-800 dark:text-white'}">${sign}${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p></div></div>`; });
+                AppState.transactions.slice(0, 5).forEach((tx) => { 
+                    if(!tx) return;
+                    const style = Utils.getCategoryStyle(tx.category || 'Lainnya'); const sign = tx.type === 'income' ? '+' : '-'; 
+                    const walletBadge = tx.wallet === 'bank' ? '<span class="text-[9px] bg-brand-light dark:bg-blue-600/20 text-brand-dark dark:text-blue-400 font-bold px-1.5 py-0.5 rounded ml-1 tracking-wider shrink-0">Rekening</span>' : '<span class="text-[9px] bg-zinc-100 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-300 font-bold px-1.5 py-0.5 rounded ml-1 tracking-wider shrink-0">Cash</span>'; 
+                    dashRecent.innerHTML += `<div onclick="AppUI.switchTab('history')" class="group bg-white dark:bg-zinc-900 p-4 rounded-[20px] shadow-sm border border-brand-border dark:border-zinc-800 flex items-center gap-3 cursor-pointer hover:border-zinc-300 transition-colors min-w-0"><div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">${style.svg}</div><div class="flex-grow min-w-0"><p class="text-[13px] font-bold text-zinc-800 dark:text-white truncate">${tx.description || '-'}</p><div class="flex items-center mt-0.5 min-w-0"><span class="text-[10px] font-medium text-zinc-400 truncate shrink-0">${Utils.formatDate(tx.date)}</span> ${walletBadge}</div></div><div class="text-right shrink-0 ml-1"><p class="text-sm font-bold tracking-tight ${tx.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-zinc-800 dark:text-white'}">${sign}${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p></div></div>`; 
+                });
             }
         },
-        getFilteredHistory: () => {
-            const search = document.getElementById('filter-search').value.toLowerCase();
-            const period = document.getElementById('filter-period-value').value;
-            const type = document.getElementById('filter-type-value').value;
-            const category = document.getElementById('filter-category-value').value;
-            const wallet = document.getElementById('filter-wallet-value').value;
-            
+
+        renderWalletAndRecap: () => {
+            const balances = TransactionManager.getBalances();
+            document.getElementById('wallet-cash').innerText = Utils.formatIDR(balances.cash);
+            document.getElementById('wallet-bank').innerText = Utils.formatIDR(balances.bank);
+
+            let currentMonthIncome = 0, currentMonthExpense = 0; const categoryData = {}; 
             const currentMonthStr = Utils.getCurrentMonthStr();
-            const lastMonthStr = Utils.getPreviousMonthStr();
-
-            let filtered = AppState.transactions.filter(tx => {
-                const matchSearch = (tx.description || '').toLowerCase().includes(search) || (tx.category || '').toLowerCase().includes(search) || tx.amount.toString().includes(search);
-                const matchType = type === 'all' || tx.type === type;
-                const matchCategory = category === 'all' || tx.category === category;
-                const matchWallet = wallet === 'all' || tx.wallet === wallet;
-                let matchDate = true; if(period === 'this_month') matchDate = tx.date.startsWith(currentMonthStr); else if(period === 'last_month') matchDate = tx.date.startsWith(lastMonthStr);
-                return matchSearch && matchType && matchCategory && matchWallet && matchDate;
+            
+            AppState.transactions.forEach(tx => { 
+                if(!tx || !tx.date) return;
+                const nominal = Number(tx.amount) || 0; 
+                if(tx.date.substring(0, 7) === currentMonthStr) { 
+                    if (tx.type === 'income') currentMonthIncome += nominal; 
+                    if (tx.type === 'expense') { currentMonthExpense += nominal; const cat = tx.category || 'Lainnya'; categoryData[cat] = (categoryData[cat] || 0) + nominal; } 
+                } 
             });
-            filtered.sort((a,b) => new Date(b.date) - new Date(a.date));
-            return filtered;
-        },
-        renderHistory: () => {
-            const historyList = document.getElementById('history-list'); const pagination = document.getElementById('pagination-controls'); historyList.innerHTML = '';
-            const filteredData = TransactionManager.getFilteredHistory();
-            if (filteredData.length === 0) { document.getElementById('history-empty').classList.remove('hidden'); document.getElementById('history-empty').classList.add('flex'); pagination.classList.add('hidden'); pagination.classList.remove('flex'); return; }
-            document.getElementById('history-empty').classList.add('hidden'); document.getElementById('history-empty').classList.remove('flex');
 
-            const totalPages = Math.ceil(filteredData.length / AppState.itemsPerPage) || 1; if(AppState.currentPage > totalPages) AppState.currentPage = totalPages;
-            if (filteredData.length > AppState.itemsPerPage) { pagination.classList.remove('hidden'); pagination.classList.add('flex'); document.getElementById('page-info').innerText = `Hal ${AppState.currentPage}/${totalPages}`; document.getElementById('btn-prev').disabled = AppState.currentPage === 1; document.getElementById('btn-next').disabled = AppState.currentPage === totalPages; } else { pagination.classList.add('hidden'); pagination.classList.remove('flex'); }
+            document.getElementById('wallet-income').innerText = Utils.formatIDR(currentMonthIncome);
+            document.getElementById('wallet-expense').innerText = Utils.formatIDR(currentMonthExpense);
+            
+            const margin = currentMonthIncome - currentMonthExpense;
+            const marginEl = document.getElementById('wallet-margin');
+            marginEl.innerText = Utils.formatIDR(margin);
+            marginEl.className = margin >= 0 ? "text-base font-extrabold text-emerald-600 dark:text-emerald-400" : "text-base font-extrabold text-red-600 dark:text-red-400";
 
-            const paginated = filteredData.slice((AppState.currentPage - 1) * AppState.itemsPerPage, ((AppState.currentPage - 1) * AppState.itemsPerPage) + AppState.itemsPerPage);
-            paginated.forEach((tx) => { 
-                const style = Utils.getCategoryStyle(tx.category); const sign = tx.type === 'income' ? '+' : '-'; const walletText = tx.wallet === 'bank' ? 'Rekening' : 'Cash';
-                historyList.innerHTML += `<li class="flex items-center gap-3 py-4 px-4 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors min-w-0"><div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">${style.svg}</div><div class="flex-grow min-w-0"><p class="text-[13px] font-bold text-zinc-800 dark:text-white truncate">${tx.description || '-'}</p><div class="flex items-center gap-1.5 mt-0.5 min-w-0 overflow-hidden"><span class="text-[9px] font-bold bg-zinc-100 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-300 px-1.5 py-0.5 rounded tracking-widest uppercase shrink-0">${tx.category || 'Lainnya'}</span><span class="text-[9px] font-bold bg-brand-light dark:bg-zinc-700 text-brand-dark dark:text-zinc-300 px-1.5 py-0.5 rounded tracking-widest uppercase shrink-0">${walletText}</span></div></div><div class="text-right shrink-0 ml-1"><p class="text-sm font-bold tracking-tight ${tx.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-zinc-800 dark:text-white'}">${sign}${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p><p class="text-[10px] font-medium text-zinc-400 mt-0.5">${Utils.formatDate(tx.date)}</p></div></li>`;
-            });
-        },
-        renderRecap: () => {
+            // Render Budget
+            const budgetListEl = document.getElementById('dashboard-budgets-list'); budgetListEl.innerHTML = '';
+            const budgetsSafe = AppState.budgets || {};
+            if(Object.keys(budgetsSafe).length === 0) { 
+                budgetListEl.innerHTML = `<div class="flex flex-col items-center justify-center py-4 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 flex-grow min-w-0 border border-brand-border dark:border-zinc-800"><p class="text-[11px] text-zinc-400 font-semibold">Belum ada anggaran.</p></div>`; 
+            } else {
+                Object.keys(budgetsSafe).forEach(cat => {
+                    const limit = budgetsSafe[cat]; const spent = categoryData[cat] || 0; const persen = Math.min((spent / limit) * 100, 100);
+                    let barColor = 'bg-brand-dark dark:bg-blue-500', warningHtml = '';
+                    if (persen >= 100) { barColor = 'bg-red-500'; warningHtml = `<span class="text-[9px] font-bold text-red-500 bg-red-50 dark:bg-red-500/10 px-1.5 py-0.5 rounded ml-1 uppercase shrink-0">Over</span>`; } else if (persen >= 80) { barColor = 'bg-amber-500'; }
+                    const style = Utils.getCategoryStyle(cat);
+                    budgetListEl.innerHTML += `<div class="p-3 rounded-[16px] bg-zinc-50 dark:bg-zinc-800/50 border border-brand-border dark:border-zinc-800 min-w-0"><div class="flex justify-between items-center mb-2.5 min-w-0"><div class="flex items-center gap-2 min-w-0"><div class="${style.colorText} shrink-0 w-4 h-4 flex items-center justify-center">${style.svg}</div><span class="text-xs font-bold text-zinc-800 dark:text-white tracking-tight truncate">${cat}</span>${warningHtml}</div><span class="text-[11px] font-bold shrink-0 pl-1 ${persen >= 100 ? 'text-red-500' : 'text-zinc-700 dark:text-zinc-300'}">${Utils.formatIDR(spent)}</span></div><div class="w-full bg-zinc-200 dark:bg-zinc-700 rounded-full h-1.5 mb-1.5 overflow-hidden"><div class="${barColor} h-1.5 rounded-full" style="width: ${persen}%"></div></div><div class="flex justify-between text-[9px] font-bold text-zinc-400 uppercase tracking-widest gap-2 min-w-0"><span class="truncate text-left">Sisa: ${Utils.formatIDR(Math.max(limit - spent, 0))}</span><span class="truncate text-right">Batas: ${Utils.formatIDR(limit)}</span></div></div>`;
+                });
+            }
+
+            // Render Recap History
             const recapList = document.getElementById('recap-list'); recapList.innerHTML = '';
-            if (AppState.transactions.length === 0) { recapList.innerHTML = `<div class="text-center py-10 bg-white dark:bg-zinc-900 rounded-3xl border border-brand-border dark:border-zinc-800 min-w-0"><p class="text-sm font-medium text-zinc-500">Belum ada data untuk dianalisis.</p></div>`; return; }
+            if (AppState.transactions.length === 0) { recapList.innerHTML = `<div class="text-center py-10 bg-white dark:bg-zinc-900 rounded-3xl border border-brand-border dark:border-zinc-800 min-w-0"><p class="text-[11px] font-medium text-zinc-500">Belum ada data untuk dianalisis.</p></div>`; return; }
+            
             const monthlyData = {}; const categoryDataPerMonth = {};
             AppState.transactions.forEach(tx => { 
-                if(!tx.date) return; const monthYear = tx.date.substring(0, 7); 
+                if(!tx || !tx.date) return; const monthYear = tx.date.substring(0, 7); 
                 if (!monthlyData[monthYear]) monthlyData[monthYear] = { label: new Date(tx.date).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }), income: 0, expense: 0, count: 0 }; 
                 if (!categoryDataPerMonth[monthYear]) categoryDataPerMonth[monthYear] = {};
                 const nominal = Number(tx.amount) || 0; 
@@ -842,12 +868,51 @@
                 Object.keys(currCatData).forEach(cat => { const diff = (currCatData[cat] || 0) - (prevCatData[cat] || 0); if (diff > maxIncreaseVal) { maxIncreaseVal = diff; maxIncreaseCat = cat; } });
                 const increaseAlert = maxIncreaseVal > 0 ? `<div class="col-span-2 bg-brand-bg dark:bg-zinc-800 rounded-xl p-3 mt-1 flex items-center gap-3 min-w-0"><div class="w-8 h-8 rounded-lg bg-red-100 dark:bg-red-500/20 flex items-center justify-center shrink-0"><svg class="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg></div><div class="min-w-0"><p class="text-[10px] uppercase text-zinc-500 font-bold tracking-widest truncate">Lonjakan Pengeluaran</p><p class="text-xs font-bold text-zinc-900 dark:text-white truncate">${maxIncreaseCat} (Naik ${Utils.formatIDR(maxIncreaseVal)})</p></div></div>` : '';
 
-                analysisEl.innerHTML = `<div class="bg-white dark:bg-zinc-900 border border-brand-border dark:border-zinc-800 p-5 rounded-3xl shadow-sm mb-4 min-w-0"><h3 class="font-bold text-sm mb-4 flex items-center gap-2 tracking-tight truncate text-zinc-900 dark:text-white"><svg class="w-4 h-4 text-zinc-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg> Analisis Bulan Ini vs Lalu</h3><div class="grid grid-cols-2 gap-3"><div class="bg-zinc-50 dark:bg-zinc-800 rounded-xl p-3 min-w-0 border border-brand-border dark:border-zinc-700"><p class="text-[10px] uppercase tracking-widest text-zinc-500 mb-1 font-bold truncate">Pemasukan</p><p class="text-xs truncate">${incHtml}</p></div><div class="bg-zinc-50 dark:bg-zinc-800 rounded-xl p-3 min-w-0 border border-brand-border dark:border-zinc-700"><p class="text-[10px] uppercase tracking-widest text-zinc-500 mb-1 font-bold truncate">Pengeluaran</p><p class="text-xs truncate">${expHtml}</p></div>${increaseAlert}</div></div>`;
+                analysisEl.innerHTML = `<div class="bg-white dark:bg-zinc-900 border border-brand-border dark:border-zinc-800 p-5 rounded-3xl shadow-sm mb-4 min-w-0"><h3 class="font-bold text-sm mb-4 flex items-center gap-2 tracking-tight truncate text-zinc-900 dark:text-white"><svg class="w-4 h-4 text-zinc-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg> Rekap Bulan Ini vs Lalu</h3><div class="grid grid-cols-2 gap-3"><div class="bg-zinc-50 dark:bg-zinc-800 rounded-xl p-3 min-w-0 border border-brand-border dark:border-zinc-700"><p class="text-[10px] uppercase tracking-widest text-zinc-500 mb-1 font-bold truncate">Pemasukan</p><p class="text-xs truncate">${incHtml}</p></div><div class="bg-zinc-50 dark:bg-zinc-800 rounded-xl p-3 min-w-0 border border-brand-border dark:border-zinc-700"><p class="text-[10px] uppercase tracking-widest text-zinc-500 mb-1 font-bold truncate">Pengeluaran</p><p class="text-xs truncate">${expHtml}</p></div>${increaseAlert}</div></div>`;
             } else { analysisEl.innerHTML = ''; }
 
             Object.keys(monthlyData).sort((a, b) => b.localeCompare(a)).forEach(my => {
                 const data = monthlyData[my]; const balance = data.income - data.expense; const balanceColor = balance >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400';
                 recapList.innerHTML += `<div class="bg-white dark:bg-zinc-900 p-5 rounded-3xl shadow-sm border border-brand-border dark:border-zinc-800 min-w-0"><div class="flex justify-between items-center mb-4 border-b border-brand-border dark:border-zinc-800 pb-4 min-w-0"><div class="flex items-center min-w-0 flex-1 pr-2"><h3 class="font-extrabold text-zinc-800 dark:text-white text-base tracking-tight truncate">${data.label}</h3></div><span class="text-[10px] font-bold text-zinc-500 bg-zinc-50 dark:bg-zinc-800 px-2.5 py-1 rounded-md shrink-0 tracking-widest">${data.count} Transaksi</span></div><div class="grid grid-cols-2 gap-4 mb-4 min-w-0"><div class="min-w-0"><p class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1 truncate">Total Masuk</p><p class="font-extrabold tracking-tight text-sm text-emerald-600 dark:text-emerald-400 truncate">${Utils.formatIDR(data.income)}</p></div><div class="min-w-0"><p class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1 truncate">Total Keluar</p><p class="font-extrabold tracking-tight text-sm text-red-600 dark:text-red-400 truncate">${Utils.formatIDR(data.expense)}</p></div></div><div class="bg-zinc-50 dark:bg-zinc-800/50 rounded-xl p-4 flex justify-between items-center gap-3 min-w-0"><span class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest shrink-0">Sisa Saldo</span><span class="font-extrabold tracking-tighter text-base ${balanceColor} truncate w-full text-right">${Utils.formatIDR(balance)}</span></div></div>`;
+            });
+        },
+
+        getFilteredHistory: () => {
+            const search = document.getElementById('filter-search').value.toLowerCase();
+            const period = document.getElementById('filter-period-value').value;
+            const type = document.getElementById('filter-type-value').value;
+            const category = document.getElementById('filter-category-value').value;
+            
+            const currentMonthStr = Utils.getCurrentMonthStr();
+            const lastMonthStr = Utils.getPreviousMonthStr();
+
+            let filtered = AppState.transactions.filter(tx => {
+                if(!tx || !tx.date) return false;
+                const amtString = tx.amount ? tx.amount.toString() : '0';
+                const matchSearch = (tx.description || '').toLowerCase().includes(search) || (tx.category || '').toLowerCase().includes(search) || amtString.includes(search);
+                const matchType = type === 'all' || tx.type === type;
+                const matchCategory = category === 'all' || tx.category === category;
+                let matchDate = true; if(period === 'this_month') matchDate = tx.date.startsWith(currentMonthStr); else if(period === 'last_month') matchDate = tx.date.startsWith(lastMonthStr);
+                return matchSearch && matchType && matchCategory && matchDate;
+            });
+            filtered.sort((a,b) => new Date(b.date) - new Date(a.date));
+            return filtered;
+        },
+
+        renderHistory: () => {
+            const historyList = document.getElementById('history-list'); const pagination = document.getElementById('pagination-controls'); historyList.innerHTML = '';
+            const filteredData = TransactionManager.getFilteredHistory();
+            if (filteredData.length === 0) { document.getElementById('history-empty').classList.remove('hidden'); document.getElementById('history-empty').classList.add('flex'); pagination.classList.add('hidden'); pagination.classList.remove('flex'); return; }
+            document.getElementById('history-empty').classList.add('hidden'); document.getElementById('history-empty').classList.remove('flex');
+
+            const totalPages = Math.ceil(filteredData.length / AppState.itemsPerPage) || 1; if(AppState.currentPage > totalPages) AppState.currentPage = totalPages;
+            if (filteredData.length > AppState.itemsPerPage) { pagination.classList.remove('hidden'); pagination.classList.add('flex'); document.getElementById('page-info').innerText = `Hal ${AppState.currentPage}/${totalPages}`; document.getElementById('btn-prev').disabled = AppState.currentPage === 1; document.getElementById('btn-next').disabled = AppState.currentPage === totalPages; } else { pagination.classList.add('hidden'); pagination.classList.remove('flex'); }
+
+            const paginated = filteredData.slice((AppState.currentPage - 1) * AppState.itemsPerPage, ((AppState.currentPage - 1) * AppState.itemsPerPage) + AppState.itemsPerPage);
+            paginated.forEach((tx) => { 
+                if(!tx) return;
+                const style = Utils.getCategoryStyle(tx.category); const sign = tx.type === 'income' ? '+' : '-'; const walletText = tx.wallet === 'bank' ? 'Rekening' : 'Cash';
+                historyList.innerHTML += `<li class="flex items-center gap-3 py-4 px-4 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors min-w-0"><div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">${style.svg}</div><div class="flex-grow min-w-0"><p class="text-[13px] font-bold text-zinc-800 dark:text-white truncate">${tx.description || '-'}</p><div class="flex items-center gap-1.5 mt-0.5 min-w-0 overflow-hidden"><span class="text-[9px] font-bold bg-zinc-100 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-300 px-1.5 py-0.5 rounded tracking-widest uppercase shrink-0">${tx.category || 'Lainnya'}</span><span class="text-[9px] font-bold bg-brand-light dark:bg-blue-600/20 text-brand-dark dark:text-blue-400 px-1.5 py-0.5 rounded tracking-widest uppercase shrink-0">${walletText}</span></div></div><div class="text-right shrink-0 ml-1"><p class="text-sm font-bold tracking-tight ${tx.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-zinc-800 dark:text-white'}">${sign}${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p><p class="text-[10px] font-medium text-zinc-400 mt-0.5">${Utils.formatDate(tx.date)}</p></div></li>`;
             });
         }
     };
@@ -862,9 +927,9 @@
             } else {
                 AppState.savingsGoals.forEach((goal, idx) => {
                     totalSaved += goal.saved; let persen = Math.min((goal.saved / goal.target) * 100, 100);
-                    if(idx < 2) summaryEl.innerHTML += `<div class="p-3 rounded-[16px] bg-zinc-50 dark:bg-zinc-800/50 border border-brand-border dark:border-zinc-800 min-w-0"><div class="flex justify-between items-center mb-1.5 gap-2 min-w-0"><p class="text-xs font-bold text-zinc-800 dark:text-white tracking-tight truncate">${goal.name}</p><span class="text-[9px] font-bold text-brand-dark dark:text-brand-light bg-brand-light dark:bg-zinc-700 px-1.5 py-0.5 rounded uppercase shrink-0">${Math.round(persen)}%</span></div><div class="w-full bg-zinc-200 dark:bg-zinc-700 rounded-full h-1.5 mb-1.5 overflow-hidden"><div class="bg-brand-dark h-1.5 rounded-full" style="width: ${persen}%"></div></div><div class="flex justify-between text-[9px] font-bold tracking-widest gap-2 min-w-0"><span class="text-zinc-900 dark:text-white truncate text-left">${Utils.formatIDR(goal.saved)}</span><span class="text-zinc-400 truncate text-right">/ ${Utils.formatIDR(goal.target)}</span></div></div>`;
+                    if(idx < 2) summaryEl.innerHTML += `<div class="p-3 rounded-[16px] bg-zinc-50 dark:bg-zinc-800/50 border border-brand-border dark:border-zinc-800 min-w-0"><div class="flex justify-between items-center mb-1.5 gap-2 min-w-0"><p class="text-xs font-bold text-zinc-800 dark:text-white tracking-tight truncate">${goal.name}</p><span class="text-[9px] font-bold text-brand-dark dark:text-blue-400 bg-brand-light dark:bg-blue-600/20 px-1.5 py-0.5 rounded uppercase shrink-0">${Math.round(persen)}%</span></div><div class="w-full bg-zinc-200 dark:bg-zinc-700 rounded-full h-1.5 mb-1.5 overflow-hidden"><div class="bg-brand-dark dark:bg-blue-500 h-1.5 rounded-full" style="width: ${persen}%"></div></div><div class="flex justify-between text-[9px] font-bold tracking-widest gap-2 min-w-0"><span class="text-zinc-900 dark:text-white truncate text-left">${Utils.formatIDR(goal.saved)}</span><span class="text-zinc-400 truncate text-right">/ ${Utils.formatIDR(goal.target)}</span></div></div>`;
                     
-                    listEl.innerHTML += `<div class="bg-white dark:bg-zinc-900 p-5 rounded-3xl border border-brand-border dark:border-zinc-800 shadow-sm flex flex-col justify-between h-full min-w-0"><div><div class="flex justify-between items-start mb-4 gap-3 min-w-0"><h3 class="font-extrabold text-zinc-900 dark:text-white text-base tracking-tight truncate flex-grow">${goal.name}</h3><button onclick="GoalManager.deleteGoal(${goal.id})" class="shrink-0 w-8 h-8 rounded-lg bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div><div class="w-full bg-zinc-100 dark:bg-zinc-800 rounded-full h-2 mb-3 overflow-hidden"><div class="bg-brand-dark h-2 rounded-full" style="width: ${persen}%"></div></div><div class="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest gap-2 min-w-0"><span class="text-zinc-900 dark:text-white text-[13px] truncate tracking-tight">${Utils.formatIDR(goal.saved)}</span><span class="text-zinc-400 truncate text-right">/ ${Utils.formatIDR(goal.target)}</span></div></div><button onclick="GoalManager.openAddModal(${goal.id}, '${goal.name}')" class="w-full bg-brand-light dark:bg-zinc-800 text-brand-dark dark:text-zinc-100 font-bold rounded-xl py-3 mt-4 hover:opacity-80 transition-opacity text-xs shrink-0">Isi Tabungan</button></div>`;
+                    listEl.innerHTML += `<div class="bg-white dark:bg-zinc-900 p-5 rounded-3xl border border-brand-border dark:border-zinc-800 shadow-sm flex flex-col justify-between h-full min-w-0"><div><div class="flex justify-between items-start mb-4 gap-3 min-w-0"><h3 class="font-extrabold text-zinc-900 dark:text-white text-base tracking-tight truncate flex-grow">${goal.name}</h3><button onclick="GoalManager.deleteGoal(${goal.id})" class="shrink-0 w-8 h-8 rounded-lg bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div><div class="w-full bg-zinc-100 dark:bg-zinc-800 rounded-full h-2 mb-3 overflow-hidden"><div class="bg-brand-dark dark:bg-blue-500 h-2 rounded-full" style="width: ${persen}%"></div></div><div class="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest gap-2 min-w-0"><span class="text-zinc-900 dark:text-white text-[13px] truncate tracking-tight">${Utils.formatIDR(goal.saved)}</span><span class="text-zinc-400 truncate text-right">/ ${Utils.formatIDR(goal.target)}</span></div></div><button onclick="GoalManager.openAddModal(${goal.id}, '${goal.name}')" class="w-full bg-brand-light dark:bg-blue-600/20 text-brand-dark dark:text-blue-400 font-bold rounded-xl py-3 mt-4 hover:opacity-80 transition-opacity text-xs shrink-0">Isi Tabungan</button></div>`;
                 });
             }
             document.getElementById('goals-total-saved').innerText = Utils.formatIDR(totalSaved);
@@ -880,7 +945,12 @@
                     if (amount > currentBal) { return AppUI.showToast(`Saldo ${wallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup!`, "error"); }
                     LocalDB.addTransaction({ type: 'expense', wallet: wallet, amount: amount, category: 'Lainnya', date: Utils.getTodayDateStr(), description: `[Tabungan] ${goal.name}` }); 
                 }
-                goal.saved += amount; GoalManager.saveState(); GoalManager.render(); AppUI.closeModal('modal-add-savings');
+                goal.saved += amount; GoalManager.saveState(); GoalManager.render(); 
+                
+                // CRITICAL FIX: Update UI saldo total setelah potong saldo!
+                try { TransactionManager.renderAll(); } catch(e) {}
+
+                AppUI.closeModal('modal-add-savings');
                 AppUI.showToast(goal.saved >= goal.target ? "Wah, Target tercapai! 🎉" : "Berhasil menabung!"); 
             } 
         }
@@ -939,7 +1009,9 @@
         document.getElementById('form-add-savings').addEventListener('submit', (e) => { e.preventDefault(); const added = Utils.parseRawCurrency(document.getElementById('input-add-savings').value); if(added <= 0) return AppUI.showToast("Nominal tidak valid", "error"); const source = document.querySelector('input[name="savings-source"]:checked').value; const wallet = document.querySelector('input[name="savings-wallet"]:checked').value; GoalManager.addSavings(document.getElementById('input-savings-id').value, added, source, wallet); });
 
         document.getElementById('add-form').addEventListener('submit', (e) => {
-            e.preventDefault(); const amount = Utils.parseRawCurrency(document.getElementById('input-amount').value); if(amount <= 0) return AppUI.showToast("Masukkan nominal!", "error");
+            e.preventDefault(); 
+            const amount = Utils.parseRawCurrency(document.getElementById('input-amount').value); 
+            if(amount <= 0) return AppUI.showToast("Masukkan nominal!", "error");
             const type = document.querySelector('input[name="tx-type"]:checked').value; const wallet = document.querySelector('input[name="tx-wallet"]:checked').value;
             if (type === 'expense') { const balances = TransactionManager.getBalances(); const currentBal = wallet === 'cash' ? balances.cash : balances.bank; if (amount > currentBal) { return AppUI.showToast(`Saldo ${wallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup!`, "error"); } }
 
