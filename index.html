@@ -19,7 +19,7 @@
                     },
                     boxShadow: {
                         'soft': '0 8px 30px rgba(0, 0, 0, 0.04)',
-                        'float': '0 12px 40px rgba(0, 0, 0, 0.08)'
+                        'float': '0 12px 40px rgba(0, 0, 0, 0.12)'
                     }
                 } 
             } 
@@ -46,25 +46,28 @@
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #D4D4D8; border-radius: 10px; }
         .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #3F3F46; }
 
-        /* Mobile Safe Area Bottom Padding Bug Fix */
-        .pb-safe { padding-bottom: calc(env(safe-area-inset-bottom) + 120px) !important; }
+        .pb-safe { padding-bottom: calc(env(safe-area-inset-bottom) + 110px) !important; }
 
         /* Icon Toggles */
         .nav-btn.active .icon-outline { display: none; }
         .nav-btn.active .icon-fill { display: block; }
         .nav-btn:not(.active) .icon-fill { display: none; }
         
-        /* Mobile Navbar Styling */
+        /* Mobile Navbar Button Sizing Fix */
         .mobile-nav { 
             transition: all 0.2s ease; 
-            padding: 6px 10px; 
-            border-radius: 20px; 
+            padding: 8px 10px; 
+            border-radius: 18px; 
             color: #71717A; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 3px;
         }
         .mobile-nav.active { background-color: #E8EDE7; color: #1B2E22; font-weight: 700; }
         .dark .mobile-nav { color: #A1A1AA; }
-        .dark .mobile-nav.active { background-color: rgba(37, 99, 235, 0.2); color: #60A5FA; }
+        .dark .mobile-nav.active { background-color: rgba(37, 99, 235, 0.25); color: #60A5FA; }
 
         /* Desktop Sidebar Active */
         .desktop-nav.active { background-color: #E8EDE7; color: #1B2E22; font-weight: 700; }
@@ -80,7 +83,7 @@
         .dark .input-premium { background-color: #18181B; border-color: #27272A; color: #F4F4F5; }
         .dark .input-premium:focus { border-color: #3B82F6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
 
-        /* Fix Autofill/Copy Paste White Highlight Box */
+        /* Fix Autofill/Copy Paste Highlight Box */
         input:-webkit-autofill,
         input:-webkit-autofill:hover, 
         input:-webkit-autofill:focus {
@@ -279,8 +282,9 @@
     <!-- SIDEBAR DESKTOP -->
     <aside class="hidden md:flex flex-col w-[250px] bg-white dark:bg-zinc-950 border-r border-brand-border dark:border-zinc-800 z-30 fixed left-0 top-0 h-full">
         <div class="px-6 py-6 flex items-center gap-3 shrink-0">
-            <div class="w-9 h-9 rounded-xl bg-brand-dark dark:bg-blue-600 text-white flex items-center justify-center shrink-0">
-                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+            <!-- LOGO ICON FIX -->
+            <div class="w-10 h-10 rounded-xl bg-brand-dark dark:bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+                <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
             </div>
             <div class="min-w-0">
                 <h1 class="text-base font-extrabold tracking-tight text-zinc-900 dark:text-white leading-none truncate">Keuanganku</h1>
@@ -289,20 +293,24 @@
 
         <nav class="flex-grow px-3 py-2 space-y-1 overflow-y-auto custom-scrollbar">
             <button onclick="AppUI.switchTab('dashboard')" class="nav-btn nav-btn-dashboard desktop-nav w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-zinc-500 hover:bg-brand-bg dark:hover:bg-zinc-900 transition-all text-xs font-semibold active">
-                <svg class="w-4 h-4 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                <svg class="w-4 h-4 icon-fill shrink-0" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> <span class="truncate">Beranda</span>
+                <svg class="w-5 h-5 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <svg class="w-5 h-5 icon-fill shrink-0" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> <span class="truncate">Beranda</span>
             </button>
             <button onclick="AppUI.switchTab('wallet')" class="nav-btn nav-btn-wallet desktop-nav w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-zinc-500 hover:bg-brand-bg dark:hover:bg-zinc-900 transition-all text-xs font-semibold">
-                <svg class="w-4 h-4 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2v-5zm-5 0h.01M16 12a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
-                <svg class="w-4 h-4 icon-fill shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M21 7v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2zm-5 5h.01M16 12a1 1 0 10-2 0 1 1 0 002 0z"/></svg> <span class="truncate">Dompet</span>
+                <svg class="w-5 h-5 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2v-5zm-5 0h.01M16 12a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
+                <svg class="w-5 h-5 icon-fill shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M21 7v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2zm-5 5h.01M16 12a1 1 0 10-2 0 1 1 0 002 0z"/></svg> <span class="truncate">Dompet</span>
+            </button>
+            <button onclick="AppUI.switchTab('recap')" class="nav-btn nav-btn-recap desktop-nav w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-zinc-500 hover:bg-brand-bg dark:hover:bg-zinc-900 transition-all text-xs font-semibold">
+                <svg class="w-5 h-5 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                <svg class="w-5 h-5 icon-fill shrink-0" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-10 14H7v-6h2v6zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg> <span class="truncate">Rekap Bulanan</span>
             </button>
             <button onclick="AppUI.switchTab('history')" class="nav-btn nav-btn-history desktop-nav w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-zinc-500 hover:bg-brand-bg dark:hover:bg-zinc-900 transition-all text-xs font-semibold">
-                <svg class="w-4 h-4 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
-                <svg class="w-4 h-4 icon-fill shrink-0" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg> <span class="truncate">Riwayat & Rekap</span>
+                <svg class="w-5 h-5 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                <svg class="w-5 h-5 icon-fill shrink-0" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg> <span class="truncate">Riwayat Transaksi</span>
             </button>
             <button onclick="AppUI.switchTab('goals')" class="nav-btn nav-btn-goals desktop-nav w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-zinc-500 hover:bg-brand-bg dark:hover:bg-zinc-900 transition-all text-xs font-semibold">
-                <svg class="w-4 h-4 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <svg class="w-4 h-4 icon-fill shrink-0" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg> <span class="truncate">Target Impian</span>
+                <svg class="w-5 h-5 icon-outline shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <svg class="w-5 h-5 icon-fill shrink-0" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg> <span class="truncate">Target Impian</span>
             </button>
         </nav>
         <div class="p-4 shrink-0">
@@ -317,24 +325,26 @@
         
         <!-- HEADER -->
         <header class="sticky top-0 z-40 bg-[#F9F8F4]/90 dark:bg-zinc-950/90 backdrop-blur-xl px-4 py-3 flex items-center justify-between border-b border-brand-border dark:border-zinc-800 md:px-8 shrink-0">
-            <div class="flex items-center gap-2.5 md:hidden min-w-0">
-                <div class="w-8 h-8 rounded-lg bg-brand-dark dark:bg-blue-600 flex items-center justify-center text-white shrink-0"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg></div>
+            <div class="flex items-center gap-3 md:hidden min-w-0">
+                <!-- LOGO ICON MOBILE FIX -->
+                <div class="w-9 h-9 rounded-xl bg-brand-dark dark:bg-blue-600 flex items-center justify-center text-white shrink-0 shadow-sm">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                </div>
                 <h1 class="text-base font-extrabold tracking-tight text-zinc-900 dark:text-white truncate">Keuanganku</h1>
             </div>
             <div class="hidden md:block min-w-0"><h2 id="desktop-page-title" class="text-lg font-extrabold tracking-tight text-zinc-900 dark:text-white truncate">Beranda</h2></div>
             <div class="flex items-center gap-2 shrink-0">
-                <button onclick="ThemeManager.toggle()" class="w-8 h-8 rounded-full bg-white dark:bg-zinc-900 text-zinc-500 flex items-center justify-center hover:bg-zinc-50 border border-brand-border dark:border-zinc-800 transition-colors">
+                <button onclick="ThemeManager.toggle()" class="w-9 h-9 rounded-full bg-white dark:bg-zinc-900 text-zinc-500 flex items-center justify-center hover:bg-zinc-50 border border-brand-border dark:border-zinc-800 transition-colors">
                     <svg class="w-4 h-4 shrink-0 dark:hidden" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
                     <svg class="w-4 h-4 shrink-0 hidden dark:block" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                 </button>
-                <button onclick="AppUI.switchTab('settings')" class="w-8 h-8 rounded-full bg-white dark:bg-zinc-900 text-zinc-500 flex items-center justify-center hover:bg-zinc-50 border border-brand-border dark:border-zinc-800 transition-colors">
+                <button onclick="AppUI.switchTab('settings')" class="w-9 h-9 rounded-full bg-white dark:bg-zinc-900 text-zinc-500 flex items-center justify-center hover:bg-zinc-50 border border-brand-border dark:border-zinc-800 transition-colors">
                     <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 </button>
             </div>
         </header>
 
         <main class="flex-1 p-4 sm:p-6 pb-safe w-full min-w-0">
-            <!-- Container Lebar Maksimal Moderen -->
             <div class="max-w-xl mx-auto w-full min-w-0">
 
                 <!-- ==================== VIEW: BERANDA ==================== -->
@@ -354,8 +364,8 @@
                         <h2 class="text-3xl md:text-4xl font-extrabold tracking-tighter truncate w-full mb-5" id="dash-balance">Rp 0</h2>
                         
                         <div class="flex gap-2.5 justify-center w-full">
-                            <button onclick="AppUI.switchTab('wallet')" class="bg-white/20 hover:bg-white/30 text-white text-xs font-bold py-2 px-4 rounded-xl backdrop-blur-sm transition-colors flex-1 max-w-[130px]">Rincian Saldo</button>
-                            <button onclick="AppUI.switchTab('add')" class="bg-white text-brand-dark dark:text-blue-600 text-xs font-bold py-2 px-4 rounded-xl transition-colors flex-1 max-w-[130px] shadow-sm">+ Catat</button>
+                            <button onclick="AppUI.switchTab('wallet')" class="bg-white/20 hover:bg-white/30 text-white text-xs font-bold py-2.5 px-4 rounded-xl backdrop-blur-sm transition-colors flex-1 max-w-[130px]">Rincian Saldo</button>
+                            <button onclick="AppUI.switchTab('add')" class="bg-white text-brand-dark dark:text-blue-600 text-xs font-bold py-2.5 px-4 rounded-xl transition-colors flex-1 max-w-[130px] shadow-sm">+ Catat</button>
                         </div>
                     </div>
 
@@ -381,11 +391,11 @@
                     </div>
                 </section>
 
-                <!-- ==================== VIEW: DOMPET (COMPACT & PAS) ==================== -->
+                <!-- ==================== VIEW: DOMPET ==================== -->
                 <section id="view-wallet" class="view-section space-y-4">
                     <div class="md:hidden mb-1 px-1 min-w-0"><h2 class="text-lg font-extrabold tracking-tight text-zinc-900 dark:text-white truncate">Dompet & Anggaran</h2></div>
                     
-                    <!-- Rincian Saldo Ringkas -->
+                    <!-- Rincian Saldo -->
                     <div class="grid grid-cols-2 gap-2.5">
                         <div class="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-brand-border dark:border-zinc-800 shadow-sm flex flex-col justify-center">
                             <p class="text-[9px] font-bold text-zinc-400 uppercase tracking-widest mb-0.5 truncate">Uang Tunai</p>
@@ -397,7 +407,7 @@
                         </div>
                     </div>
 
-                    <!-- Arus Kas Bulan Ini (Compact) -->
+                    <!-- Arus Kas Bulan Ini -->
                     <div class="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-brand-border dark:border-zinc-800 shadow-sm">
                         <h3 class="font-extrabold text-zinc-900 dark:text-white text-xs mb-3">Arus Kas Bulan Ini</h3>
                         <div class="grid grid-cols-2 gap-2 mb-3">
@@ -435,79 +445,76 @@
                     </div>
                 </section>
 
-                <!-- ==================== VIEW: RIWAYAT & REKAP BULANAN ==================== -->
+                <!-- ==================== VIEW: REKAP BULANAN (HALAMAN BARU TERSENDIRI) ==================== -->
+                <section id="view-recap" class="view-section space-y-4">
+                    <div class="md:hidden flex justify-between items-end px-1 min-w-0">
+                        <div class="min-w-0"><h2 class="text-lg font-extrabold tracking-tight text-zinc-900 dark:text-white truncate">Rekap Bulanan</h2></div>
+                    </div>
+
+                    <div class="flex items-center gap-2 px-1">
+                        <svg class="w-4 h-4 text-zinc-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                        <h3 class="font-extrabold text-xs text-zinc-900 dark:text-white uppercase tracking-wider">Performa Keuangan Per Bulan</h3>
+                    </div>
+
+                    <div id="recap-analysis" class="min-w-0"></div>
+                    <div id="recap-list" class="space-y-3 min-w-0"></div>
+                </section>
+
+                <!-- ==================== VIEW: RIWAYAT TRANSAKSI ==================== -->
                 <section id="view-history" class="view-section space-y-4">
                     <div class="md:hidden flex justify-between items-end px-1 min-w-0">
-                        <div class="min-w-0"><h2 class="text-lg font-extrabold tracking-tight text-zinc-900 dark:text-white truncate">Riwayat & Rekap</h2></div>
+                        <div class="min-w-0"><h2 class="text-lg font-extrabold tracking-tight text-zinc-900 dark:text-white truncate">Riwayat Transaksi</h2></div>
                     </div>
 
-                    <!-- BAGIAN REKAP BULANAN (DIPINDAHKAN KE SINI) -->
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-2 px-1">
-                            <svg class="w-4 h-4 text-zinc-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                            <h3 class="font-extrabold text-xs text-zinc-900 dark:text-white uppercase tracking-wider">Rekap Performa Bulanan</h3>
-                        </div>
-                        <div id="recap-analysis" class="min-w-0"></div>
-                        <div id="recap-list" class="space-y-3 min-w-0"></div>
-                    </div>
-                    
-                    <!-- DAFTAR RIWAYAT TRANSAKSI -->
-                    <div class="pt-2">
-                        <div class="flex items-center gap-2 px-1 mb-2">
-                            <svg class="w-4 h-4 text-zinc-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            <h3 class="font-extrabold text-xs text-zinc-900 dark:text-white uppercase tracking-wider">Semua Catatan Transaksi</h3>
-                        </div>
-
-                        <div class="bg-white dark:bg-zinc-900 rounded-2xl p-3 mb-3 shadow-sm border border-brand-border dark:border-zinc-800 relative z-20 min-w-0">
-                            <div class="flex items-center gap-2 min-w-0">
-                                <div class="relative flex-grow min-w-0">
-                                    <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                                    <input type="text" id="filter-search" placeholder="Cari transaksi..." class="w-full input-premium text-zinc-700 dark:text-white text-xs font-semibold rounded-xl pl-8 pr-3 py-2">
-                                </div>
-                                <button onclick="Utils.toggleAdvancedFilter()" id="btn-toggle-filter" class="shrink-0 w-9 h-9 bg-zinc-50 dark:bg-zinc-800 rounded-xl text-zinc-500 flex items-center justify-center transition-colors hover:bg-zinc-100">
-                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
-                                </button>
+                    <div class="bg-white dark:bg-zinc-900 rounded-2xl p-3 mb-3 shadow-sm border border-brand-border dark:border-zinc-800 relative z-20 min-w-0">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <div class="relative flex-grow min-w-0">
+                                <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                                <input type="text" id="filter-search" placeholder="Cari transaksi..." class="w-full input-premium text-zinc-700 dark:text-white text-xs font-semibold rounded-xl pl-8 pr-3 py-2">
                             </div>
-                            
-                            <div id="advanced-filter-panel" class="hidden mt-3 pt-3 border-t border-brand-border dark:border-zinc-800 min-w-0">
-                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 min-w-0">
-                                    <div class="relative custom-select z-50 min-w-0" id="filter-period-select">
-                                        <div class="w-full input-premium text-zinc-700 dark:text-white text-[10px] font-bold rounded-lg px-2.5 py-2 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('filter-period-select')"><div id="filter-period-display" class="truncate pr-1">Bulan Ini</div><svg class="w-3.5 h-3.5 text-zinc-400 caret-icon shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
-                                        <div class="custom-select-options absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 rounded-lg shadow-lg overflow-hidden max-h-48 overflow-y-auto custom-scrollbar">
-                                            <div class="px-3 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-[10px] font-bold dark:text-white" onclick="Utils.selectOption('filter-period-select', 'this_month', 'Bulan Ini')">Bulan Ini</div>
-                                            <div class="px-3 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-[10px] font-bold dark:text-white" onclick="Utils.selectOption('filter-period-select', 'last_month', 'Bulan Lalu')">Bulan Lalu</div>
-                                            <div class="px-3 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-[10px] font-bold dark:text-white" onclick="Utils.selectOption('filter-period-select', 'all', 'Semua Waktu')">Semua Waktu</div>
-                                        </div>
-                                        <input type="hidden" id="filter-period-value" value="this_month">
+                            <button onclick="Utils.toggleAdvancedFilter()" id="btn-toggle-filter" class="shrink-0 w-9 h-9 bg-zinc-50 dark:bg-zinc-800 rounded-xl text-zinc-500 flex items-center justify-center transition-colors hover:bg-zinc-100">
+                                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+                            </button>
+                        </div>
+                        
+                        <div id="advanced-filter-panel" class="hidden mt-3 pt-3 border-t border-brand-border dark:border-zinc-800 min-w-0">
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 min-w-0">
+                                <div class="relative custom-select z-50 min-w-0" id="filter-period-select">
+                                    <div class="w-full input-premium text-zinc-700 dark:text-white text-[10px] font-bold rounded-lg px-2.5 py-2 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('filter-period-select')"><div id="filter-period-display" class="truncate pr-1">Bulan Ini</div><svg class="w-3.5 h-3.5 text-zinc-400 caret-icon shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
+                                    <div class="custom-select-options absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 rounded-lg shadow-lg overflow-hidden max-h-48 overflow-y-auto custom-scrollbar">
+                                        <div class="px-3 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-[10px] font-bold dark:text-white" onclick="Utils.selectOption('filter-period-select', 'this_month', 'Bulan Ini')">Bulan Ini</div>
+                                        <div class="px-3 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-[10px] font-bold dark:text-white" onclick="Utils.selectOption('filter-period-select', 'last_month', 'Bulan Lalu')">Bulan Lalu</div>
+                                        <div class="px-3 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-[10px] font-bold dark:text-white" onclick="Utils.selectOption('filter-period-select', 'all', 'Semua Waktu')">Semua Waktu</div>
                                     </div>
-                                    <div class="relative custom-select z-40 min-w-0" id="filter-type-select">
-                                        <div class="w-full input-premium text-zinc-700 dark:text-white text-[10px] font-bold rounded-lg px-2.5 py-2 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('filter-type-select')"><div id="filter-type-display" class="truncate pr-1">Semua Tipe</div><svg class="w-3.5 h-3.5 text-zinc-400 caret-icon shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
-                                        <div class="custom-select-options absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 rounded-lg shadow-lg overflow-hidden max-h-48 overflow-y-auto custom-scrollbar">
-                                            <div class="px-3 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-[10px] font-bold dark:text-white" onclick="Utils.selectOption('filter-type-select', 'all', 'Semua Tipe')">Semua Tipe</div>
-                                            <div class="px-3 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-[10px] font-bold dark:text-white" onclick="Utils.selectOption('filter-type-select', 'income', 'Pemasukan')">Pemasukan</div>
-                                            <div class="px-3 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-[10px] font-bold dark:text-white" onclick="Utils.selectOption('filter-type-select', 'expense', 'Pengeluaran')">Pengeluaran</div>
-                                        </div>
-                                        <input type="hidden" id="filter-type-value" value="all">
+                                    <input type="hidden" id="filter-period-value" value="this_month">
+                                </div>
+                                <div class="relative custom-select z-40 min-w-0" id="filter-type-select">
+                                    <div class="w-full input-premium text-zinc-700 dark:text-white text-[10px] font-bold rounded-lg px-2.5 py-2 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('filter-type-select')"><div id="filter-type-display" class="truncate pr-1">Semua Tipe</div><svg class="w-3.5 h-3.5 text-zinc-400 caret-icon shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
+                                    <div class="custom-select-options absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 rounded-lg shadow-lg overflow-hidden max-h-48 overflow-y-auto custom-scrollbar">
+                                        <div class="px-3 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-[10px] font-bold dark:text-white" onclick="Utils.selectOption('filter-type-select', 'all', 'Semua Tipe')">Semua Tipe</div>
+                                        <div class="px-3 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-[10px] font-bold dark:text-white" onclick="Utils.selectOption('filter-type-select', 'income', 'Pemasukan')">Pemasukan</div>
+                                        <div class="px-3 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-[10px] font-bold dark:text-white" onclick="Utils.selectOption('filter-type-select', 'expense', 'Pengeluaran')">Pengeluaran</div>
                                     </div>
-                                    <div class="relative custom-select z-30 min-w-0" id="filter-category-select">
-                                        <div class="w-full input-premium text-zinc-700 dark:text-white text-[10px] font-bold rounded-lg px-2.5 py-2 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('filter-category-select')"><div id="filter-category-display" class="truncate pr-1">Kategori</div><svg class="w-3.5 h-3.5 text-zinc-400 caret-icon shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
-                                        <div class="custom-select-options absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 rounded-lg shadow-lg overflow-hidden max-h-48 overflow-y-auto custom-scrollbar" id="filter-category-options"></div>
-                                        <input type="hidden" id="filter-category-value" value="all">
-                                    </div>
+                                    <input type="hidden" id="filter-type-value" value="all">
+                                </div>
+                                <div class="relative custom-select z-30 min-w-0" id="filter-category-select">
+                                    <div class="w-full input-premium text-zinc-700 dark:text-white text-[10px] font-bold rounded-lg px-2.5 py-2 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('filter-category-select')"><div id="filter-category-display" class="truncate pr-1">Kategori</div><svg class="w-3.5 h-3.5 text-zinc-400 caret-icon shrink-0" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
+                                    <div class="custom-select-options absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 rounded-lg shadow-lg overflow-hidden max-h-48 overflow-y-auto custom-scrollbar" id="filter-category-options"></div>
+                                    <input type="hidden" id="filter-category-value" value="all">
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-brand-border dark:border-zinc-800 overflow-hidden flex flex-col min-h-[250px] min-w-0">
-                            <div id="history-empty" class="flex-col items-center justify-center py-12 text-zinc-400 hidden flex-grow bg-zinc-50/50 dark:bg-zinc-950/50 min-w-0">
-                                <p class="text-xs font-medium text-zinc-500">Tidak ada riwayat yang sesuai.</p>
-                            </div>
-                            <ul id="history-list" class="divide-y divide-brand-border dark:divide-zinc-800/50 flex-grow min-w-0"></ul>
-                            <div id="pagination-controls" class="hidden flex justify-between items-center p-3 border-t border-brand-border dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 min-w-0">
-                                <button onclick="TransactionManager.changePage(-1)" id="btn-prev" class="px-3 py-1.5 text-[10px] font-bold text-zinc-600 dark:text-zinc-300 bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 rounded-lg disabled:opacity-40 transition-colors hover:bg-zinc-50 shrink-0">Sebelum</button>
-                                <span id="page-info" class="text-[9px] font-bold text-zinc-400 uppercase tracking-widest truncate px-2 text-center">Hal 1/1</span>
-                                <button onclick="TransactionManager.changePage(1)" id="btn-next" class="px-3 py-1.5 text-[10px] font-bold text-zinc-600 dark:text-zinc-300 bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 rounded-lg disabled:opacity-40 transition-colors hover:bg-zinc-50 shrink-0">Selanjut</button>
-                            </div>
+                    <div class="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-brand-border dark:border-zinc-800 overflow-hidden flex flex-col min-h-[300px] min-w-0">
+                        <div id="history-empty" class="flex-col items-center justify-center py-12 text-zinc-400 hidden flex-grow bg-zinc-50/50 dark:bg-zinc-950/50 min-w-0">
+                            <p class="text-xs font-medium text-zinc-500">Tidak ada riwayat yang sesuai.</p>
+                        </div>
+                        <ul id="history-list" class="divide-y divide-brand-border dark:divide-zinc-800/50 flex-grow min-w-0"></ul>
+                        <div id="pagination-controls" class="hidden flex justify-between items-center p-3 border-t border-brand-border dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 min-w-0">
+                            <button onclick="TransactionManager.changePage(-1)" id="btn-prev" class="px-3 py-1.5 text-[10px] font-bold text-zinc-600 dark:text-zinc-300 bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 rounded-lg disabled:opacity-40 transition-colors hover:bg-zinc-50 shrink-0">Sebelum</button>
+                            <span id="page-info" class="text-[9px] font-bold text-zinc-400 uppercase tracking-widest truncate px-2 text-center">Hal 1/1</span>
+                            <button onclick="TransactionManager.changePage(1)" id="btn-next" class="px-3 py-1.5 text-[10px] font-bold text-zinc-600 dark:text-zinc-300 bg-white dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 rounded-lg disabled:opacity-40 transition-colors hover:bg-zinc-50 shrink-0">Selanjut</button>
                         </div>
                     </div>
                 </section>
@@ -525,7 +532,7 @@
                     <div id="goals-list-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-stretch min-w-0"></div>
                 </section>
 
-                <!-- ==================== VIEW: TAMBAH TRANSAKSI (TANPA BLOK PUTIH) ==================== -->
+                <!-- ==================== VIEW: TAMBAH TRANSAKSI ==================== -->
                 <section id="view-add" class="view-section">
                     <div class="md:hidden mb-3 px-1"><h2 class="text-lg font-extrabold tracking-tight text-zinc-900 dark:text-white">Catat Transaksi</h2></div>
                     <form id="add-form" class="bg-white dark:bg-zinc-900 p-5 sm:p-6 rounded-2xl shadow-sm border border-brand-border dark:border-zinc-800 space-y-5 min-w-0">
@@ -535,7 +542,6 @@
                             <label class="flex-1 cursor-pointer"><input type="radio" name="tx-type" value="income" class="peer hidden"><div class="text-center py-2.5 rounded-lg text-xs font-bold peer-checked:bg-white dark:peer-checked:bg-zinc-700 peer-checked:text-zinc-900 dark:peer-checked:text-white peer-checked:shadow-sm text-zinc-500 transition-all">Pemasukan</div></label>
                         </div>
                         
-                        <!-- FIX INPUT NOMINAL: Tidak ada latar belakang blok putih saat copy/paste -->
                         <div class="py-2">
                             <label class="block text-[10px] font-bold text-zinc-400 mb-1 uppercase tracking-widest text-center truncate">Jumlah Nominal</label>
                             <div class="relative max-w-[240px] mx-auto flex items-center justify-center border-b-2 border-zinc-200 dark:border-zinc-700 focus-within:border-brand-dark dark:focus-within:border-blue-500 transition-colors">
@@ -625,32 +631,32 @@
     </div>
 </div>
 
-<!-- BOTTOM NAV (MOBILE) - FIXED OVERLAP SAFE AREA -->
-<nav class="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 w-max max-w-[92%] bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-brand-border dark:border-zinc-800 rounded-[24px] z-50 shadow-float px-1.5 py-1 flex justify-center items-center gap-1">
+<!-- BOTTOM NAV (MOBILE) - FIXED PROPORTIONAL LARGER SIZE & ICONS -->
+<nav class="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 w-[94%] max-w-md bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border border-brand-border dark:border-zinc-800 rounded-[26px] z-50 shadow-float px-2 py-2 flex justify-between items-center gap-1">
     <button onclick="AppUI.switchTab('dashboard')" class="nav-btn nav-btn-dashboard mobile-nav active flex-1">
-        <svg class="w-4 h-4 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-        <svg class="w-4 h-4 shrink-0 icon-fill" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-        <span class="text-[9px] font-bold tracking-tight leading-none">Home</span>
+        <svg class="w-5 h-5 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        <svg class="w-5 h-5 shrink-0 icon-fill" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        <span class="text-[10px] font-bold tracking-tight leading-none">Home</span>
     </button>
     <button onclick="AppUI.switchTab('wallet')" class="nav-btn nav-btn-wallet mobile-nav flex-1">
-        <svg class="w-4 h-4 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2v-5zm-5 0h.01M16 12a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
-        <svg class="w-4 h-4 shrink-0 icon-fill" fill="currentColor" viewBox="0 0 24 24"><path d="M21 7v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2zm-5 5h.01M16 12a1 1 0 10-2 0 1 1 0 002 0z"/></svg>
-        <span class="text-[9px] font-bold tracking-tight leading-none">Dompet</span>
+        <svg class="w-5 h-5 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2v-5zm-5 0h.01M16 12a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
+        <svg class="w-5 h-5 shrink-0 icon-fill" fill="currentColor" viewBox="0 0 24 24"><path d="M21 7v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2zm-5 5h.01M16 12a1 1 0 10-2 0 1 1 0 002 0z"/></svg>
+        <span class="text-[10px] font-bold tracking-tight leading-none">Dompet</span>
     </button>
     <button onclick="AppUI.switchTab('add')" class="nav-btn nav-btn-add mobile-nav flex-1">
-        <svg class="w-4 h-4 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-        <svg class="w-4 h-4 shrink-0 icon-fill" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-        <span class="text-[9px] font-bold tracking-tight leading-none">Catat</span>
+        <svg class="w-5 h-5 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        <svg class="w-5 h-5 shrink-0 icon-fill" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        <span class="text-[10px] font-bold tracking-tight leading-none">Catat</span>
     </button>
-    <button onclick="AppUI.switchTab('goals')" class="nav-btn nav-btn-goals mobile-nav flex-1">
-        <svg class="w-4 h-4 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        <svg class="w-4 h-4 shrink-0 icon-fill" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-        <span class="text-[9px] font-bold tracking-tight leading-none">Target</span>
+    <button onclick="AppUI.switchTab('recap')" class="nav-btn nav-btn-recap mobile-nav flex-1">
+        <svg class="w-5 h-5 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        <svg class="w-5 h-5 shrink-0 icon-fill" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-10 14H7v-6h2v6zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+        <span class="text-[10px] font-bold tracking-tight leading-none">Rekap</span>
     </button>
     <button onclick="AppUI.switchTab('history')" class="nav-btn nav-btn-history mobile-nav flex-1">
-        <svg class="w-4 h-4 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
-        <svg class="w-4 h-4 shrink-0 icon-fill" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-        <span class="text-[9px] font-bold tracking-tight leading-none">Riwayat</span>
+        <svg class="w-5 h-5 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+        <svg class="w-5 h-5 shrink-0 icon-fill" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+        <span class="text-[10px] font-bold tracking-tight leading-none">Riwayat</span>
     </button>
 </nav>
 
@@ -744,7 +750,7 @@
             if(id === 'modal-add-savings') { document.getElementById('input-add-savings').value = ''; document.querySelector('input[name="savings-source"][value="external"]').checked = true; }
         },
         switchTab: (tabId) => {
-            const titles = { 'dashboard': 'Beranda', 'wallet': 'Dompet & Anggaran', 'history': 'Riwayat & Rekap', 'add': 'Catat Transaksi', 'settings': 'Pengaturan', 'goals': 'Target Impian' };
+            const titles = { 'dashboard': 'Beranda', 'wallet': 'Dompet & Anggaran', 'recap': 'Rekap Bulanan', 'history': 'Riwayat Transaksi', 'add': 'Catat Transaksi', 'settings': 'Pengaturan', 'goals': 'Target Impian' };
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active')); 
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
             
@@ -801,13 +807,12 @@
     const TransactionManager = {
         getBalances: () => { let cash = 0, bank = 0; AppState.transactions.forEach(tx => { if(!tx) return; const nominal = Number(tx.amount) || 0; if (tx.type === 'income') { if (tx.wallet === 'cash') cash += nominal; else bank += nominal; } else if (tx.type === 'expense') { if (tx.wallet === 'cash') cash -= nominal; else bank -= nominal; } }); return { cash, bank, total: cash + bank }; },
         changePage: (delta) => { const filteredData = TransactionManager.getFilteredHistory(); const totalPages = Math.ceil(filteredData.length / AppState.itemsPerPage) || 1; AppState.currentPage += delta; if(AppState.currentPage < 1) AppState.currentPage = 1; if(AppState.currentPage > totalPages) AppState.currentPage = totalPages; TransactionManager.renderHistory(); },
-        renderAll: () => { TransactionManager.renderDashboard(); TransactionManager.renderWallet(); TransactionManager.renderHistory(); },
+        renderAll: () => { TransactionManager.renderDashboard(); TransactionManager.renderWallet(); TransactionManager.renderRecap(); TransactionManager.renderHistory(); },
         
         renderDashboard: () => {
             const balances = TransactionManager.getBalances();
             document.getElementById('dash-balance').innerText = Utils.formatIDR(balances.total);
 
-            // Aktivitas Terakhir
             const dashRecent = document.getElementById('dash-recent-list'); dashRecent.innerHTML = '';
             if (AppState.transactions.length === 0) { document.getElementById('dash-empty').classList.remove('hidden'); document.getElementById('dash-empty').classList.add('flex'); } 
             else {
@@ -846,7 +851,6 @@
             marginEl.innerText = Utils.formatIDR(margin);
             marginEl.className = margin >= 0 ? "text-xs font-extrabold text-emerald-600 dark:text-emerald-400" : "text-xs font-extrabold text-red-600 dark:text-red-400";
 
-            // Render Budget Ringkas
             const budgetListEl = document.getElementById('dashboard-budgets-list'); budgetListEl.innerHTML = '';
             const budgetsSafe = AppState.budgets || {};
             if(Object.keys(budgetsSafe).length === 0) { 
@@ -860,6 +864,44 @@
                     budgetListEl.innerHTML += `<div class="p-2.5 rounded-xl bg-zinc-50 dark:bg-zinc-800/50 border border-brand-border dark:border-zinc-800 min-w-0"><div class="flex justify-between items-center mb-1.5 min-w-0"><div class="flex items-center gap-1.5 min-w-0"><div class="${style.colorText} shrink-0 w-3.5 h-3.5 flex items-center justify-center">${style.svg}</div><span class="text-[11px] font-bold text-zinc-800 dark:text-white tracking-tight truncate">${cat}</span>${warningHtml}</div><span class="text-[10px] font-bold shrink-0 pl-1 ${persen >= 100 ? 'text-red-500' : 'text-zinc-700 dark:text-zinc-300'}">${Utils.formatIDR(spent)}</span></div><div class="w-full bg-zinc-200 dark:bg-zinc-700 rounded-full h-1.5 mb-1 overflow-hidden"><div class="${barColor} h-1.5 rounded-full" style="width: ${persen}%"></div></div><div class="flex justify-between text-[8px] font-bold text-zinc-400 uppercase tracking-widest gap-2 min-w-0"><span class="truncate text-left">Sisa: ${Utils.formatIDR(Math.max(limit - spent, 0))}</span><span class="truncate text-right">Batas: ${Utils.formatIDR(limit)}</span></div></div>`;
                 });
             }
+        },
+
+        renderRecap: () => {
+            const recapList = document.getElementById('recap-list'); recapList.innerHTML = '';
+            const analysisEl = document.getElementById('recap-analysis');
+            
+            if (AppState.transactions.length === 0) { 
+                analysisEl.innerHTML = '';
+                recapList.innerHTML = `<div class="text-center py-8 bg-white dark:bg-zinc-900 rounded-2xl border border-brand-border dark:border-zinc-800 min-w-0"><p class="text-xs font-medium text-zinc-500">Belum ada data rekap bulanan.</p></div>`; 
+                return;
+            }
+
+            const monthlyData = {}; const categoryDataPerMonth = {};
+            AppState.transactions.forEach(tx => { 
+                if(!tx || !tx.date) return; const monthYear = tx.date.substring(0, 7); 
+                if (!monthlyData[monthYear]) monthlyData[monthYear] = { label: new Date(tx.date).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }), income: 0, expense: 0, count: 0 }; 
+                if (!categoryDataPerMonth[monthYear]) categoryDataPerMonth[monthYear] = {};
+                const nominal = Number(tx.amount) || 0; 
+                if (tx.type === 'income') monthlyData[monthYear].income += nominal; 
+                if (tx.type === 'expense') { monthlyData[monthYear].expense += nominal; const cat = tx.category || 'Lainnya'; categoryDataPerMonth[monthYear][cat] = (categoryDataPerMonth[monthYear][cat] || 0) + nominal; }
+                monthlyData[monthYear].count += 1; 
+            });
+
+            const curr = Utils.getCurrentMonthStr(); const prev = Utils.getPreviousMonthStr();
+            if (monthlyData[curr] && monthlyData[prev]) {
+                const incDiff = monthlyData[curr].income - monthlyData[prev].income; const expDiff = monthlyData[curr].expense - monthlyData[prev].expense;
+                const incPercent = monthlyData[prev].income > 0 ? (incDiff / monthlyData[prev].income) * 100 : (incDiff > 0 ? 100 : 0);
+                const expPercent = monthlyData[prev].expense > 0 ? (expDiff / monthlyData[prev].expense) * 100 : (expDiff > 0 ? 100 : 0);
+                const incHtml = incDiff >= 0 ? `<span class="text-emerald-600 dark:text-emerald-400 font-bold tracking-tight">▲ ${Math.abs(incPercent).toFixed(0)}%</span>` : `<span class="text-red-600 dark:text-red-400 font-bold tracking-tight">▼ ${Math.abs(incPercent).toFixed(0)}%</span>`;
+                const expHtml = expDiff >= 0 ? `<span class="text-red-600 dark:text-red-400 font-bold tracking-tight">▲ ${Math.abs(expPercent).toFixed(0)}%</span>` : `<span class="text-emerald-600 dark:text-emerald-400 font-bold tracking-tight">▼ ${Math.abs(expPercent).toFixed(0)}%</span>`;
+                
+                analysisEl.innerHTML = `<div class="bg-white dark:bg-zinc-900 border border-brand-border dark:border-zinc-800 p-3.5 rounded-2xl shadow-sm mb-2 min-w-0"><h4 class="font-bold text-xs mb-2 text-zinc-900 dark:text-white truncate">Perbandingan Bulan Ini vs Lalu</h4><div class="grid grid-cols-2 gap-2"><div class="bg-zinc-50 dark:bg-zinc-800 rounded-xl p-2.5 min-w-0 border border-brand-border dark:border-zinc-700"><p class="text-[9px] uppercase tracking-widest text-zinc-500 font-bold truncate">Masuk</p><p class="text-xs truncate font-extrabold mt-0.5">${incHtml}</p></div><div class="bg-zinc-50 dark:bg-zinc-800 rounded-xl p-2.5 min-w-0 border border-brand-border dark:border-zinc-700"><p class="text-[9px] uppercase tracking-widest text-zinc-500 font-bold truncate">Keluar</p><p class="text-xs truncate font-extrabold mt-0.5">${expHtml}</p></div></div></div>`;
+            } else { analysisEl.innerHTML = ''; }
+
+            Object.keys(monthlyData).sort((a, b) => b.localeCompare(a)).forEach(my => {
+                const data = monthlyData[my]; const balance = data.income - data.expense; const balanceColor = balance >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400';
+                recapList.innerHTML += `<div class="bg-white dark:bg-zinc-900 p-4 rounded-2xl shadow-sm border border-brand-border dark:border-zinc-800 min-w-0"><div class="flex justify-between items-center mb-3 border-b border-brand-border dark:border-zinc-800 pb-2.5 min-w-0"><div class="flex items-center min-w-0 flex-1 pr-2"><h3 class="font-extrabold text-zinc-800 dark:text-white text-xs tracking-tight truncate">${data.label}</h3></div><span class="text-[9px] font-bold text-zinc-500 bg-zinc-50 dark:bg-zinc-800 px-2 py-0.5 rounded-md shrink-0 tracking-widest">${data.count} Transaksi</span></div><div class="grid grid-cols-2 gap-2 mb-3 min-w-0"><div class="min-w-0"><p class="text-[8px] font-bold text-zinc-400 uppercase tracking-widest mb-0.5 truncate">Total Masuk</p><p class="font-extrabold tracking-tight text-xs text-emerald-600 dark:text-emerald-400 truncate">${Utils.formatIDR(data.income)}</p></div><div class="min-w-0"><p class="text-[8px] font-bold text-zinc-400 uppercase tracking-widest mb-0.5 truncate">Total Keluar</p><p class="font-extrabold tracking-tight text-xs text-red-600 dark:text-red-400 truncate">${Utils.formatIDR(data.expense)}</p></div></div><div class="bg-zinc-50 dark:bg-zinc-800/50 rounded-xl p-2.5 flex justify-between items-center gap-2 min-w-0"><span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest shrink-0">Sisa Saldo</span><span class="font-extrabold tracking-tighter text-xs ${balanceColor} truncate w-full text-right">${Utils.formatIDR(balance)}</span></div></div>`;
+            });
         },
 
         getFilteredHistory: () => {
@@ -885,43 +927,6 @@
         },
 
         renderHistory: () => {
-            // Render Rekap Bulanan di dalam Halaman Riwayat
-            const recapList = document.getElementById('recap-list'); recapList.innerHTML = '';
-            const analysisEl = document.getElementById('recap-analysis');
-            
-            if (AppState.transactions.length === 0) { 
-                analysisEl.innerHTML = '';
-                recapList.innerHTML = `<div class="text-center py-6 bg-white dark:bg-zinc-900 rounded-2xl border border-brand-border dark:border-zinc-800 min-w-0"><p class="text-[10px] font-medium text-zinc-500">Belum ada rekap bulanan.</p></div>`; 
-            } else {
-                const monthlyData = {}; const categoryDataPerMonth = {};
-                AppState.transactions.forEach(tx => { 
-                    if(!tx || !tx.date) return; const monthYear = tx.date.substring(0, 7); 
-                    if (!monthlyData[monthYear]) monthlyData[monthYear] = { label: new Date(tx.date).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }), income: 0, expense: 0, count: 0 }; 
-                    if (!categoryDataPerMonth[monthYear]) categoryDataPerMonth[monthYear] = {};
-                    const nominal = Number(tx.amount) || 0; 
-                    if (tx.type === 'income') monthlyData[monthYear].income += nominal; 
-                    if (tx.type === 'expense') { monthlyData[monthYear].expense += nominal; const cat = tx.category || 'Lainnya'; categoryDataPerMonth[monthYear][cat] = (categoryDataPerMonth[monthYear][cat] || 0) + nominal; }
-                    monthlyData[monthYear].count += 1; 
-                });
-
-                const curr = Utils.getCurrentMonthStr(); const prev = Utils.getPreviousMonthStr();
-                if (monthlyData[curr] && monthlyData[prev]) {
-                    const incDiff = monthlyData[curr].income - monthlyData[prev].income; const expDiff = monthlyData[curr].expense - monthlyData[prev].expense;
-                    const incPercent = monthlyData[prev].income > 0 ? (incDiff / monthlyData[prev].income) * 100 : (incDiff > 0 ? 100 : 0);
-                    const expPercent = monthlyData[prev].expense > 0 ? (expDiff / monthlyData[prev].expense) * 100 : (expDiff > 0 ? 100 : 0);
-                    const incHtml = incDiff >= 0 ? `<span class="text-emerald-600 dark:text-emerald-400 font-bold tracking-tight">▲ ${Math.abs(incPercent).toFixed(0)}%</span>` : `<span class="text-red-600 dark:text-red-400 font-bold tracking-tight">▼ ${Math.abs(incPercent).toFixed(0)}%</span>`;
-                    const expHtml = expDiff >= 0 ? `<span class="text-red-600 dark:text-red-400 font-bold tracking-tight">▲ ${Math.abs(expPercent).toFixed(0)}%</span>` : `<span class="text-emerald-600 dark:text-emerald-400 font-bold tracking-tight">▼ ${Math.abs(expPercent).toFixed(0)}%</span>`;
-                    
-                    analysisEl.innerHTML = `<div class="bg-white dark:bg-zinc-900 border border-brand-border dark:border-zinc-800 p-3.5 rounded-2xl shadow-sm mb-2 min-w-0"><h4 class="font-bold text-xs mb-2 text-zinc-900 dark:text-white truncate">Perbandingan Bulan Ini vs Lalu</h4><div class="grid grid-cols-2 gap-2"><div class="bg-zinc-50 dark:bg-zinc-800 rounded-xl p-2.5 min-w-0 border border-brand-border dark:border-zinc-700"><p class="text-[9px] uppercase tracking-widest text-zinc-500 font-bold truncate">Masuk</p><p class="text-xs truncate font-extrabold mt-0.5">${incHtml}</p></div><div class="bg-zinc-50 dark:bg-zinc-800 rounded-xl p-2.5 min-w-0 border border-brand-border dark:border-zinc-700"><p class="text-[9px] uppercase tracking-widest text-zinc-500 font-bold truncate">Keluar</p><p class="text-xs truncate font-extrabold mt-0.5">${expHtml}</p></div></div></div>`;
-                } else { analysisEl.innerHTML = ''; }
-
-                Object.keys(monthlyData).sort((a, b) => b.localeCompare(a)).forEach(my => {
-                    const data = monthlyData[my]; const balance = data.income - data.expense; const balanceColor = balance >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400';
-                    recapList.innerHTML += `<div class="bg-white dark:bg-zinc-900 p-4 rounded-2xl shadow-sm border border-brand-border dark:border-zinc-800 min-w-0"><div class="flex justify-between items-center mb-3 border-b border-brand-border dark:border-zinc-800 pb-2.5 min-w-0"><div class="flex items-center min-w-0 flex-1 pr-2"><h3 class="font-extrabold text-zinc-800 dark:text-white text-xs tracking-tight truncate">${data.label}</h3></div><span class="text-[9px] font-bold text-zinc-500 bg-zinc-50 dark:bg-zinc-800 px-2 py-0.5 rounded-md shrink-0 tracking-widest">${data.count} Transaksi</span></div><div class="grid grid-cols-2 gap-2 mb-3 min-w-0"><div class="min-w-0"><p class="text-[8px] font-bold text-zinc-400 uppercase tracking-widest mb-0.5 truncate">Total Masuk</p><p class="font-extrabold tracking-tight text-xs text-emerald-600 dark:text-emerald-400 truncate">${Utils.formatIDR(data.income)}</p></div><div class="min-w-0"><p class="text-[8px] font-bold text-zinc-400 uppercase tracking-widest mb-0.5 truncate">Total Keluar</p><p class="font-extrabold tracking-tight text-xs text-red-600 dark:text-red-400 truncate">${Utils.formatIDR(data.expense)}</p></div></div><div class="bg-zinc-50 dark:bg-zinc-800/50 rounded-xl p-2.5 flex justify-between items-center gap-2 min-w-0"><span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest shrink-0">Sisa Saldo</span><span class="font-extrabold tracking-tighter text-xs ${balanceColor} truncate w-full text-right">${Utils.formatIDR(balance)}</span></div></div>`;
-                });
-            }
-
-            // Render Daftar Transaksi
             const historyList = document.getElementById('history-list'); const pagination = document.getElementById('pagination-controls'); historyList.innerHTML = '';
             const filteredData = TransactionManager.getFilteredHistory();
             if (filteredData.length === 0) { document.getElementById('history-empty').classList.remove('hidden'); document.getElementById('history-empty').classList.add('flex'); pagination.classList.add('hidden'); pagination.classList.remove('flex'); return; }
