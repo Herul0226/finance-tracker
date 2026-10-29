@@ -33,8 +33,7 @@
         * { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-user-drag: none; }
         input, textarea, select { -webkit-user-select: auto; user-select: auto; }
         
-        /* Mengunci pantulan scroll agar terasa seperti Native App */
-        html, body { scroll-behavior: smooth; overflow-x: hidden; background-color: #F9F8F4; overscroll-behavior: none; }
+        html, body { scroll-behavior: smooth; overflow-x: hidden; min-height: 100%; background-color: #F9F8F4; }
         .dark body { background-color: #09090B; } 
         
         .view-section { display: none; opacity: 0; transition: opacity 0.2s ease, transform 0.2s ease; transform: translateY(5px); }
@@ -48,22 +47,20 @@
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #D4D4D8; border-radius: 10px; }
         .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #3F3F46; }
 
-        .pb-safe { padding-bottom: calc(env(safe-area-inset-bottom) + 110px) !important; }
-
         .nav-btn.active .icon-outline { display: none; }
         .nav-btn.active .icon-fill { display: block; }
         .nav-btn:not(.active) .icon-fill { display: none; }
         
         .mobile-nav { 
             transition: all 0.2s ease; 
-            padding: 8px 10px; 
-            border-radius: 18px; 
+            padding: 6px 8px; 
+            border-radius: 16px; 
             color: #71717A; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             justify-content: center; 
-            gap: 3px;
+            gap: 2px;
         }
         .mobile-nav.active { background-color: #E8EDE7; color: #1B2E22; font-weight: 700; }
         .dark .mobile-nav { color: #A1A1AA; }
@@ -76,7 +73,6 @@
         .custom-select.open .custom-select-options { opacity: 1; pointer-events: auto; transform: translateY(0); }
         .custom-select.open .caret-icon { transform: rotate(180deg); }
 
-        /* Clean Inputs Fix (Anti Teks Hitam di Dark Mode) */
         .input-premium { background-color: #ffffff; border: 1px solid #EBEAE4; transition: all 0.2s ease; color: #27272A; }
         .input-premium:focus { border-color: #1B2E22; box-shadow: 0 0 0 3px rgba(27, 46, 34, 0.1); outline: none; }
         
@@ -86,7 +82,6 @@
         input::placeholder { color: #A1A1AA; }
         .dark input::placeholder { color: #52525B; }
 
-        /* Fix Autofill Browser */
         input:-webkit-autofill,
         input:-webkit-autofill:hover, 
         input:-webkit-autofill:focus {
@@ -96,7 +91,7 @@
         .dark input:-webkit-autofill { -webkit-text-fill-color: #F4F4F5 !important; }
     </style>
 </head>
-<body class="text-zinc-800 dark:text-zinc-100 antialiased transition-colors duration-300 min-h-screen flex">
+<body class="bg-[#F9F8F4] dark:bg-[#09090B] text-zinc-800 dark:text-zinc-100 antialiased transition-colors duration-300 min-h-screen">
 
 <script>
     if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -280,7 +275,7 @@
 </div>
 
 <!-- ================= WRAPPER UTAMA ================= -->
-<div class="flex w-full min-h-[100dvh]">
+<div class="flex w-full min-h-screen">
 
     <!-- SIDEBAR DESKTOP -->
     <aside class="hidden md:flex flex-col w-[250px] bg-white dark:bg-zinc-950 border-r border-brand-border dark:border-zinc-800 z-30 fixed left-0 top-0 h-full">
@@ -323,7 +318,7 @@
     </aside>
 
     <!-- MAIN CONTENT AREA -->
-    <div class="md:ml-[250px] flex flex-col flex-1 min-w-0 min-h-[100dvh]">
+    <div class="md:ml-[250px] flex flex-col flex-1 min-w-0 min-h-screen">
         
         <!-- HEADER -->
         <header class="sticky top-0 z-40 bg-[#F9F8F4]/90 dark:bg-zinc-950/90 backdrop-blur-xl px-4 py-3 flex items-center justify-between border-b border-brand-border dark:border-zinc-800 md:px-8 shrink-0">
@@ -345,7 +340,8 @@
             </div>
         </header>
 
-        <main class="flex-1 p-4 sm:p-6 pb-safe w-full min-w-0">
+        <!-- AREA KONTEN UTAMA DENGAN PADDING BOTTOM (pb-32) UNTUK NAV HP -->
+        <main class="flex-1 p-4 sm:p-6 pb-32 md:pb-8 w-full min-w-0">
             <div class="max-w-xl mx-auto w-full min-w-0">
 
                 <!-- ==================== VIEW: BERANDA ==================== -->
@@ -634,32 +630,32 @@
     </div>
 </div>
 
-<!-- BOTTOM NAV (MOBILE) -->
+<!-- BOTTOM NAV BAR HP -->
 <nav class="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 w-[94%] max-w-md bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border border-brand-border dark:border-zinc-800 rounded-[26px] z-50 shadow-float px-2 py-2 flex justify-between items-center gap-1">
     <button onclick="AppUI.switchTab('dashboard')" class="nav-btn nav-btn-dashboard mobile-nav active flex-1">
         <svg class="w-6 h-6 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
         <svg class="w-6 h-6 shrink-0 icon-fill" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-        <span class="text-[10px] font-bold tracking-tight leading-none mt-1">Home</span>
+        <span class="text-[10px] font-bold tracking-tight leading-none">Home</span>
     </button>
     <button onclick="AppUI.switchTab('wallet')" class="nav-btn nav-btn-wallet mobile-nav flex-1">
         <svg class="w-6 h-6 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2v-5zm-5 0h.01M16 12a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
         <svg class="w-6 h-6 shrink-0 icon-fill" fill="currentColor" viewBox="0 0 24 24"><path d="M21 7v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2zm-5 5h.01M16 12a1 1 0 10-2 0 1 1 0 002 0z"/></svg>
-        <span class="text-[10px] font-bold tracking-tight leading-none mt-1">Dompet</span>
+        <span class="text-[10px] font-bold tracking-tight leading-none">Dompet</span>
     </button>
     <button onclick="AppUI.switchTab('add')" class="nav-btn nav-btn-add mobile-nav flex-1">
         <svg class="w-6 h-6 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
         <svg class="w-6 h-6 shrink-0 icon-fill" fill="currentColor" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-        <span class="text-[10px] font-bold tracking-tight leading-none mt-1">Catat</span>
+        <span class="text-[10px] font-bold tracking-tight leading-none">Catat</span>
     </button>
     <button onclick="AppUI.switchTab('recap')" class="nav-btn nav-btn-recap mobile-nav flex-1">
         <svg class="w-6 h-6 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
         <svg class="w-6 h-6 shrink-0 icon-fill" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-10 14H7v-6h2v6zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
-        <span class="text-[10px] font-bold tracking-tight leading-none mt-1">Rekap</span>
+        <span class="text-[10px] font-bold tracking-tight leading-none">Rekap</span>
     </button>
     <button onclick="AppUI.switchTab('history')" class="nav-btn nav-btn-history mobile-nav flex-1">
         <svg class="w-6 h-6 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
         <svg class="w-6 h-6 shrink-0 icon-fill" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-        <span class="text-[10px] font-bold tracking-tight leading-none mt-1">Riwayat</span>
+        <span class="text-[10px] font-bold tracking-tight leading-none">Riwayat</span>
     </button>
 </nav>
 
@@ -677,7 +673,6 @@
         formatCurrencyInputEvent: (e) => { let v = e.target.value.replace(/[^0-9]/g, ''); e.target.value = v ? new Intl.NumberFormat('id-ID').format(v) : ''; },
         toggleAdvancedFilter: () => { const p = document.getElementById('advanced-filter-panel'); p.classList.toggle('hidden'); document.getElementById('btn-toggle-filter').classList.toggle('bg-zinc-100'); },
 
-        // Ikon dengan viewBox absolut presisi
         categoryData: {
             'Makanan': { type: 'expense', svg: '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a7 7 0 00-7 7v1h14v-1a7 7 0 00-7-7zM5 13h14v2a4 4 0 01-4 4H9a4 4 0 01-4-4v-2z" /></svg>', colorText: 'text-orange-600 dark:text-orange-500', bg: 'bg-orange-50 dark:bg-orange-500/10' },
             'Transport': { type: 'expense', svg: '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V9a2 2 0 012-2h8a2 2 0 012 2v5a2 2 0 01-2 2h-2m-4 0v2m0-2v-2m4 2h.01M9 16h.01" /></svg>', colorText: 'text-sky-600 dark:text-sky-500', bg: 'bg-sky-50 dark:bg-sky-500/10' },
@@ -694,7 +689,7 @@
         renderTxCategories: (txType, containerId = 'tx-category-select') => {
             const container = document.querySelector(`#${containerId} .custom-select-options`); let html = ''; 
             const cats = Object.keys(Utils.categoryData).filter(c => Utils.categoryData[c].type === txType || Utils.categoryData[c].type === 'both');
-            cats.forEach(cat => { const style = Utils.categoryData[cat]; html += `<div class="px-3.5 py-3 flex items-center gap-3 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer border-b border-brand-border dark:border-zinc-800 transition-colors min-w-0" onclick="Utils.selectOption('${containerId}', '${cat}', '${cat}')"><div class="${style.colorText} shrink-0 w-6 h-6 flex items-center justify-center">${style.svg}</div><span class="font-bold text-zinc-700 dark:text-zinc-200 text-xs truncate">${cat}</span></div>`; });
+            cats.forEach(cat => { const style = Utils.categoryData[cat]; html += `<div class="px-3.5 py-3 flex items-center gap-3 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer border-b border-brand-border dark:border-zinc-800 transition-colors min-w-0" onclick="Utils.selectOption('${containerId}', '${cat}', '${cat}')"><div class="${style.colorText} shrink-0 w-5 h-5 flex items-center justify-center">${style.svg}</div><span class="font-bold text-zinc-700 dark:text-zinc-200 text-xs truncate">${cat}</span></div>`; });
             if(container) container.innerHTML = html; Utils.selectOption(containerId, cats[0], cats[0]);
         },
         setupCustomSelects: () => {
@@ -702,7 +697,7 @@
             const filterCatOptions = document.getElementById('filter-category-options');
             if(filterCatOptions) {
                 let catHtml = `<div class="px-3 py-2.5 flex items-center gap-2 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer border-b border-brand-border dark:border-zinc-800 text-xs font-bold text-zinc-700 dark:text-zinc-200 transition-colors min-w-0" onclick="Utils.selectOption('filter-category-select', 'all', 'Kategori')"><span class="truncate">Semua Kategori</span></div>`;
-                Object.keys(Utils.categoryData).forEach(cat => { const style = Utils.categoryData[cat]; catHtml += `<div class="px-3 py-2.5 flex items-center gap-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer border-b border-brand-border dark:border-zinc-800 transition-colors min-w-0" onclick="Utils.selectOption('filter-category-select', '${cat}', '${cat}')"><div class="${style.colorText} shrink-0 w-6 h-6 flex items-center justify-center">${style.svg}</div><span class="font-bold text-zinc-700 dark:text-zinc-200 text-xs truncate">${cat}</span></div>`; });
+                Object.keys(Utils.categoryData).forEach(cat => { const style = Utils.categoryData[cat]; catHtml += `<div class="px-3 py-2.5 flex items-center gap-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer border-b border-brand-border dark:border-zinc-800 transition-colors min-w-0" onclick="Utils.selectOption('filter-category-select', '${cat}', '${cat}')"><div class="${style.colorText} shrink-0 w-5 h-5 flex items-center justify-center">${style.svg}</div><span class="font-bold text-zinc-700 dark:text-zinc-200 text-xs truncate">${cat}</span></div>`; });
                 filterCatOptions.innerHTML = catHtml;
             }
             document.addEventListener('click', (e) => { if(!e.target.closest('.custom-select')) document.querySelectorAll('.custom-select').forEach(el => el.classList.remove('open')); });
@@ -711,7 +706,7 @@
             const s = document.getElementById(selectId); if(!s) return;
             s.querySelector('input[type="hidden"]').value = value;
             const displayContainer = s.querySelector('div[id$="-display"]');
-            if (Utils.categoryData[value] && !selectId.startsWith('filter-')) { const style = Utils.categoryData[value]; displayContainer.innerHTML = `<div class="flex items-center gap-2.5 min-w-0"><div class="${style.colorText} shrink-0 w-6 h-6 flex items-center justify-center">${style.svg}</div> <span class="dark:text-white font-bold text-sm truncate">${value}</span></div>`; } 
+            if (Utils.categoryData[value] && !selectId.startsWith('filter-')) { const style = Utils.categoryData[value]; displayContainer.innerHTML = `<div class="flex items-center gap-2.5 min-w-0"><div class="${style.colorText} shrink-0 w-5 h-5 flex items-center justify-center">${style.svg}</div> <span class="dark:text-white font-bold text-sm truncate">${value}</span></div>`; } 
             else { displayContainer.innerHTML = `<span class="dark:text-white font-bold truncate pr-1">${displayText || value}</span>`; }
             s.classList.remove('open');
             if (selectId.startsWith('filter-')) { AppState.currentPage = 1; TransactionManager.renderHistory(); }
@@ -750,11 +745,11 @@
         closeConfirm: () => { AppUI.closeModal('modal-confirm'); AppState.confirmCallback = null; },
         openModal: (id) => {
             document.getElementById(id).classList.remove('hidden');
-            document.body.style.overflow = 'hidden'; // Mengunci background scroll
+            document.body.style.overflow = 'hidden';
         },
         closeModal: (id) => { 
             document.getElementById(id).classList.add('hidden'); 
-            document.body.style.overflow = ''; // Membuka background scroll
+            document.body.style.overflow = '';
             if(id === 'modal-add-savings') { document.getElementById('input-add-savings').value = ''; document.querySelector('input[name="savings-source"][value="external"]').checked = true; }
         },
         switchTab: (tabId) => {
