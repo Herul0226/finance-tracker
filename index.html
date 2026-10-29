@@ -15,17 +15,15 @@
     <style>
         /* ==================== NATIVE APP FEEL ==================== */
         * {
-            -webkit-tap-highlight-color: transparent; /* Menghilangkan efek kotak biru/abu saat tombol ditap di HP */
-            -webkit-touch-callout: none; /* Mencegah munculnya pop-up menu saat layar ditahan (long-press) */
-            -webkit-user-select: none; /* Mencegah seleksi teks (Safari) */
-            -moz-user-select: none; /* Mencegah seleksi teks (Firefox) */
-            -ms-user-select: none; /* Mencegah seleksi teks (Edge) */
-            user-select: none; /* Mencegah seleksi teks standar */
-            -webkit-user-drag: none; /* Mencegah elemen bisa di-drag */
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-user-drag: none;
         }
-
-        /* KHUSUS INPUT: Tetap izinkan user untuk menyeleksi dan mengetik teks */
-        input, textarea {
+        input, textarea, select {
             -webkit-user-select: auto;
             -moz-user-select: auto;
             -ms-user-select: auto;
@@ -121,6 +119,34 @@
     </div>
 </div>
 
+<!-- MODAL: BUAT ANGGARAN (BUDGET) -->
+<div id="modal-set-budget" class="fixed inset-0 z-[60] flex items-center justify-center hidden">
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm modal-overlay" onclick="AppUI.closeModal('modal-set-budget')"></div>
+    <div class="bg-white dark:bg-slate-800 w-11/12 max-w-md rounded-[2rem] p-6 relative z-10 modal-content shadow-2xl border border-slate-100 dark:border-slate-700">
+        <h3 class="font-bold text-lg text-slate-800 dark:text-white mb-1">Atur Anggaran Kategori</h3>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mb-5">Tentukan batas pengeluaran maksimal per bulan.</p>
+        <form id="form-set-budget" class="space-y-4">
+            <div class="relative custom-select z-20" id="budget-category-select">
+                <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Kategori</label>
+                <div class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white text-sm font-medium rounded-xl px-4 py-3 flex items-center justify-between cursor-pointer focus:ring-2 focus:ring-indigo-500 transition-all" onclick="Utils.toggleDropdown('budget-category-select')">
+                    <div class="flex items-center gap-2" id="budget-category-display"><span>Makanan</span></div>
+                    <svg class="w-4 h-4 text-slate-400 caret-icon transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+                </div>
+                <div class="custom-select-options absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden z-30 max-h-48 overflow-y-auto custom-scrollbar"></div>
+                <input type="hidden" id="budget-category-value" value="Makanan">
+            </div>
+            <div>
+                <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Batas Maksimal (Rp)</label>
+                <input type="text" inputmode="numeric" id="input-budget-amount" placeholder="Cth: 800.000" required class="currency-input w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold rounded-xl px-4 py-3.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+            </div>
+            <div class="flex gap-3 pt-2">
+                <button type="button" onclick="AppUI.closeModal('modal-set-budget')" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold rounded-xl py-3.5 text-sm hover:bg-slate-200 transition-colors">Batal</button>
+                <button type="submit" class="flex-1 bg-indigo-600 text-white font-bold rounded-xl py-3.5 shadow-lg shadow-indigo-200/50 dark:shadow-none hover:bg-indigo-700 transition-all text-sm">Simpan Anggaran</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- MODAL: BUAT TARGET TABUNGAN -->
 <div id="modal-set-goal" class="fixed inset-0 z-[60] flex items-center justify-center hidden">
     <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm modal-overlay" onclick="AppUI.closeModal('modal-set-goal')"></div>
@@ -167,12 +193,11 @@
                     </label>
                     <label class="flex-1 cursor-pointer">
                         <input type="radio" name="savings-source" value="balance" class="peer hidden">
-                        <div class="text-center py-3 rounded-xl text-xs font-bold peer-checked:bg-white dark:peer-checked:bg-slate-800 peer-checked:text-indigo-600 peer-checked:shadow text-slate-500 transition-all flex items-center justify-center gap-1.5">Potong Saldo Aktif</div>
+                        <div class="text-center py-3 rounded-xl text-xs font-bold peer-checked:bg-white dark:peer-checked:bg-slate-800 peer-checked:text-indigo-600 peer-checked:shadow text-slate-500 transition-all flex items-center justify-center gap-1.5">Potong Saldo</div>
                     </label>
                 </div>
             </div>
 
-            <!-- Pilih Rekening / Cash untuk Potong Saldo -->
             <div id="savings-wallet-wrapper">
                 <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Potong dari Akun Mana?</label>
                 <div class="grid grid-cols-2 gap-2">
@@ -245,7 +270,6 @@
         <h3 class="font-bold text-lg text-slate-800 dark:text-white mb-1" id="pay-bill-name">Bayar Tagihan?</h3>
         <p class="text-3xl font-black text-rose-500 mb-4" id="pay-bill-amount">Rp 0</p>
         
-        <!-- Pilih Sumber Pembayaran Tagihan -->
         <div class="mb-6 text-left">
             <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Bayar Menggunakan Sumber:</label>
             <div class="grid grid-cols-2 gap-2">
@@ -392,7 +416,7 @@
                         </div>
                     </div>
 
-                    <!-- Grid Simetris 2 Kolom -->
+                    <!-- FITUR 1: ANGGARAN KATEGORI & ALOKASI (Grid) -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
                         <!-- Alokasi Pengeluaran -->
                         <div class="bg-white dark:bg-slate-800 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-[0_8px_30px_rgba(0,0,0,0.04)] flex flex-col h-full">
@@ -404,16 +428,27 @@
                             <div id="category-breakdown-list" class="space-y-3 flex-grow flex flex-col justify-center"></div>
                         </div>
 
-                        <!-- Progres Target Tabungan -->
-                        <div class="bg-white dark:bg-slate-800 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-[0_8px_30px_rgba(0,0,0,0.04)] cursor-pointer hover:border-indigo-100 transition-colors flex flex-col h-full" onclick="AppUI.switchTab('goals')">
+                        <!-- Anggaran Bulanan (Baru) -->
+                        <div class="bg-white dark:bg-slate-800 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-[0_8px_30px_rgba(0,0,0,0.04)] flex flex-col h-full">
                             <div class="flex justify-between items-center mb-4 min-h-[28px]">
                                 <h3 class="font-bold text-slate-800 dark:text-white text-sm flex items-center">
-                                    <span class="w-5 h-5 text-amber-500 mr-2 inline-flex"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span> Impian Anda
+                                    <span class="w-5 h-5 text-blue-500 mr-2 inline-flex"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg></span> Anggaran Bulanan
                                 </h3>
-                                <span class="text-[10px] font-bold text-slate-400 bg-slate-50 dark:bg-slate-900 px-2.5 py-1 rounded-lg shrink-0">Lihat Semua</span>
+                                <button onclick="AppUI.openModal('modal-set-budget'); Utils.renderTxCategories('expense', 'budget-category-select');" class="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-2.5 py-1 rounded-lg shrink-0 hover:bg-indigo-100 transition-colors">+ Atur Anggaran</button>
                             </div>
-                            <div id="dash-goals-summary" class="space-y-3 flex-grow flex flex-col justify-center"></div>
+                            <div id="budgets-list-container" class="space-y-3 flex-grow flex flex-col justify-center"></div>
                         </div>
+                    </div>
+
+                    <!-- Progres Target Tabungan -->
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-[0_8px_30px_rgba(0,0,0,0.04)] cursor-pointer hover:border-indigo-100 transition-colors flex flex-col" onclick="AppUI.switchTab('goals')">
+                        <div class="flex justify-between items-center mb-4 min-h-[28px]">
+                            <h3 class="font-bold text-slate-800 dark:text-white text-sm flex items-center">
+                                <span class="w-5 h-5 text-amber-500 mr-2 inline-flex"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span> Impian Anda
+                            </h3>
+                            <span class="text-[10px] font-bold text-slate-400 bg-slate-50 dark:bg-slate-900 px-2.5 py-1 rounded-lg shrink-0">Lihat Semua</span>
+                        </div>
+                        <div id="dash-goals-summary" class="space-y-3 flex flex-col justify-center"></div>
                     </div>
 
                     <!-- Transaksi Terakhir -->
@@ -451,7 +486,7 @@
                 <section id="view-bills" class="view-section space-y-6">
                     <div class="flex justify-between items-center mb-2 px-1">
                         <div><h2 class="text-2xl font-bold text-slate-800 dark:text-white">Tagihan Bulanan</h2><p class="text-xs text-slate-500 mt-1">Otomatis berulang setiap awal bulan.</p></div>
-                        <button onclick="AppUI.openModal('modal-add-bill')" class="bg-indigo-600 text-white font-bold text-xs px-5 py-3 rounded-xl shadow-lg shadow-indigo-200/50 dark:shadow-none flex items-center gap-2 hover:bg-indigo-700 transition-all">
+                        <button onclick="AppUI.openModal('modal-add-bill'); Utils.renderTxCategories('expense', 'bill-category-select')" class="bg-indigo-600 text-white font-bold text-xs px-5 py-3 rounded-xl shadow-lg shadow-indigo-200/50 dark:shadow-none flex items-center gap-2 hover:bg-indigo-700 transition-all">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg> Tambah
                         </button>
                     </div>
@@ -521,16 +556,38 @@
                     </form>
                 </section>
 
-                <!-- ==================== VIEW: RIWAYAT & REKAP ==================== -->
+                <!-- ==================== VIEW: RIWAYAT & FILTER ==================== -->
                 <section id="view-history" class="view-section">
-                    <div class="md:hidden mb-6 flex justify-between items-center px-1"><div><h2 class="text-2xl font-bold text-slate-800 dark:text-white">Riwayat</h2></div><button onclick="AppUI.switchTab('recap')" class="text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-xl uppercase">Lihat Rekap</button></div>
-                    <div class="bg-white dark:bg-slate-800 rounded-[2rem] shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-slate-100 dark:border-slate-700 overflow-hidden flex flex-col min-h-[500px]">
+                    <div class="md:hidden mb-4 flex justify-between items-center px-1"><div><h2 class="text-2xl font-bold text-slate-800 dark:text-white">Riwayat</h2></div><button onclick="AppUI.switchTab('recap')" class="text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-4 py-2 rounded-xl uppercase">Lihat Rekap</button></div>
+                    
+                    <!-- FITUR 2: FILTER & PENCARIAN -->
+                    <div class="bg-white dark:bg-slate-800 rounded-[1.5rem] p-4 mb-6 shadow-sm border border-slate-100 dark:border-slate-700">
+                        <div class="flex flex-col md:flex-row gap-3">
+                            <div class="flex-grow">
+                                <input type="text" id="filter-search" placeholder="Cari catatan atau nominal..." class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-indigo-500 text-slate-700 dark:text-white">
+                            </div>
+                            <div class="flex gap-3 overflow-x-auto custom-scrollbar pb-1 md:pb-0">
+                                <select id="filter-type" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-bold rounded-xl px-3 py-2.5 outline-none text-slate-600 dark:text-slate-300 shrink-0">
+                                    <option value="all">Semua Tipe</option><option value="income">Pemasukan</option><option value="expense">Pengeluaran</option>
+                                </select>
+                                <select id="filter-category" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-bold rounded-xl px-3 py-2.5 outline-none text-slate-600 dark:text-slate-300 shrink-0">
+                                    <option value="all">Semua Kategori</option>
+                                    <!-- Diisi otomatis oleh JS -->
+                                </select>
+                                <select id="filter-sort" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-bold rounded-xl px-3 py-2.5 outline-none text-slate-600 dark:text-slate-300 shrink-0">
+                                    <option value="newest">Terbaru</option><option value="highest">Nominal Tertinggi</option><option value="lowest">Nominal Terendah</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-800 rounded-[2rem] shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-slate-100 dark:border-slate-700 overflow-hidden flex flex-col min-h-[400px]">
                         <div class="hidden md:flex justify-between items-center p-6 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50"><h3 class="font-bold text-slate-800 dark:text-white">Semua Transaksi</h3><button onclick="AppUI.switchTab('recap')" class="text-xs font-bold bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-4 py-2.5 rounded-xl hover:bg-slate-300 transition-colors">Rekap Bulanan</button></div>
                         <div id="history-empty" class="flex-col items-center justify-center py-24 text-slate-400 hidden flex-grow bg-slate-50/50 dark:bg-slate-900/50">
                             <div class="w-20 h-20 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center mb-4 shadow-sm opacity-50">
                                 <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                             </div>
-                            <p class="text-sm font-bold text-slate-600 dark:text-slate-400">Belum ada riwayat</p>
+                            <p class="text-sm font-bold text-slate-600 dark:text-slate-400">Tidak ada riwayat ditemukan</p>
                         </div>
                         <ul id="history-list" class="divide-y divide-slate-100 dark:divide-slate-700/50 flex-grow"></ul>
                         <div id="pagination-controls" class="hidden flex justify-between items-center p-5 border-t border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50">
@@ -541,21 +598,43 @@
                     </div>
                 </section>
 
+                <!-- ==================== VIEW: REKAP & ANALISIS ==================== -->
                 <section id="view-recap" class="view-section">
-                    <div class="mb-6 flex justify-between items-center px-1"><h2 class="text-2xl font-bold text-slate-800 dark:text-white">Rekap Bulanan</h2><button onclick="AppUI.switchTab('history')" class="text-xs font-bold bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 px-4 py-2 rounded-xl uppercase transition-colors">Kembali</button></div>
+                    <div class="mb-6 flex justify-between items-center px-1"><h2 class="text-2xl font-bold text-slate-800 dark:text-white">Rekap & Analisis</h2><button onclick="AppUI.switchTab('history')" class="text-xs font-bold bg-indigo-50 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 px-4 py-2 rounded-xl uppercase transition-colors">Kembali</button></div>
+                    
+                    <!-- FITUR 3: ANALISIS ANTARBULAN -->
+                    <div id="recap-analysis" class="mb-6"></div>
+
                     <div id="recap-list" class="space-y-4 md:space-y-6"></div>
                 </section>
 
                 <!-- ==================== VIEW: SETTINGS ==================== -->
                 <section id="view-settings" class="view-section">
                     <div class="mb-6 px-1"><h2 class="text-2xl font-bold text-slate-800 dark:text-white">Pengaturan</h2></div>
-                    <div class="bg-white dark:bg-slate-800 p-8 md:p-10 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-[0_8px_30px_rgba(0,0,0,0.04)] max-w-2xl mx-auto text-center">
-                        <div class="w-20 h-20 bg-rose-50 dark:bg-rose-900/20 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-5">
-                            <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    
+                    <!-- FITUR 4: BACKUP & RESTORE DATA -->
+                    <div class="bg-white dark:bg-slate-800 p-8 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-[0_8px_30px_rgba(0,0,0,0.04)] max-w-2xl mx-auto mb-6 text-center">
+                        <div class="w-16 h-16 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"/></svg>
                         </div>
-                        <h3 class="font-bold text-slate-800 dark:text-white text-xl mb-3">Hapus Seluruh Data</h3>
-                        <p class="text-sm text-slate-500 dark:text-slate-400 mb-8 leading-relaxed">Aplikasi ini berjalan secara offline 100%. Data Anda murni tersimpan di perangkat ini. Tindakan ini akan menghapus permanen seluruh riwayat transaksi, target impian, dan tagihan Anda.</p>
-                        <button onclick="LocalDB.hardReset()" class="w-full md:w-auto bg-rose-500 text-white font-bold px-8 py-3.5 rounded-xl hover:bg-rose-600 transition-all shadow-lg shadow-rose-200/50 dark:shadow-none">Reset Aplikasi Sekarang</button>
+                        <h3 class="font-bold text-slate-800 dark:text-white text-lg mb-2">Cadangkan & Pulihkan Data</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">Ekspor data Anda ke file untuk mengamankannya atau memindahkannya ke perangkat lain. Tidak ada data yang tersimpan di server internet.</p>
+                        
+                        <div class="flex flex-col md:flex-row gap-3 justify-center">
+                            <button onclick="BackupManager.export()" class="flex-1 bg-indigo-600 text-white font-bold px-6 py-3 rounded-xl hover:bg-indigo-700 transition-all shadow-md text-sm">Unduh File Backup</button>
+                            <input type="file" id="import-file" class="hidden" accept=".json" onchange="BackupManager.import(event)">
+                            <button onclick="document.getElementById('import-file').click()" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold px-6 py-3 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-all text-sm border border-slate-200 dark:border-slate-600">Impor dari File</button>
+                        </div>
+                    </div>
+
+                    <!-- Hard Reset -->
+                    <div class="bg-white dark:bg-slate-800 p-8 rounded-[2rem] border border-slate-100 dark:border-slate-700 shadow-[0_8px_30px_rgba(0,0,0,0.04)] max-w-2xl mx-auto text-center">
+                        <div class="w-16 h-16 bg-rose-50 dark:bg-rose-900/20 text-rose-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </div>
+                        <h3 class="font-bold text-slate-800 dark:text-white text-lg mb-2">Hapus Seluruh Data</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">Tindakan ini akan menghapus permanen seluruh riwayat transaksi, anggaran, target impian, dan tagihan Anda dari perangkat ini.</p>
+                        <button onclick="LocalDB.hardReset()" class="w-full md:w-auto bg-rose-500 text-white font-bold px-8 py-3 rounded-xl hover:bg-rose-600 transition-all shadow-md text-sm">Reset Aplikasi</button>
                     </div>
                 </section>
             </div>
@@ -608,6 +687,7 @@
         currentPage: 1, itemsPerPage: 10,
         savingsGoals: JSON.parse(localStorage.getItem('keuanganku_goals')) || [],
         recurringBills: JSON.parse(localStorage.getItem('keuanganku_bills')) || [],
+        budgets: JSON.parse(localStorage.getItem('keuanganku_budgets')) || {}, // Fitur 1
         billToPay: null,
         confirmCallback: null
     };
@@ -616,11 +696,11 @@
         formatIDR: (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(Number(num) || 0),
         formatDate: (dateStr) => dateStr ? new Date(dateStr).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '-',
         getCurrentMonthStr: () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`; },
+        getPreviousMonthStr: () => { const d = new Date(); d.setMonth(d.getMonth() - 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`; },
         getTodayDateStr: () => { const d = new Date(); const m = String(d.getMonth() + 1).padStart(2, '0'); const day = String(d.getDate()).padStart(2, '0'); return `${d.getFullYear()}-${m}-${day}`; },
         parseRawCurrency: (str) => parseFloat(str.replace(/[^0-9]/g, '')) || 0,
         formatCurrencyInputEvent: (e) => { let v = e.target.value.replace(/[^0-9]/g, ''); e.target.value = v ? new Intl.NumberFormat('id-ID').format(v) : ''; },
 
-        // DATA KATEGORI DIPISAHKAN BERDASARKAN TIPE
         categoryData: {
             // Khusus Pengeluaran
             'Makanan': { type: 'expense', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>', colorText: 'text-orange-500', bg: 'bg-orange-100 dark:bg-orange-900/30' },
@@ -634,7 +714,7 @@
             'Bonus': { type: 'income', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>', colorText: 'text-amber-500', bg: 'bg-amber-100 dark:bg-amber-900/30' },
             'Investasi': { type: 'income', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>', colorText: 'text-indigo-500', bg: 'bg-indigo-100 dark:bg-indigo-900/30' },
             
-            // Berlaku untuk Keduanya
+            // Berlaku Keduanya
             'Lainnya': { type: 'both', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>', colorText: 'text-slate-500', bg: 'bg-slate-100 dark:bg-slate-700' }
         },
         getCategoryStyle: (cat) => {
@@ -643,42 +723,37 @@
         },
         toggleDropdown: (id) => { document.querySelectorAll('.custom-select').forEach(el => { if (el.id !== id) el.classList.remove('open'); }); document.getElementById(id).classList.toggle('open'); },
         
-        // FUNGSI RENDER KATEGORI DINAMIS
-        renderTxCategories: (txType) => {
-            const container = document.querySelector('#tx-category-select .custom-select-options');
+        renderTxCategories: (txType, containerId = 'tx-category-select') => {
+            const container = document.querySelector(`#${containerId} .custom-select-options`);
             let html = ''; 
-            
-            // Filter kategori yang cocok (expense/income) ATAU yang tipe 'both' (Lainnya)
             const cats = Object.keys(Utils.categoryData).filter(c => Utils.categoryData[c].type === txType || Utils.categoryData[c].type === 'both');
-            
             cats.forEach(cat => {
                 const style = Utils.categoryData[cat];
-                html += `<div class="px-5 py-3.5 flex items-center gap-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer border-b border-slate-50 dark:border-slate-800 last:border-0 transition-colors" onclick="Utils.selectOption('tx-category-select', '${cat}')"><span class="${style.colorText}">${style.svg}</span><span class="font-bold text-slate-700 dark:text-slate-200 text-sm">${cat}</span></div>`;
+                html += `<div class="px-5 py-3.5 flex items-center gap-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer border-b border-slate-50 dark:border-slate-800 last:border-0 transition-colors" onclick="Utils.selectOption('${containerId}', '${cat}')"><span class="${style.colorText}">${style.svg}</span><span class="font-bold text-slate-700 dark:text-slate-200 text-sm">${cat}</span></div>`;
             });
-            container.innerHTML = html;
-            
-            // Otomatis pilih opsi pertama dari daftar yang dirender (Makanan untuk Pengeluaran, Gaji untuk Pemasukan)
-            Utils.selectOption('tx-category-select', cats[0]);
+            if(container) container.innerHTML = html;
+            Utils.selectOption(containerId, cats[0]);
         },
 
         setupCustomSelects: () => {
-            // Render awal untuk form Catat Transaksi (Pengeluaran)
-            Utils.renderTxCategories('expense');
+            Utils.renderTxCategories('expense', 'tx-category-select');
+            Utils.renderTxCategories('expense', 'budget-category-select');
             
-            // Render manual untuk Modal Tagihan Rutin (hanya Tagihan, Transport, Lainnya)
-            const billContainer = document.querySelector('#bill-category-select .custom-select-options');
-            let billHtml = '';
-            ['Tagihan', 'Transport', 'Lainnya'].forEach(cat => {
-                const style = Utils.categoryData[cat];
-                billHtml += `<div class="px-5 py-3.5 flex items-center gap-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer border-b border-slate-50 dark:border-slate-800 last:border-0 transition-colors" onclick="Utils.selectOption('bill-category-select', '${cat}')"><span class="${style.colorText}">${style.svg}</span><span class="font-bold text-slate-700 dark:text-slate-200 text-sm">${cat}</span></div>`;
-            });
-            billContainer.innerHTML = billHtml;
+            // Render manual untuk dropdown filter
+            const filterCat = document.getElementById('filter-category');
+            if(filterCat) {
+                Object.keys(Utils.categoryData).forEach(cat => {
+                    filterCat.innerHTML += `<option value="${cat}">${cat}</option>`;
+                });
+            }
 
             document.addEventListener('click', (e) => { if(!e.target.closest('.custom-select')) document.querySelectorAll('.custom-select').forEach(el => el.classList.remove('open')); });
         },
 
         selectOption: (selectId, value) => {
-            const s = document.getElementById(selectId); s.querySelector('input[type="hidden"]').value = value;
+            const s = document.getElementById(selectId); 
+            if(!s) return;
+            s.querySelector('input[type="hidden"]').value = value;
             const style = Utils.categoryData[value] || Utils.categoryData['Lainnya'];
             s.querySelector('div[id$="-display"]').innerHTML = `<span class="${style.colorText}">${style.svg}</span> <span class="dark:text-white">${value}</span>`; s.classList.remove('open');
         }
@@ -724,7 +799,6 @@
             t.innerHTML = `<span>●</span> ${message}`;
             c.appendChild(t); setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(-20px)'; t.style.transition = 'all 0.3s ease'; setTimeout(() => t.remove(), 300); }, 3000);
         },
-
         showConfirm: (title, message, callback, btnStyle = "bg-rose-500", iconStyle = "text-rose-500", iconBg = "bg-rose-100 dark:bg-rose-900/30") => {
             document.getElementById('confirm-title').innerText = title;
             document.getElementById('confirm-msg').innerText = message;
@@ -735,7 +809,6 @@
             document.getElementById('modal-confirm').classList.remove('hidden');
         },
         closeConfirm: () => { document.getElementById('modal-confirm').classList.add('hidden'); AppState.confirmCallback = null; },
-
         openModal: (id) => document.getElementById(id).classList.remove('hidden'),
         closeModal: (id) => { 
             document.getElementById(id).classList.add('hidden'); 
@@ -759,6 +832,7 @@
     /** LOCAL DB */
     const LocalDB = {
         saveTx: () => localStorage.setItem('keuanganku_tx', JSON.stringify(AppState.transactions)),
+        saveBudgets: () => localStorage.setItem('keuanganku_budgets', JSON.stringify(AppState.budgets)), // Fitur 1
         addTransaction: (txData) => {
             const newTx = { ...txData, id: Date.now() };
             AppState.transactions.unshift(newTx);
@@ -773,39 +847,101 @@
             });
         },
         hardReset: () => {
-            AppUI.showConfirm("Reset Total Aplikasi?", "PERINGATAN! Seluruh data transaksi, target, dan tagihan akan hilang selamanya.", () => {
-                localStorage.removeItem('keuanganku_tx'); localStorage.removeItem('keuanganku_goals'); localStorage.removeItem('keuanganku_bills');
+            AppUI.showConfirm("Reset Total Aplikasi?", "PERINGATAN! Seluruh data akan hilang selamanya.", () => {
+                localStorage.clear();
                 location.reload();
             }, "bg-rose-600");
         }
     };
 
-    /** TRANSACTIONS MANAGER */
+    /** FITUR 4: BACKUP & RESTORE */
+    const BackupManager = {
+        export: () => {
+            const data = { tx: AppState.transactions, goals: AppState.savingsGoals, bills: AppState.recurringBills, budgets: AppState.budgets };
+            const blob = new Blob([JSON.stringify(data)], {type: "application/json"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = `Keuanganku_Backup_${Utils.getTodayDateStr()}.json`; a.click();
+            AppUI.showToast("File backup berhasil diunduh.");
+        },
+        import: (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    AppUI.showConfirm("Pulihkan Data?", "Data saat ini akan TERTEMPA oleh file backup. Lanjutkan?", () => {
+                        if(data.tx) localStorage.setItem('keuanganku_tx', JSON.stringify(data.tx));
+                        if(data.goals) localStorage.setItem('keuanganku_goals', JSON.stringify(data.goals));
+                        if(data.bills) localStorage.setItem('keuanganku_bills', JSON.stringify(data.bills));
+                        if(data.budgets) localStorage.setItem('keuanganku_budgets', JSON.stringify(data.budgets));
+                        location.reload();
+                    });
+                } catch(err) { AppUI.showToast("Gagal membaca file backup yang dipilih.", "error"); }
+            };
+            reader.readAsText(file);
+        }
+    };
+
+    /** TRANSACTIONS & DASHBOARD MANAGER */
     const TransactionManager = {
         getBalances: () => {
             let cash = 0, bank = 0;
             AppState.transactions.forEach(tx => {
                 const nominal = Number(tx.amount) || 0;
-                if (tx.type === 'income') {
-                    if (tx.wallet === 'cash') cash += nominal; else bank += nominal;
-                } else if (tx.type === 'expense') {
-                    if (tx.wallet === 'cash') cash -= nominal; else bank -= nominal;
-                }
+                if (tx.type === 'income') { if (tx.wallet === 'cash') cash += nominal; else bank += nominal; } 
+                else if (tx.type === 'expense') { if (tx.wallet === 'cash') cash -= nominal; else bank -= nominal; }
             });
             return { cash, bank, total: cash + bank };
         },
 
         changePage: (delta) => {
-            const totalPages = Math.ceil(AppState.transactions.length / AppState.itemsPerPage) || 1;
+            // Evaluasi total halaman berdasarkan riwayat yang ter-filter
+            const filteredData = TransactionManager.getFilteredHistory();
+            const totalPages = Math.ceil(filteredData.length / AppState.itemsPerPage) || 1;
             AppState.currentPage += delta; if(AppState.currentPage < 1) AppState.currentPage = 1; if(AppState.currentPage > totalPages) AppState.currentPage = totalPages;
-            TransactionManager.renderAll(); window.scrollTo({ top: 0, behavior: 'smooth' });
+            TransactionManager.renderHistory(); window.scrollTo({ top: 0, behavior: 'smooth' });
         },
+        
         renderAll: () => { TransactionManager.renderDashboard(); TransactionManager.renderHistory(); TransactionManager.renderRecap(); },
+
+        // FITUR 1: Render Anggaran di Dashboard
+        renderBudgets: (categorySpent) => {
+            const container = document.getElementById('budgets-list-container');
+            container.innerHTML = '';
+            
+            if (Object.keys(AppState.budgets).length === 0) {
+                container.innerHTML = `<div class="flex flex-col items-center justify-center py-6 border border-slate-100 dark:border-slate-700 border-dashed rounded-[1.5rem] bg-slate-50/50 dark:bg-slate-900/50 flex-grow"><p class="text-xs text-slate-400 font-medium">Belum ada anggaran.</p></div>`;
+                return;
+            }
+
+            Object.keys(AppState.budgets).forEach(cat => {
+                const limit = AppState.budgets[cat];
+                const spent = categorySpent[cat] || 0;
+                const percentage = Math.min((spent / limit) * 100, 100);
+                
+                // Logika Warna Indikator
+                let colorClass = 'bg-emerald-500';
+                let textClass = 'text-emerald-500';
+                if (percentage >= 100) { colorClass = 'bg-rose-500'; textClass = 'text-rose-500'; } 
+                else if (percentage >= 80) { colorClass = 'bg-amber-500'; textClass = 'text-amber-500'; }
+
+                container.innerHTML += `
+                <div class="mb-3">
+                    <div class="flex justify-between items-end mb-1">
+                        <span class="text-sm font-bold text-slate-800 dark:text-white">${cat}</span>
+                        <span class="text-[10px] font-bold ${textClass}">${Utils.formatIDR(spent)} / ${Utils.formatIDR(limit)}</span>
+                    </div>
+                    <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2 overflow-hidden">
+                        <div class="${colorClass} h-2 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
+                    </div>
+                </div>`;
+            });
+        },
 
         renderDashboard: () => {
             let currentMonthIncome = 0, currentMonthExpense = 0; 
             const categoryData = {}; const currentMonthStr = Utils.getCurrentMonthStr();
-
             const balances = TransactionManager.getBalances();
 
             AppState.transactions.forEach(tx => {
@@ -826,6 +962,7 @@
             document.getElementById('dash-income').innerText = Utils.formatIDR(currentMonthIncome); 
             document.getElementById('dash-expense').innerText = Utils.formatIDR(currentMonthExpense);
 
+            // Render Breakdown
             const catListEl = document.getElementById('category-breakdown-list'); catListEl.innerHTML = '';
             if(Object.keys(categoryData).length === 0) {
                 catListEl.innerHTML = `<div class="flex flex-col items-center justify-center py-6 border border-slate-100 dark:border-slate-700 border-dashed rounded-[1.5rem] bg-slate-50/50 dark:bg-slate-900/50 flex-grow"><p class="text-xs text-slate-400 font-medium">Belum ada data</p></div>`;
@@ -843,18 +980,19 @@
                 });
             }
 
+            // Render Anggaran (Fitur 1)
+            TransactionManager.renderBudgets(categoryData);
+
+            // Render Recent
             const dashRecent = document.getElementById('dash-recent-list'); dashRecent.innerHTML = '';
             if (AppState.transactions.length === 0) {
-                document.getElementById('dash-empty').classList.remove('hidden');
-                document.getElementById('dash-empty').classList.add('flex');
+                document.getElementById('dash-empty').classList.remove('hidden'); document.getElementById('dash-empty').classList.add('flex');
             } else {
-                document.getElementById('dash-empty').classList.add('hidden');
-                document.getElementById('dash-empty').classList.remove('flex');
+                document.getElementById('dash-empty').classList.add('hidden'); document.getElementById('dash-empty').classList.remove('flex');
                 AppState.transactions.slice(0, 5).forEach((tx) => { 
                     const style = Utils.getCategoryStyle(tx.category || 'Lainnya'); 
                     const sign = tx.type === 'income' ? '+' : '-';
                     const walletBadge = tx.wallet === 'bank' ? '<span class="text-[9px] bg-indigo-50 dark:bg-indigo-900/30 text-indigo-500 font-bold px-1.5 py-0.5 rounded ml-1">Rekening</span>' : '<span class="text-[9px] bg-emerald-50 dark:bg-emerald-900/30 text-emerald-500 font-bold px-1.5 py-0.5 rounded ml-1">Cash</span>';
-
                     dashRecent.innerHTML += `<div onclick="AppUI.switchTab('history')" class="bg-white dark:bg-slate-800 p-4 md:p-5 rounded-[1.5rem] shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 dark:border-slate-700 flex items-center gap-4 cursor-pointer hover:border-indigo-100 transition-colors">
                         <div class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">${style.svg}</div>
                         <div class="flex-grow min-w-0">
@@ -867,15 +1005,39 @@
             }
         },
 
+        // FITUR 2: Logika Filter Transaksi
+        getFilteredHistory: () => {
+            const search = document.getElementById('filter-search').value.toLowerCase();
+            const type = document.getElementById('filter-type').value;
+            const category = document.getElementById('filter-category').value;
+            const sort = document.getElementById('filter-sort').value;
+
+            let filtered = AppState.transactions.filter(tx => {
+                const matchSearch = (tx.description || '').toLowerCase().includes(search) || (tx.category || '').toLowerCase().includes(search) || tx.amount.toString().includes(search);
+                const matchType = type === 'all' || tx.type === type;
+                const matchCategory = category === 'all' || tx.category === category;
+                return matchSearch && matchType && matchCategory;
+            });
+
+            if (sort === 'highest') { filtered.sort((a,b) => b.amount - a.amount); }
+            else if (sort === 'lowest') { filtered.sort((a,b) => a.amount - b.amount); }
+            else { filtered.sort((a,b) => new Date(b.date) - new Date(a.date)); } // newest
+
+            return filtered;
+        },
+
         renderHistory: () => {
             const historyList = document.getElementById('history-list'); const pagination = document.getElementById('pagination-controls'); historyList.innerHTML = '';
-            if (AppState.transactions.length === 0) { document.getElementById('history-empty').classList.remove('hidden'); document.getElementById('history-empty').classList.add('flex'); pagination.classList.add('hidden'); pagination.classList.remove('flex'); return; }
+            
+            const filteredData = TransactionManager.getFilteredHistory();
+
+            if (filteredData.length === 0) { document.getElementById('history-empty').classList.remove('hidden'); document.getElementById('history-empty').classList.add('flex'); pagination.classList.add('hidden'); pagination.classList.remove('flex'); return; }
             document.getElementById('history-empty').classList.add('hidden'); document.getElementById('history-empty').classList.remove('flex');
 
-            const totalPages = Math.ceil(AppState.transactions.length / AppState.itemsPerPage) || 1; if(AppState.currentPage > totalPages) AppState.currentPage = totalPages;
-            if (AppState.transactions.length > AppState.itemsPerPage) { pagination.classList.remove('hidden'); pagination.classList.add('flex'); document.getElementById('page-info').innerText = `HAL ${AppState.currentPage} DARI ${totalPages}`; document.getElementById('btn-prev').disabled = AppState.currentPage === 1; document.getElementById('btn-next').disabled = AppState.currentPage === totalPages; } else { pagination.classList.add('hidden'); pagination.classList.remove('flex'); }
+            const totalPages = Math.ceil(filteredData.length / AppState.itemsPerPage) || 1; if(AppState.currentPage > totalPages) AppState.currentPage = totalPages;
+            if (filteredData.length > AppState.itemsPerPage) { pagination.classList.remove('hidden'); pagination.classList.add('flex'); document.getElementById('page-info').innerText = `HAL ${AppState.currentPage} DARI ${totalPages}`; document.getElementById('btn-prev').disabled = AppState.currentPage === 1; document.getElementById('btn-next').disabled = AppState.currentPage === totalPages; } else { pagination.classList.add('hidden'); pagination.classList.remove('flex'); }
 
-            const paginated = AppState.transactions.slice((AppState.currentPage - 1) * AppState.itemsPerPage, ((AppState.currentPage - 1) * AppState.itemsPerPage) + AppState.itemsPerPage);
+            const paginated = filteredData.slice((AppState.currentPage - 1) * AppState.itemsPerPage, ((AppState.currentPage - 1) * AppState.itemsPerPage) + AppState.itemsPerPage);
             paginated.forEach((tx) => { 
                 const style = Utils.getCategoryStyle(tx.category); 
                 const sign = tx.type === 'income' ? '+' : '-';
@@ -902,7 +1064,51 @@
         renderRecap: () => {
             const recapList = document.getElementById('recap-list'); recapList.innerHTML = '';
             if (AppState.transactions.length === 0) { recapList.innerHTML = `<div class="text-center py-20 bg-slate-50/50 dark:bg-slate-900/50 rounded-[2rem] border border-slate-100 dark:border-slate-700 border-dashed flex flex-col items-center justify-center"><p class="text-sm font-medium text-slate-500">Belum ada data bulanan.</p></div>`; return; }
-            const monthlyData = {}; AppState.transactions.forEach(tx => { if(!tx.date) return; const monthYear = tx.date.substring(0, 7); if (!monthlyData[monthYear]) monthlyData[monthYear] = { label: new Date(tx.date).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }), income: 0, expense: 0, count: 0 }; const nominal = Number(tx.amount) || 0; if (tx.type === 'income') monthlyData[monthYear].income += nominal; if (tx.type === 'expense') monthlyData[monthYear].expense += nominal; monthlyData[monthYear].count += 1; });
+            
+            const monthlyData = {}; 
+            AppState.transactions.forEach(tx => { 
+                if(!tx.date) return; 
+                const monthYear = tx.date.substring(0, 7); 
+                if (!monthlyData[monthYear]) monthlyData[monthYear] = { label: new Date(tx.date).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }), income: 0, expense: 0, count: 0 }; 
+                const nominal = Number(tx.amount) || 0; 
+                if (tx.type === 'income') monthlyData[monthYear].income += nominal; 
+                if (tx.type === 'expense') monthlyData[monthYear].expense += nominal; 
+                monthlyData[monthYear].count += 1; 
+            });
+
+            // FITUR 3: Analisis Keuangan Antarbulan (Bulan ini vs Bulan lalu)
+            const analysisEl = document.getElementById('recap-analysis');
+            const curr = Utils.getCurrentMonthStr();
+            const prev = Utils.getPreviousMonthStr();
+            
+            if (monthlyData[curr] && monthlyData[prev]) {
+                const incDiff = monthlyData[curr].income - monthlyData[prev].income;
+                const expDiff = monthlyData[curr].expense - monthlyData[prev].expense;
+                
+                const incPercent = monthlyData[prev].income > 0 ? (incDiff / monthlyData[prev].income) * 100 : 100;
+                const expPercent = monthlyData[prev].expense > 0 ? (expDiff / monthlyData[prev].expense) * 100 : 100;
+
+                const incHtml = incDiff > 0 ? `<span class="text-emerald-500 font-bold">▲ Naik ${Math.abs(incPercent).toFixed(1)}%</span>` : `<span class="text-rose-500 font-bold">▼ Turun ${Math.abs(incPercent).toFixed(1)}%</span>`;
+                const expHtml = expDiff > 0 ? `<span class="text-rose-500 font-bold">▲ Naik ${Math.abs(expPercent).toFixed(1)}%</span>` : `<span class="text-emerald-500 font-bold">▼ Turun ${Math.abs(expPercent).toFixed(1)}%</span>`;
+
+                analysisEl.innerHTML = `
+                <div class="bg-indigo-600 text-white p-6 rounded-[2rem] shadow-lg shadow-indigo-200/50 dark:shadow-none mb-6">
+                    <h3 class="font-bold text-lg mb-4 flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg> Analisis Bulan Ini</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-white/10 rounded-xl p-4">
+                            <p class="text-[10px] uppercase tracking-wider text-indigo-200 mb-1">Pemasukan vs Lalu</p>
+                            <p class="text-sm">${incHtml}</p>
+                        </div>
+                        <div class="bg-white/10 rounded-xl p-4">
+                            <p class="text-[10px] uppercase tracking-wider text-indigo-200 mb-1">Pengeluaran vs Lalu</p>
+                            <p class="text-sm">${expHtml}</p>
+                        </div>
+                    </div>
+                </div>`;
+            } else {
+                analysisEl.innerHTML = ''; // Tidak cukup data untuk perbandingan
+            }
+
             Object.keys(monthlyData).sort((a, b) => b.localeCompare(a)).forEach(my => {
                 const data = monthlyData[my]; const balance = data.income - data.expense; const balanceColor = balance >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400';
                 recapList.innerHTML += `<div class="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-[2rem] shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-slate-100 dark:border-slate-700"><div class="flex justify-between items-center mb-5 border-b border-slate-100 dark:border-slate-700 pb-5"><div class="flex items-center gap-3 min-w-0"><h3 class="font-bold text-slate-800 dark:text-white md:text-lg truncate">${data.label}</h3></div><span class="text-[10px] font-bold text-slate-400 bg-slate-50 dark:bg-slate-900 px-3 py-1.5 rounded-lg shrink-0">${data.count} Transaksi</span></div><div class="grid grid-cols-2 gap-4 mb-5"><div><p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 truncate">Total Masuk</p><p class="font-bold text-sm md:text-base text-emerald-600 dark:text-emerald-400 truncate">${Utils.formatIDR(data.income)}</p></div><div><p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 truncate">Total Keluar</p><p class="font-bold text-sm md:text-base text-rose-600 dark:text-rose-400 truncate">${Utils.formatIDR(data.expense)}</p></div></div><div class="${balance >= 0 ? 'bg-emerald-50 dark:bg-emerald-900/20' : 'bg-rose-50 dark:bg-rose-900/20'} rounded-2xl p-5 flex justify-between items-center gap-3"><span class="text-xs md:text-sm font-bold ${balanceColor} uppercase tracking-wide shrink-0">Saldo Bersih</span><span class="font-bold text-lg md:text-xl ${balanceColor} truncate w-full text-right">${Utils.formatIDR(balance)}</span></div></div>`;
@@ -958,32 +1164,16 @@
         addSavings: (id, amount, source, wallet) => { 
             const goal = AppState.savingsGoals.find(g => g.id == id); 
             if(goal) { 
-                
-                // VALIDASI: Cek saldo sebelum memotong untuk menabung
                 if (source === 'balance') {
                     const balances = TransactionManager.getBalances();
                     const currentBal = wallet === 'cash' ? balances.cash : balances.bank;
+                    if (amount > currentBal) { return AppUI.showToast(`Saldo ${wallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup! Sisa: ${Utils.formatIDR(currentBal)}`, "error"); }
                     
-                    if (amount > currentBal) {
-                        return AppUI.showToast(`Saldo ${wallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup! Sisa: ${Utils.formatIDR(currentBal)}`, "error");
-                    }
-                    
-                    const txObj = { 
-                        type: 'expense', 
-                        wallet: wallet, 
-                        amount: amount, 
-                        category: 'Lainnya', 
-                        date: Utils.getTodayDateStr(), 
-                        description: `[Tabungan] ${goal.name}` 
-                    };
+                    const txObj = { type: 'expense', wallet: wallet, amount: amount, category: 'Lainnya', date: Utils.getTodayDateStr(), description: `[Tabungan] ${goal.name}` };
                     LocalDB.addTransaction(txObj); 
                 }
-
-                // Jika saldo cukup atau pakai uang luar, tabungan bertambah
                 goal.saved += amount; 
-                GoalManager.saveState(); 
-                GoalManager.render(); 
-                AppUI.closeModal('modal-add-savings');
+                GoalManager.saveState(); GoalManager.render(); AppUI.closeModal('modal-add-savings');
                 AppUI.showToast(goal.saved >= goal.target ? "Target tercapai! 🎉" : "Uang ditabung!"); 
             } 
         }
@@ -993,17 +1183,11 @@
     const BillManager = {
         saveState: () => localStorage.setItem('keuanganku_bills', JSON.stringify(AppState.recurringBills)),
         addBill: (name, amount, category, dateNum) => { AppState.recurringBills.push({ id: Date.now().toString(), name, amount, category, date: parseInt(dateNum), lastPaidMonth: null }); BillManager.saveState(); BillManager.render(); BillManager.checkDueBills(); AppUI.showToast("Tagihan ditambahkan."); AppUI.closeModal('modal-add-bill'); },
-        
         deleteBill: (id) => {
             AppUI.showConfirm("Hapus Tagihan?", "Tagihan rutin ini akan dihapus tanpa harus dibayar.", () => {
-                AppState.recurringBills = AppState.recurringBills.filter(b => b.id !== id); 
-                BillManager.saveState(); 
-                BillManager.render(); 
-                BillManager.checkDueBills(); 
-                AppUI.showToast("Tagihan dihapus.");
+                AppState.recurringBills = AppState.recurringBills.filter(b => b.id !== id); BillManager.saveState(); BillManager.render(); BillManager.checkDueBills(); AppUI.showToast("Tagihan dihapus.");
             });
         },
-
         checkDueBills: () => {
             const currentMonthStr = Utils.getCurrentMonthStr(); const currentDay = new Date().getDate();
             AppState.dueBillsCache = AppState.recurringBills.filter(b => (currentDay >= b.date) && (b.lastPaidMonth !== currentMonthStr));
@@ -1014,15 +1198,9 @@
         confirmPayBill: () => {
             const bill = AppState.billToPay; if(!bill) return;
             const chosenWallet = document.querySelector('input[name="pay-bill-wallet"]:checked').value;
-            
-            // VALIDASI: Cek saldo sebelum membayar tagihan
             const balances = TransactionManager.getBalances();
             const currentBal = chosenWallet === 'cash' ? balances.cash : balances.bank;
-            
-            if (bill.amount > currentBal) {
-                AppUI.closeModal('modal-pay-bill');
-                return AppUI.showToast(`Saldo ${chosenWallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup! Sisa: ${Utils.formatIDR(currentBal)}`, "error");
-            }
+            if (bill.amount > currentBal) { AppUI.closeModal('modal-pay-bill'); return AppUI.showToast(`Saldo ${chosenWallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup! Sisa: ${Utils.formatIDR(currentBal)}`, "error"); }
 
             const txObj = { type: 'expense', wallet: chosenWallet, amount: bill.amount, category: bill.category, date: Utils.getTodayDateStr(), description: `[Otomatis] Tagihan ${bill.name}` };
             LocalDB.addTransaction(txObj);
@@ -1071,29 +1249,37 @@
         document.querySelectorAll('.currency-input').forEach(el => el.addEventListener('input', Utils.formatCurrencyInputEvent)); 
         Utils.setupCustomSelects();
 
-        // EVENT LISTENER UNTUK MENGGANTI KATEGORI SECARA DINAMIS
+        // Ganti opsi kategori (Pemasukan/Pengeluaran) form transaksi
         document.querySelectorAll('input[name="tx-type"]').forEach(radio => {
-            radio.addEventListener('change', (e) => {
-                Utils.renderTxCategories(e.target.value);
-            });
+            radio.addEventListener('change', (e) => { Utils.renderTxCategories(e.target.value, 'tx-category-select'); });
         });
+
+        // Event listener Fitur Filter Riwayat
+        document.getElementById('filter-search').addEventListener('input', () => { AppState.currentPage = 1; TransactionManager.renderHistory(); });
+        document.getElementById('filter-type').addEventListener('change', () => { AppState.currentPage = 1; TransactionManager.renderHistory(); });
+        document.getElementById('filter-category').addEventListener('change', () => { AppState.currentPage = 1; TransactionManager.renderHistory(); });
+        document.getElementById('filter-sort').addEventListener('change', () => { AppState.currentPage = 1; TransactionManager.renderHistory(); });
 
         document.getElementById('btn-confirm-action').addEventListener('click', () => {
-            if (AppState.confirmCallback) AppState.confirmCallback();
-            AppUI.closeConfirm();
+            if (AppState.confirmCallback) AppState.confirmCallback(); AppUI.closeConfirm();
         });
 
-        document.getElementById('form-set-goal').addEventListener('submit', (e) => { e.preventDefault(); const target = Utils.parseRawCurrency(document.getElementById('input-goal-target').value); if(target <= 0) return AppUI.showToast("Harga tidak valid", 'error'); GoalManager.addGoal(document.getElementById('input-goal-name').value, target); AppUI.closeModal('modal-set-goal'); document.getElementById('form-set-goal').reset(); });
-        
-        document.getElementById('form-add-savings').addEventListener('submit', (e) => { 
+        // Form Anggaran (Fitur 1)
+        document.getElementById('form-set-budget').addEventListener('submit', (e) => { 
             e.preventDefault(); 
-            const added = Utils.parseRawCurrency(document.getElementById('input-add-savings').value); 
-            if(added <= 0) return AppUI.showToast("Nominal tidak valid", "error"); 
-            const source = document.querySelector('input[name="savings-source"]:checked').value;
-            const wallet = document.querySelector('input[name="savings-wallet"]:checked').value;
-            GoalManager.addSavings(document.getElementById('input-savings-id').value, added, source, wallet); 
+            const target = Utils.parseRawCurrency(document.getElementById('input-budget-amount').value); 
+            if(target <= 0) return AppUI.showToast("Batas tidak valid", 'error'); 
+            const cat = document.getElementById('budget-category-value').value;
+            AppState.budgets[cat] = target;
+            LocalDB.saveBudgets(); TransactionManager.renderDashboard(); AppUI.closeModal('modal-set-budget'); document.getElementById('form-set-budget').reset();
+            AppUI.showToast(`Anggaran ${cat} disimpan.`);
         });
 
+        // Form Tabungan
+        document.getElementById('form-set-goal').addEventListener('submit', (e) => { e.preventDefault(); const target = Utils.parseRawCurrency(document.getElementById('input-goal-target').value); if(target <= 0) return AppUI.showToast("Harga tidak valid", 'error'); GoalManager.addGoal(document.getElementById('input-goal-name').value, target); AppUI.closeModal('modal-set-goal'); document.getElementById('form-set-goal').reset(); });
+        document.getElementById('form-add-savings').addEventListener('submit', (e) => { e.preventDefault(); const added = Utils.parseRawCurrency(document.getElementById('input-add-savings').value); if(added <= 0) return AppUI.showToast("Nominal tidak valid", "error"); const source = document.querySelector('input[name="savings-source"]:checked').value; const wallet = document.querySelector('input[name="savings-wallet"]:checked').value; GoalManager.addSavings(document.getElementById('input-savings-id').value, added, source, wallet); });
+
+        // Form Transaksi
         document.getElementById('add-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const amount = Utils.parseRawCurrency(document.getElementById('input-amount').value);
@@ -1102,39 +1288,26 @@
             const type = document.querySelector('input[name="tx-type"]:checked').value;
             const wallet = document.querySelector('input[name="tx-wallet"]:checked').value;
             
-            // VALIDASI: Cek saldo sebelum menyimpan pengeluaran manual
             if (type === 'expense') {
                 const balances = TransactionManager.getBalances();
                 const currentBal = wallet === 'cash' ? balances.cash : balances.bank;
-                
-                if (amount > currentBal) {
-                    return AppUI.showToast(`Saldo ${wallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup! Sisa: ${Utils.formatIDR(currentBal)}`, "error");
-                }
+                if (amount > currentBal) { return AppUI.showToast(`Saldo ${wallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup! Sisa: ${Utils.formatIDR(currentBal)}`, "error"); }
             }
 
             const category = document.getElementById('input-category').value;
             const date = document.getElementById('input-date').value;
             const description = document.getElementById('input-desc').value;
 
-            const obj = { type, wallet, amount, category, date, description };
-            if(LocalDB.addTransaction(obj)) {
-                // Reset Form ke Default
-                document.getElementById('input-amount').value = '';
-                document.getElementById('input-desc').value = '';
-                
-                const expenseRadio = document.querySelector('input[name="tx-type"][value="expense"]');
-                expenseRadio.checked = true;
-                Utils.renderTxCategories('expense'); // Render ulang daftar default
-                
+            if(LocalDB.addTransaction({ type, wallet, amount, category, date, description })) {
+                document.getElementById('input-amount').value = ''; document.getElementById('input-desc').value = '';
+                document.querySelector('input[name="tx-type"][value="expense"]').checked = true; Utils.renderTxCategories('expense', 'tx-category-select');
                 document.querySelector('input[name="tx-wallet"][value="cash"]').checked = true;
-                document.getElementById('input-date').value = Utils.getTodayDateStr();
-                document.getElementById('display-date').innerText = Utils.formatDate(Utils.getTodayDateStr());
-                
-                AppUI.showToast("Transaksi disimpan!");
-                AppUI.switchTab('dashboard');
+                document.getElementById('input-date').value = Utils.getTodayDateStr(); document.getElementById('display-date').innerText = Utils.formatDate(Utils.getTodayDateStr());
+                AppUI.showToast("Transaksi disimpan!"); AppUI.switchTab('dashboard');
             }
         });
 
+        // Form Tagihan
         document.getElementById('add-bill-form').addEventListener('submit', (e) => { e.preventDefault(); const amount = Utils.parseRawCurrency(document.getElementById('bill-amount').value); if(amount <= 0) return AppUI.showToast("Nominal tidak valid", 'error'); BillManager.addBill(document.getElementById('bill-name').value, amount, document.getElementById('bill-category-value').value, document.getElementById('bill-date').value); document.getElementById('add-bill-form').reset(); });
         document.getElementById('btn-confirm-pay').addEventListener('click', BillManager.confirmPayBill);
 
