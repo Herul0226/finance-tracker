@@ -536,9 +536,16 @@
                     <div class="md:hidden mb-3 px-1"><h2 class="text-lg font-extrabold tracking-tight text-zinc-900 dark:text-white">Catat Transaksi</h2></div>
                     <form id="add-form" class="bg-white dark:bg-zinc-900 p-5 sm:p-6 rounded-2xl shadow-sm border border-brand-border dark:border-zinc-800 space-y-5 min-w-0">
                         
-                        <div class="bg-zinc-50 dark:bg-zinc-800/50 p-1 rounded-xl flex gap-1 relative border border-brand-border dark:border-zinc-800">
-                            <label class="flex-1 cursor-pointer"><input type="radio" name="tx-type" value="expense" class="peer hidden" checked><div class="text-center py-2.5 rounded-lg text-sm font-bold peer-checked:bg-white dark:peer-checked:bg-zinc-700 peer-checked:text-zinc-900 dark:peer-checked:text-white peer-checked:shadow-sm text-zinc-500 transition-all">Pengeluaran</div></label>
-                            <label class="flex-1 cursor-pointer"><input type="radio" name="tx-type" value="income" class="peer hidden"><div class="text-center py-2.5 rounded-lg text-sm font-bold peer-checked:bg-white dark:peer-checked:bg-zinc-700 peer-checked:text-zinc-900 dark:peer-checked:text-white peer-checked:shadow-sm text-zinc-500 transition-all">Pemasukan</div></label>
+                        <!-- VISUAL SWITCH MERAH/HIJAU (PENGELUARAN/PEMASUKAN) -->
+                        <div class="bg-zinc-100 dark:bg-zinc-800/80 p-1.5 rounded-xl flex gap-1.5 relative border border-brand-border dark:border-zinc-700 shadow-inner">
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="tx-type" value="expense" class="peer hidden" checked>
+                                <div class="text-center py-2.5 rounded-lg text-sm font-bold peer-checked:bg-red-500 dark:peer-checked:bg-red-600 peer-checked:text-white peer-checked:shadow-md text-zinc-500 dark:text-zinc-400 transition-all">Pengeluaran</div>
+                            </label>
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="tx-type" value="income" class="peer hidden">
+                                <div class="text-center py-2.5 rounded-lg text-sm font-bold peer-checked:bg-emerald-500 dark:peer-checked:bg-emerald-600 peer-checked:text-white peer-checked:shadow-md text-zinc-500 dark:text-zinc-400 transition-all">Pemasukan</div>
+                            </label>
                         </div>
                         
                         <div class="py-2">
@@ -822,9 +829,11 @@
                 document.getElementById('dash-empty').classList.add('hidden'); document.getElementById('dash-empty').classList.remove('flex');
                 AppState.transactions.slice(0, 5).forEach((tx) => { 
                     if(!tx) return;
-                    const style = Utils.getCategoryStyle(tx.category || 'Lainnya'); const sign = tx.type === 'income' ? '+' : '-'; 
+                    const style = Utils.getCategoryStyle(tx.category || 'Lainnya'); 
+                    const sign = tx.type === 'income' ? '+' : '-'; 
+                    const amountColor = tx.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400';
                     const walletBadge = tx.wallet === 'bank' ? '<span class="text-[9px] bg-brand-light dark:bg-blue-600/20 text-brand-dark dark:text-blue-400 font-bold px-1.5 py-0.5 rounded ml-1 tracking-wider shrink-0">Rekening</span>' : '<span class="text-[9px] bg-zinc-100 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-300 font-bold px-1.5 py-0.5 rounded ml-1 tracking-wider shrink-0">Cash</span>'; 
-                    dashRecent.innerHTML += `<div onclick="AppUI.switchTab('history')" class="group bg-white dark:bg-zinc-900 p-3.5 rounded-xl shadow-sm border border-brand-border dark:border-zinc-800 flex items-center gap-3 cursor-pointer hover:border-zinc-300 transition-colors min-w-0"><div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">${style.svg}</div><div class="flex-grow min-w-0"><p class="text-sm font-bold text-zinc-800 dark:text-white truncate">${tx.description || '-'}</p><div class="flex items-center mt-1 min-w-0"><span class="text-[10px] font-medium text-zinc-400 truncate shrink-0">${Utils.formatDate(tx.date)}</span> ${walletBadge}</div></div><div class="text-right shrink-0 ml-1"><p class="text-sm font-bold tracking-tight ${tx.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-zinc-800 dark:text-white'}">${sign}${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p></div></div>`; 
+                    dashRecent.innerHTML += `<div onclick="AppUI.switchTab('history')" class="group bg-white dark:bg-zinc-900 p-3.5 rounded-xl shadow-sm border border-brand-border dark:border-zinc-800 flex items-center gap-3 cursor-pointer hover:border-zinc-300 transition-colors min-w-0"><div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">${style.svg}</div><div class="flex-grow min-w-0"><p class="text-sm font-bold text-zinc-800 dark:text-white truncate">${tx.description || '-'}</p><div class="flex items-center mt-1 min-w-0"><span class="text-[10px] font-medium text-zinc-400 truncate shrink-0">${Utils.formatDate(tx.date)}</span> ${walletBadge}</div></div><div class="text-right shrink-0 ml-1"><p class="text-sm font-bold tracking-tight ${amountColor}">${sign}${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p></div></div>`; 
                 });
             }
         },
@@ -941,8 +950,11 @@
             const paginated = filteredData.slice((AppState.currentPage - 1) * AppState.itemsPerPage, ((AppState.currentPage - 1) * AppState.itemsPerPage) + AppState.itemsPerPage);
             paginated.forEach((tx) => { 
                 if(!tx) return;
-                const style = Utils.getCategoryStyle(tx.category); const sign = tx.type === 'income' ? '+' : '-'; const walletText = tx.wallet === 'bank' ? 'Rekening' : 'Cash';
-                historyList.innerHTML += `<li class="flex items-center gap-3 py-3.5 px-4 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors min-w-0"><div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">${style.svg}</div><div class="flex-grow min-w-0"><p class="text-sm font-bold text-zinc-800 dark:text-white truncate">${tx.description || '-'}</p><div class="flex items-center gap-1.5 mt-1 min-w-0 overflow-hidden"><span class="text-[9px] font-bold bg-zinc-100 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-300 px-1.5 py-0.5 rounded tracking-widest uppercase shrink-0">${tx.category || 'Lainnya'}</span><span class="text-[9px] font-bold bg-brand-light dark:bg-blue-600/20 text-brand-dark dark:text-blue-400 px-1.5 py-0.5 rounded tracking-widest uppercase shrink-0">${walletText}</span></div></div><div class="text-right shrink-0 ml-1"><p class="text-sm font-bold tracking-tight ${tx.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-zinc-800 dark:text-white'}">${sign}${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p><p class="text-[10px] font-medium text-zinc-400 mt-1">${Utils.formatDate(tx.date)}</p></div></li>`;
+                const style = Utils.getCategoryStyle(tx.category); 
+                const sign = tx.type === 'income' ? '+' : '-'; 
+                const amountColor = tx.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400';
+                const walletText = tx.wallet === 'bank' ? 'Rekening' : 'Cash';
+                historyList.innerHTML += `<li class="flex items-center gap-3 py-3.5 px-4 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors min-w-0"><div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">${style.svg}</div><div class="flex-grow min-w-0"><p class="text-sm font-bold text-zinc-800 dark:text-white truncate">${tx.description || '-'}</p><div class="flex items-center gap-1.5 mt-1 min-w-0 overflow-hidden"><span class="text-[9px] font-bold bg-zinc-100 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-300 px-1.5 py-0.5 rounded tracking-widest uppercase shrink-0">${tx.category || 'Lainnya'}</span><span class="text-[9px] font-bold bg-brand-light dark:bg-blue-600/20 text-brand-dark dark:text-blue-400 px-1.5 py-0.5 rounded tracking-widest uppercase shrink-0">${walletText}</span></div></div><div class="text-right shrink-0 ml-1"><p class="text-sm font-bold tracking-tight ${amountColor}">${sign}${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p><p class="text-[10px] font-medium text-zinc-400 mt-1">${Utils.formatDate(tx.date)}</p></div></li>`;
             });
         }
     };
