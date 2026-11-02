@@ -406,7 +406,7 @@
 
                     <!-- Arus Kas Bulan Ini -->
                     <div class="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-brand-border dark:border-zinc-800 shadow-sm">
-                        <h3 class="font-extrabold text-zinc-900 dark:text-white text-xs mb-3">Arus Kas Bulan Ini</h3>
+                        <h3 class="font-extrabold text-zinc-900 dark:text-white text-xs mb-3">Rekap Bulan Ini</h3>
                         <div class="grid grid-cols-2 gap-2 mb-3">
                             <div class="bg-emerald-50/50 dark:bg-emerald-500/10 p-2.5 rounded-xl border border-emerald-100 dark:border-emerald-500/20">
                                 <span class="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 block uppercase">Pemasukan</span>
@@ -417,9 +417,13 @@
                                 <span class="text-sm font-extrabold text-red-700 dark:text-red-300 truncate block mt-0.5" id="wallet-expense">Rp 0</span>
                             </div>
                         </div>
-                        <div class="flex justify-between items-center bg-zinc-50 dark:bg-zinc-800/60 p-2.5 rounded-xl">
-                            <span class="text-[11px] font-bold text-zinc-700 dark:text-zinc-300">Sisa Tersimpan</span>
-                            <span class="text-xs font-extrabold" id="wallet-margin">Rp 0</span>
+                        <div class="flex justify-between items-center bg-zinc-50 dark:bg-zinc-800/60 p-2.5 rounded-xl mb-2">
+                            <span class="text-[11px] font-bold text-zinc-700 dark:text-zinc-300">Arus Kas (Masuk-Keluar)</span>
+                            <span class="text-xs font-extrabold" id="wallet-cashflow">Rp 0</span>
+                        </div>
+                        <div class="flex justify-between items-center bg-brand-light dark:bg-blue-900/30 p-2.5 rounded-xl">
+                            <span class="text-[11px] font-bold text-brand-dark dark:text-blue-300">Total Saldo (Bawaan)</span>
+                            <span class="text-xs font-extrabold text-brand-dark dark:text-blue-400" id="wallet-cumulative">Rp 0</span>
                         </div>
                     </div>
 
@@ -493,6 +497,7 @@
                                         <div class="px-3 py-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-xs font-bold dark:text-white" onclick="Utils.selectOption('filter-type-select', 'all', 'Semua Tipe')">Semua Tipe</div>
                                         <div class="px-3 py-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-xs font-bold dark:text-white" onclick="Utils.selectOption('filter-type-select', 'income', 'Pemasukan')">Pemasukan</div>
                                         <div class="px-3 py-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-xs font-bold dark:text-white" onclick="Utils.selectOption('filter-type-select', 'expense', 'Pengeluaran')">Pengeluaran</div>
+                                        <div class="px-3 py-2.5 hover:bg-zinc-50 dark:hover:bg-zinc-700 cursor-pointer text-xs font-bold dark:text-white" onclick="Utils.selectOption('filter-type-select', 'transfer', 'Transfer')">Transfer</div>
                                     </div>
                                     <input type="hidden" id="filter-type-value" value="all">
                                 </div>
@@ -536,7 +541,7 @@
                     <div class="md:hidden mb-3 px-1"><h2 class="text-lg font-extrabold tracking-tight text-zinc-900 dark:text-white">Catat Transaksi</h2></div>
                     <form id="add-form" class="bg-white dark:bg-zinc-900 p-5 sm:p-6 rounded-2xl shadow-sm border border-brand-border dark:border-zinc-800 space-y-5 min-w-0">
                         
-                        <!-- VISUAL SWITCH MERAH/HIJAU (PENGELUARAN/PEMASUKAN) -->
+                        <!-- VISUAL SWITCH MERAH/HIJAU/BIRU -->
                         <div class="bg-zinc-100 dark:bg-zinc-800/80 p-1.5 rounded-xl flex gap-1.5 relative border border-brand-border dark:border-zinc-700 shadow-inner">
                             <label class="flex-1 cursor-pointer">
                                 <input type="radio" name="tx-type" value="expense" class="peer hidden" checked>
@@ -545,6 +550,10 @@
                             <label class="flex-1 cursor-pointer">
                                 <input type="radio" name="tx-type" value="income" class="peer hidden">
                                 <div class="text-center py-2.5 rounded-lg text-sm font-bold peer-checked:bg-emerald-500 dark:peer-checked:bg-emerald-600 peer-checked:text-white peer-checked:shadow-md text-zinc-500 dark:text-zinc-400 transition-all">Pemasukan</div>
+                            </label>
+                            <label class="flex-1 cursor-pointer">
+                                <input type="radio" name="tx-type" value="transfer" class="peer hidden">
+                                <div class="text-center py-2.5 rounded-lg text-sm font-bold peer-checked:bg-blue-500 dark:peer-checked:bg-blue-600 peer-checked:text-white peer-checked:shadow-md text-zinc-500 dark:text-zinc-400 transition-all">Transfer</div>
                             </label>
                         </div>
                         
@@ -556,8 +565,9 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 relative">
-                            <div class="relative z-50 min-w-0">
+                        <!-- KELOMPOK NORMAL (PEMASUKAN / PENGELUARAN) -->
+                        <div id="normal-group" class="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-20">
+                            <div class="min-w-0">
                                 <label class="block text-[10px] font-bold text-zinc-500 mb-1 uppercase tracking-widest truncate">Kategori</label>
                                 <div class="relative custom-select" id="tx-category-select">
                                     <div class="w-full input-premium text-zinc-700 dark:text-white text-sm font-semibold rounded-xl px-4 py-3.5 flex justify-between items-center cursor-pointer" onclick="Utils.toggleDropdown('tx-category-select')">
@@ -567,11 +577,29 @@
                                     <input type="hidden" id="input-category" value="Makanan">
                                 </div>
                             </div>
-                            <div class="relative z-20 min-w-0">
-                                <label class="block text-[10px] font-bold text-zinc-500 mb-1 uppercase tracking-widest truncate">Sumber Dana</label>
+                            <div class="min-w-0">
+                                <label id="wallet-label" class="block text-[10px] font-bold text-zinc-500 mb-1 uppercase tracking-widest truncate">Sumber Dana</label>
                                 <div class="grid grid-cols-2 gap-1.5 h-[48px]">
                                     <label class="cursor-pointer h-full"><input type="radio" name="tx-wallet" value="cash" class="peer hidden" checked><div class="h-full flex items-center justify-center rounded-xl text-xs font-bold bg-zinc-50 dark:bg-zinc-800 peer-checked:bg-brand-dark dark:peer-checked:bg-blue-600 peer-checked:text-white text-zinc-600 dark:text-zinc-300 transition-all border border-transparent">Cash</div></label>
                                     <label class="cursor-pointer h-full"><input type="radio" name="tx-wallet" value="bank" class="peer hidden"><div class="h-full flex items-center justify-center rounded-xl text-xs font-bold bg-zinc-50 dark:bg-zinc-800 peer-checked:bg-brand-dark dark:peer-checked:bg-blue-600 peer-checked:text-white text-zinc-600 dark:text-zinc-300 transition-all border border-transparent">Rekening</div></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- KELOMPOK TRANSFER -->
+                        <div id="transfer-group" class="hidden grid-cols-1 sm:grid-cols-2 gap-4 relative z-20">
+                            <div class="min-w-0">
+                                <label class="block text-[10px] font-bold text-zinc-500 mb-1 uppercase tracking-widest truncate">Transfer Dari</label>
+                                <div class="grid grid-cols-2 gap-1.5 h-[48px]">
+                                    <label class="cursor-pointer h-full"><input type="radio" name="tf-from" value="cash" class="peer hidden" checked><div class="h-full flex items-center justify-center rounded-xl text-xs font-bold bg-zinc-50 dark:bg-zinc-800 peer-checked:bg-blue-600 peer-checked:text-white text-zinc-600 dark:text-zinc-300 transition-all border border-transparent">Cash</div></label>
+                                    <label class="cursor-pointer h-full"><input type="radio" name="tf-from" value="bank" class="peer hidden"><div class="h-full flex items-center justify-center rounded-xl text-xs font-bold bg-zinc-50 dark:bg-zinc-800 peer-checked:bg-blue-600 peer-checked:text-white text-zinc-600 dark:text-zinc-300 transition-all border border-transparent">Rekening</div></label>
+                                </div>
+                            </div>
+                            <div class="min-w-0">
+                                <label class="block text-[10px] font-bold text-zinc-500 mb-1 uppercase tracking-widest truncate">Tujuan Ke</label>
+                                <div class="grid grid-cols-2 gap-1.5 h-[48px]">
+                                    <label class="cursor-pointer h-full"><input type="radio" name="tf-to" value="cash" class="peer hidden"><div class="h-full flex items-center justify-center rounded-xl text-xs font-bold bg-zinc-50 dark:bg-zinc-800 peer-checked:bg-blue-600 peer-checked:text-white text-zinc-600 dark:text-zinc-300 transition-all border border-transparent">Cash</div></label>
+                                    <label class="cursor-pointer h-full"><input type="radio" name="tf-to" value="bank" class="peer hidden" checked><div class="h-full flex items-center justify-center rounded-xl text-xs font-bold bg-zinc-50 dark:bg-zinc-800 peer-checked:bg-blue-600 peer-checked:text-white text-zinc-600 dark:text-zinc-300 transition-all border border-transparent">Rekening</div></label>
                                 </div>
                             </div>
                         </div>
@@ -599,7 +627,7 @@
                     <div class="mb-1 px-1 min-w-0"><h2 class="text-lg font-extrabold tracking-tight text-zinc-900 dark:text-white truncate">Pengaturan</h2></div>
 
                     <div class="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-brand-border dark:border-zinc-800 shadow-sm flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left min-w-0">
-                        <div class="w-12 h-12 bg-zinc-50 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 rounded-xl flex items-center justify-center shrink-0"><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg></div>
+                        <div class="w-12 h-12 bg-zinc-50 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 rounded-xl flex items-center justify-center shrink-0"><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg></div>
                         <div class="flex-grow min-w-0">
                             <h3 class="font-bold text-zinc-900 dark:text-white text-sm mb-0.5 truncate">Anggaran Bulanan</h3>
                             <p class="text-xs text-zinc-500">Atur batas pengeluaran kategori.</p>
@@ -689,7 +717,8 @@
             'Gaji': { type: 'income', svg: '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>', colorText: 'text-emerald-600 dark:text-emerald-500', bg: 'bg-emerald-50 dark:bg-emerald-500/10' },
             'Bonus': { type: 'income', svg: '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>', colorText: 'text-amber-600 dark:text-amber-500', bg: 'bg-amber-50 dark:bg-amber-500/10' },
             'Investasi': { type: 'income', svg: '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>', colorText: 'text-blue-600 dark:text-blue-500', bg: 'bg-blue-50 dark:bg-blue-500/10' },
-            'Lainnya': { type: 'both', svg: '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>', colorText: 'text-zinc-600 dark:text-zinc-400', bg: 'bg-zinc-100 dark:bg-zinc-800' }
+            'Lainnya': { type: 'both', svg: '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>', colorText: 'text-zinc-600 dark:text-zinc-400', bg: 'bg-zinc-100 dark:bg-zinc-800' },
+            'Transfer': { type: 'system', svg: '<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>', colorText: 'text-blue-600 dark:text-blue-500', bg: 'bg-blue-50 dark:bg-blue-500/10' }
         },
         getCategoryStyle: (cat) => { const c = Utils.categoryData[cat] || Utils.categoryData['Lainnya']; return { svg: c.svg, text: c.colorText, bg: c.bg }; },
         toggleDropdown: (id) => { document.querySelectorAll('.custom-select').forEach(el => { if (el.id !== id) el.classList.remove('open'); }); document.getElementById(id).classList.toggle('open'); },
@@ -810,12 +839,40 @@
 
     const BackupManager = {
         exportJSON: () => { const data = { tx: AppState.transactions, goals: AppState.savingsGoals, bills: AppState.recurringBills, budgets: AppState.budgets }; const blob = new Blob([JSON.stringify(data)], {type: "application/json"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `Keuanganku_FullBackup_${Utils.getTodayDateStr()}.json`; a.click(); AppUI.showToast("JSON berhasil diunduh."); },
-        exportCSV: () => { if(AppState.transactions.length === 0) return AppUI.showToast("Tidak ada data", "error"); const headers = ["Tanggal", "Tipe", "Kategori", "Dompet", "Nominal", "Deskripsi"]; const csvRows = [headers.join(",")]; AppState.transactions.forEach(tx => { if(!tx) return; const amt = tx.amount || 0; const row = [ tx.date, tx.type === 'income' ? 'Pemasukan' : 'Pengeluaran', tx.category || 'Lainnya', tx.wallet === 'cash' ? 'Cash' : 'Rekening', amt, `"${(tx.description || '').replace(/"/g, '""')}"` ]; csvRows.push(row.join(",")); }); const blob = new Blob([csvRows.join("\n")], {type: "text/csv"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `Keuanganku_Riwayat_${Utils.getTodayDateStr()}.csv`; a.click(); AppUI.showToast("CSV berhasil diunduh."); },
+        exportCSV: () => { 
+            if(AppState.transactions.length === 0) return AppUI.showToast("Tidak ada data", "error"); 
+            const headers = ["Tanggal", "Tipe", "Kategori", "Dompet", "Nominal", "Deskripsi"]; 
+            const csvRows = [headers.join(",")]; 
+            AppState.transactions.forEach(tx => { 
+                if(!tx) return; 
+                const amt = tx.amount || 0; 
+                const typeText = tx.type === 'income' ? 'Pemasukan' : (tx.type === 'expense' ? 'Pengeluaran' : 'Transfer');
+                const dompetText = tx.type === 'transfer' ? `${tx.fromWallet} ke ${tx.toWallet}` : (tx.wallet === 'cash' ? 'Cash' : 'Rekening');
+                const row = [ tx.date, typeText, tx.category || 'Lainnya', dompetText, amt, `"${(tx.description || '').replace(/"/g, '""')}"` ]; 
+                csvRows.push(row.join(",")); 
+            }); 
+            const blob = new Blob([csvRows.join("\n")], {type: "text/csv"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `Keuanganku_Riwayat_${Utils.getTodayDateStr()}.csv`; a.click(); AppUI.showToast("CSV berhasil diunduh."); 
+        },
         importJSON: (e) => { const file = e.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = (ev) => { try { const data = JSON.parse(ev.target.result); AppUI.showConfirm("Pulihkan Data?", "Data saat ini akan TERTEMPA oleh backup. Lanjutkan?", () => { if(data.tx) localStorage.setItem('keuanganku_tx', JSON.stringify(data.tx)); if(data.goals) localStorage.setItem('keuanganku_goals', JSON.stringify(data.goals)); if(data.bills) localStorage.setItem('keuanganku_bills', JSON.stringify(data.bills)); if(data.budgets) localStorage.setItem('keuanganku_budgets', JSON.stringify(data.budgets)); location.reload(); }); } catch(err) { AppUI.showToast("Gagal membaca file.", "error"); } }; reader.readAsText(file); e.target.value = ''; }
     };
 
     const TransactionManager = {
-        getBalances: () => { let cash = 0, bank = 0; AppState.transactions.forEach(tx => { if(!tx) return; const nominal = Number(tx.amount) || 0; if (tx.type === 'income') { if (tx.wallet === 'cash') cash += nominal; else bank += nominal; } else if (tx.type === 'expense') { if (tx.wallet === 'cash') cash -= nominal; else bank -= nominal; } }); return { cash, bank, total: cash + bank }; },
+        getBalances: () => { 
+            let cash = 0, bank = 0; 
+            AppState.transactions.forEach(tx => { 
+                if(!tx) return; 
+                const nominal = Number(tx.amount) || 0; 
+                if (tx.type === 'income') { 
+                    if (tx.wallet === 'cash') cash += nominal; else bank += nominal; 
+                } else if (tx.type === 'expense') { 
+                    if (tx.wallet === 'cash') cash -= nominal; else bank -= nominal; 
+                } else if (tx.type === 'transfer') {
+                    if (tx.fromWallet === 'cash') cash -= nominal; else bank -= nominal;
+                    if (tx.toWallet === 'cash') cash += nominal; else bank += nominal;
+                }
+            }); 
+            return { cash, bank, total: cash + bank }; 
+        },
         changePage: (delta) => { const filteredData = TransactionManager.getFilteredHistory(); const totalPages = Math.ceil(filteredData.length / AppState.itemsPerPage) || 1; AppState.currentPage += delta; if(AppState.currentPage < 1) AppState.currentPage = 1; if(AppState.currentPage > totalPages) AppState.currentPage = totalPages; TransactionManager.renderHistory(); },
         renderAll: () => { TransactionManager.renderDashboard(); TransactionManager.renderWallet(); TransactionManager.renderRecap(); TransactionManager.renderHistory(); },
         
@@ -830,10 +887,13 @@
                 AppState.transactions.slice(0, 5).forEach((tx) => { 
                     if(!tx) return;
                     const style = Utils.getCategoryStyle(tx.category || 'Lainnya'); 
-                    const sign = tx.type === 'income' ? '+' : '-'; 
-                    const amountColor = tx.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400';
-                    const walletBadge = tx.wallet === 'bank' ? '<span class="text-[9px] bg-brand-light dark:bg-blue-600/20 text-brand-dark dark:text-blue-400 font-bold px-1.5 py-0.5 rounded ml-1 tracking-wider shrink-0">Rekening</span>' : '<span class="text-[9px] bg-zinc-100 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-300 font-bold px-1.5 py-0.5 rounded ml-1 tracking-wider shrink-0">Cash</span>'; 
-                    dashRecent.innerHTML += `<div onclick="AppUI.switchTab('history')" class="group bg-white dark:bg-zinc-900 p-3.5 rounded-xl shadow-sm border border-brand-border dark:border-zinc-800 flex items-center gap-3 cursor-pointer hover:border-zinc-300 transition-colors min-w-0"><div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">${style.svg}</div><div class="flex-grow min-w-0"><p class="text-sm font-bold text-zinc-800 dark:text-white truncate">${tx.description || '-'}</p><div class="flex items-center mt-1 min-w-0"><span class="text-[10px] font-medium text-zinc-400 truncate shrink-0">${Utils.formatDate(tx.date)}</span> ${walletBadge}</div></div><div class="text-right shrink-0 ml-1"><p class="text-sm font-bold tracking-tight ${amountColor}">${sign}${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p></div></div>`; 
+                    
+                    let sign = '', amountColor = '', walletBadge = '';
+                    if (tx.type === 'income') { sign = '+'; amountColor = 'text-emerald-600 dark:text-emerald-400'; walletBadge = `<span class="text-[9px] bg-brand-light dark:bg-blue-600/20 text-brand-dark dark:text-blue-400 font-bold px-1.5 py-0.5 rounded ml-1 tracking-wider shrink-0">${tx.wallet === 'bank' ? 'Rekening' : 'Cash'}</span>`; } 
+                    else if (tx.type === 'expense') { sign = '-'; amountColor = 'text-red-600 dark:text-red-400'; walletBadge = `<span class="text-[9px] bg-zinc-100 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-300 font-bold px-1.5 py-0.5 rounded ml-1 tracking-wider shrink-0">${tx.wallet === 'bank' ? 'Rekening' : 'Cash'}</span>`; } 
+                    else if (tx.type === 'transfer') { sign = '⇄'; amountColor = 'text-blue-600 dark:text-blue-400'; const fromTxt = tx.fromWallet === 'bank' ? 'Rekening' : 'Cash'; const toTxt = tx.toWallet === 'bank' ? 'Rekening' : 'Cash'; walletBadge = `<span class="text-[9px] bg-blue-50 dark:bg-blue-600/20 text-blue-600 dark:text-blue-400 font-bold px-1.5 py-0.5 rounded ml-1 tracking-wider shrink-0">${fromTxt} ➝ ${toTxt}</span>`; }
+
+                    dashRecent.innerHTML += `<div onclick="AppUI.switchTab('history')" class="group bg-white dark:bg-zinc-900 p-3.5 rounded-xl shadow-sm border border-brand-border dark:border-zinc-800 flex items-center gap-3 cursor-pointer hover:border-zinc-300 transition-colors min-w-0"><div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">${style.svg}</div><div class="flex-grow min-w-0"><p class="text-sm font-bold text-zinc-800 dark:text-white truncate">${tx.description || (tx.type === 'transfer' ? 'Transfer Saldo' : '-')}</p><div class="flex items-center mt-1 min-w-0"><span class="text-[10px] font-medium text-zinc-400 truncate shrink-0">${Utils.formatDate(tx.date)}</span> ${walletBadge}</div></div><div class="text-right shrink-0 ml-1"><p class="text-sm font-bold tracking-tight ${amountColor}">${sign} ${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p></div></div>`; 
                 });
             }
         },
@@ -843,25 +903,42 @@
             document.getElementById('wallet-cash').innerText = Utils.formatIDR(balances.cash);
             document.getElementById('wallet-bank').innerText = Utils.formatIDR(balances.bank);
 
-            let currentMonthIncome = 0, currentMonthExpense = 0; const categoryData = {}; 
+            let currentMonthIncome = 0, currentMonthExpense = 0; 
+            let previousBalance = 0; 
+            const categoryData = {}; 
             const currentMonthStr = Utils.getCurrentMonthStr();
             
             AppState.transactions.forEach(tx => { 
                 if(!tx || !tx.date) return;
                 const nominal = Number(tx.amount) || 0; 
-                if(tx.date.substring(0, 7) === currentMonthStr) { 
+                const txMonthStr = tx.date.substring(0, 7);
+
+                if (txMonthStr < currentMonthStr) {
+                    // Menghitung sisa uang dari bulan-bulan sebelumnya
+                    if (tx.type === 'income') previousBalance += nominal;
+                    if (tx.type === 'expense') previousBalance -= nominal;
+                } else if (txMonthStr === currentMonthStr) { 
                     if (tx.type === 'income') currentMonthIncome += nominal; 
-                    if (tx.type === 'expense') { currentMonthExpense += nominal; const cat = tx.category || 'Lainnya'; categoryData[cat] = (categoryData[cat] || 0) + nominal; } 
+                    if (tx.type === 'expense') { 
+                        currentMonthExpense += nominal; 
+                        const cat = tx.category || 'Lainnya'; 
+                        categoryData[cat] = (categoryData[cat] || 0) + nominal; 
+                    } 
                 } 
             });
 
             document.getElementById('wallet-income').innerText = Utils.formatIDR(currentMonthIncome);
             document.getElementById('wallet-expense').innerText = Utils.formatIDR(currentMonthExpense);
             
-            const margin = currentMonthIncome - currentMonthExpense;
-            const marginEl = document.getElementById('wallet-margin');
-            marginEl.innerText = Utils.formatIDR(margin);
-            marginEl.className = margin >= 0 ? "text-sm font-extrabold text-emerald-600 dark:text-emerald-400" : "text-sm font-extrabold text-red-600 dark:text-red-400";
+            // Arus Kas murni bulan ini
+            const cashflow = currentMonthIncome - currentMonthExpense;
+            const cfEl = document.getElementById('wallet-cashflow');
+            cfEl.innerText = Utils.formatIDR(cashflow);
+            cfEl.className = cashflow >= 0 ? "text-xs font-extrabold text-emerald-600 dark:text-emerald-400" : "text-xs font-extrabold text-red-600 dark:text-red-400";
+
+            // Saldo Kumulatif Berjalan
+            const cumulative = previousBalance + currentMonthIncome - currentMonthExpense;
+            document.getElementById('wallet-cumulative').innerText = Utils.formatIDR(cumulative);
 
             const budgetListEl = document.getElementById('dashboard-budgets-list'); budgetListEl.innerHTML = '';
             const budgetsSafe = AppState.budgets || {};
@@ -891,12 +968,21 @@
             const monthlyData = {}; const categoryDataPerMonth = {};
             AppState.transactions.forEach(tx => { 
                 if(!tx || !tx.date) return; const monthYear = tx.date.substring(0, 7); 
-                if (!monthlyData[monthYear]) monthlyData[monthYear] = { label: new Date(tx.date).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }), income: 0, expense: 0, count: 0 }; 
+                if (!monthlyData[monthYear]) monthlyData[monthYear] = { monthYear: monthYear, label: new Date(tx.date).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }), income: 0, expense: 0, count: 0 }; 
                 if (!categoryDataPerMonth[monthYear]) categoryDataPerMonth[monthYear] = {};
                 const nominal = Number(tx.amount) || 0; 
                 if (tx.type === 'income') monthlyData[monthYear].income += nominal; 
                 if (tx.type === 'expense') { monthlyData[monthYear].expense += nominal; const cat = tx.category || 'Lainnya'; categoryDataPerMonth[monthYear][cat] = (categoryDataPerMonth[monthYear][cat] || 0) + nominal; }
-                monthlyData[monthYear].count += 1; 
+                if (tx.type !== 'transfer') monthlyData[monthYear].count += 1; 
+            });
+
+            // Urutkan dari yang PALING LAMA ke PALING BARU untuk menghitung saldo kumulatif
+            let runningBalance = 0;
+            const sortedMonthsAsc = Object.keys(monthlyData).sort((a, b) => a.localeCompare(b));
+            sortedMonthsAsc.forEach(my => {
+                runningBalance += monthlyData[my].income;
+                runningBalance -= monthlyData[my].expense;
+                monthlyData[my].cumulativeBalance = runningBalance;
             });
 
             const curr = Utils.getCurrentMonthStr(); const prev = Utils.getPreviousMonthStr();
@@ -910,9 +996,29 @@
                 analysisEl.innerHTML = `<div class="bg-white dark:bg-zinc-900 border border-brand-border dark:border-zinc-800 p-4 rounded-2xl shadow-sm mb-2 min-w-0"><h4 class="font-bold text-sm mb-3 text-zinc-900 dark:text-white truncate">Bulan Ini vs Lalu</h4><div class="grid grid-cols-2 gap-3"><div class="bg-zinc-50 dark:bg-zinc-800 rounded-xl p-3 min-w-0 border border-brand-border dark:border-zinc-700"><p class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold truncate">Masuk</p><p class="text-sm truncate font-extrabold mt-1">${incHtml}</p></div><div class="bg-zinc-50 dark:bg-zinc-800 rounded-xl p-3 min-w-0 border border-brand-border dark:border-zinc-700"><p class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold truncate">Keluar</p><p class="text-sm truncate font-extrabold mt-1">${expHtml}</p></div></div></div>`;
             } else { analysisEl.innerHTML = ''; }
 
-            Object.keys(monthlyData).sort((a, b) => b.localeCompare(a)).forEach(my => {
-                const data = monthlyData[my]; const balance = data.income - data.expense; const balanceColor = balance >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400';
-                recapList.innerHTML += `<div class="bg-white dark:bg-zinc-900 p-4 rounded-2xl shadow-sm border border-brand-border dark:border-zinc-800 min-w-0"><div class="flex justify-between items-center mb-3 border-b border-brand-border dark:border-zinc-800 pb-3 min-w-0"><div class="flex items-center min-w-0 flex-1 pr-2"><h3 class="font-extrabold text-zinc-800 dark:text-white text-sm tracking-tight truncate">${data.label}</h3></div><span class="text-[10px] font-bold text-zinc-500 bg-zinc-50 dark:bg-zinc-800 px-2 py-1 rounded-md shrink-0 tracking-widest">${data.count} Transaksi</span></div><div class="grid grid-cols-2 gap-3 mb-4 min-w-0"><div class="min-w-0"><p class="text-[9px] font-bold text-zinc-400 uppercase tracking-widest mb-1 truncate">Total Masuk</p><p class="font-extrabold tracking-tight text-sm text-emerald-600 dark:text-emerald-400 truncate">${Utils.formatIDR(data.income)}</p></div><div class="min-w-0"><p class="text-[9px] font-bold text-zinc-400 uppercase tracking-widest mb-1 truncate">Total Keluar</p><p class="font-extrabold tracking-tight text-sm text-red-600 dark:text-red-400 truncate">${Utils.formatIDR(data.expense)}</p></div></div><div class="bg-zinc-50 dark:bg-zinc-800/50 rounded-xl p-3 flex justify-between items-center gap-2 min-w-0"><span class="text-xs font-bold text-zinc-500 uppercase tracking-widest shrink-0">Sisa Saldo</span><span class="font-extrabold tracking-tighter text-sm ${balanceColor} truncate w-full text-right">${Utils.formatIDR(balance)}</span></div></div>`;
+            // Render antarmuka membalik urutan (dari PALING BARU ke PALING LAMA)
+            const sortedMonthsDesc = sortedMonthsAsc.reverse();
+            sortedMonthsDesc.forEach(my => {
+                const data = monthlyData[my]; 
+                if (data.count === 0 && data.income === 0 && data.expense === 0) return; // Sembunyikan jika isinya hanya transfer
+                
+                // Warnai berdasarkan saldo kumulatif berjalan, bukan hanya flow bulan tersebut
+                const balanceColor = data.cumulativeBalance >= 0 ? 'text-brand-dark dark:text-blue-400' : 'text-red-600 dark:text-red-400';
+                
+                recapList.innerHTML += `<div class="bg-white dark:bg-zinc-900 p-4 rounded-2xl shadow-sm border border-brand-border dark:border-zinc-800 min-w-0">
+                    <div class="flex justify-between items-center mb-3 border-b border-brand-border dark:border-zinc-800 pb-3 min-w-0">
+                        <div class="flex items-center min-w-0 flex-1 pr-2"><h3 class="font-extrabold text-zinc-800 dark:text-white text-sm tracking-tight truncate">${data.label}</h3></div>
+                        <span class="text-[10px] font-bold text-zinc-500 bg-zinc-50 dark:bg-zinc-800 px-2 py-1 rounded-md shrink-0 tracking-widest">${data.count} Transaksi</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3 mb-4 min-w-0">
+                        <div class="min-w-0"><p class="text-[9px] font-bold text-zinc-400 uppercase tracking-widest mb-1 truncate">Pemasukan Bulan Ini</p><p class="font-extrabold tracking-tight text-sm text-emerald-600 dark:text-emerald-400 truncate">${Utils.formatIDR(data.income)}</p></div>
+                        <div class="min-w-0"><p class="text-[9px] font-bold text-zinc-400 uppercase tracking-widest mb-1 truncate">Pengeluaran Bulan Ini</p><p class="font-extrabold tracking-tight text-sm text-red-600 dark:text-red-400 truncate">${Utils.formatIDR(data.expense)}</p></div>
+                    </div>
+                    <div class="bg-brand-light/50 dark:bg-blue-900/20 border border-brand-light dark:border-blue-800/30 rounded-xl p-3 flex justify-between items-center gap-2 min-w-0">
+                        <span class="text-[10px] font-bold text-brand-dark dark:text-blue-300 uppercase tracking-widest shrink-0">Saldo Akhir Bulan</span>
+                        <span class="font-extrabold tracking-tighter text-sm ${balanceColor} truncate w-full text-right">${Utils.formatIDR(data.cumulativeBalance)}</span>
+                    </div>
+                </div>`;
             });
         },
 
@@ -950,11 +1056,14 @@
             const paginated = filteredData.slice((AppState.currentPage - 1) * AppState.itemsPerPage, ((AppState.currentPage - 1) * AppState.itemsPerPage) + AppState.itemsPerPage);
             paginated.forEach((tx) => { 
                 if(!tx) return;
-                const style = Utils.getCategoryStyle(tx.category); 
-                const sign = tx.type === 'income' ? '+' : '-'; 
-                const amountColor = tx.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400';
-                const walletText = tx.wallet === 'bank' ? 'Rekening' : 'Cash';
-                historyList.innerHTML += `<li class="flex items-center gap-3 py-3.5 px-4 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors min-w-0"><div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">${style.svg}</div><div class="flex-grow min-w-0"><p class="text-sm font-bold text-zinc-800 dark:text-white truncate">${tx.description || '-'}</p><div class="flex items-center gap-1.5 mt-1 min-w-0 overflow-hidden"><span class="text-[9px] font-bold bg-zinc-100 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-300 px-1.5 py-0.5 rounded tracking-widest uppercase shrink-0">${tx.category || 'Lainnya'}</span><span class="text-[9px] font-bold bg-brand-light dark:bg-blue-600/20 text-brand-dark dark:text-blue-400 px-1.5 py-0.5 rounded tracking-widest uppercase shrink-0">${walletText}</span></div></div><div class="text-right shrink-0 ml-1"><p class="text-sm font-bold tracking-tight ${amountColor}">${sign}${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p><p class="text-[10px] font-medium text-zinc-400 mt-1">${Utils.formatDate(tx.date)}</p></div></li>`;
+                const style = Utils.getCategoryStyle(tx.category || 'Lainnya'); 
+                
+                let sign = '', amountColor = '', walletBadge = '';
+                if (tx.type === 'income') { sign = '+'; amountColor = 'text-emerald-600 dark:text-emerald-400'; walletBadge = `<span class="text-[9px] font-bold bg-brand-light dark:bg-blue-600/20 text-brand-dark dark:text-blue-400 px-1.5 py-0.5 rounded tracking-widest uppercase shrink-0">${tx.wallet === 'bank' ? 'Rekening' : 'Cash'}</span>`; } 
+                else if (tx.type === 'expense') { sign = '-'; amountColor = 'text-red-600 dark:text-red-400'; walletBadge = `<span class="text-[9px] font-bold bg-zinc-100 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-300 px-1.5 py-0.5 rounded tracking-widest uppercase shrink-0">${tx.wallet === 'bank' ? 'Rekening' : 'Cash'}</span>`; } 
+                else if (tx.type === 'transfer') { sign = '⇄'; amountColor = 'text-blue-600 dark:text-blue-400'; const fromTxt = tx.fromWallet === 'bank' ? 'Rekening' : 'Cash'; const toTxt = tx.toWallet === 'bank' ? 'Rekening' : 'Cash'; walletBadge = `<span class="text-[9px] font-bold bg-blue-50 dark:bg-blue-600/20 text-blue-600 dark:text-blue-400 px-1.5 py-0.5 rounded tracking-widest uppercase shrink-0">${fromTxt} ➝ ${toTxt}</span>`; }
+
+                historyList.innerHTML += `<li class="flex items-center gap-3 py-3.5 px-4 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors min-w-0"><div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">${style.svg}</div><div class="flex-grow min-w-0"><p class="text-sm font-bold text-zinc-800 dark:text-white truncate">${tx.description || (tx.type === 'transfer' ? 'Transfer Saldo' : '-')}</p><div class="flex items-center gap-1.5 mt-1 min-w-0 overflow-hidden"><span class="text-[9px] font-bold bg-zinc-100 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-300 px-1.5 py-0.5 rounded tracking-widest uppercase shrink-0">${tx.category || 'Lainnya'}</span>${walletBadge}</div></div><div class="text-right shrink-0 ml-1"><p class="text-sm font-bold tracking-tight ${amountColor}">${sign} ${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p><p class="text-[10px] font-medium text-zinc-400 mt-1">${Utils.formatDate(tx.date)}</p></div></li>`;
             });
         }
     };
@@ -1038,7 +1147,28 @@
         document.querySelectorAll('.currency-input').forEach(el => el.addEventListener('input', Utils.formatCurrencyInputEvent)); 
         Utils.setupCustomSelects();
 
-        document.querySelectorAll('input[name="tx-type"]').forEach(radio => { radio.addEventListener('change', (e) => { Utils.renderTxCategories(e.target.value, 'tx-category-select'); }); });
+        // LOGIKA SAAT TOMBOL PENGELUARAN / PEMASUKAN / TRANSFER DIKLIK
+        document.querySelectorAll('input[name="tx-type"]').forEach(radio => { 
+            radio.addEventListener('change', (e) => { 
+                const val = e.target.value;
+                const normalGroup = document.getElementById('normal-group');
+                const transferGroup = document.getElementById('transfer-group');
+                
+                if (val === 'transfer') {
+                    normalGroup.classList.add('hidden');
+                    normalGroup.classList.remove('grid');
+                    transferGroup.classList.remove('hidden');
+                    transferGroup.classList.add('grid');
+                } else {
+                    normalGroup.classList.remove('hidden');
+                    normalGroup.classList.add('grid');
+                    transferGroup.classList.add('hidden');
+                    transferGroup.classList.remove('grid');
+                    Utils.renderTxCategories(val, 'tx-category-select'); 
+                    document.getElementById('wallet-label').innerText = val === 'income' ? 'Simpan Ke' : 'Sumber Dana';
+                }
+            }); 
+        });
 
         document.getElementById('filter-search').addEventListener('input', () => { AppState.currentPage = 1; TransactionManager.renderHistory(); });
         
@@ -1049,18 +1179,64 @@
         document.getElementById('form-set-goal').addEventListener('submit', (e) => { e.preventDefault(); const target = Utils.parseRawCurrency(document.getElementById('input-goal-target').value); if(target <= 0) return AppUI.showToast("Nominal tidak valid", 'error'); GoalManager.addGoal(document.getElementById('input-goal-name').value, target); AppUI.closeModal('modal-set-goal'); document.getElementById('form-set-goal').reset(); });
         document.getElementById('form-add-savings').addEventListener('submit', (e) => { e.preventDefault(); const added = Utils.parseRawCurrency(document.getElementById('input-add-savings').value); if(added <= 0) return AppUI.showToast("Nominal tidak valid", "error"); const source = document.querySelector('input[name="savings-source"]:checked').value; const wallet = document.querySelector('input[name="savings-wallet"]:checked').value; GoalManager.addSavings(document.getElementById('input-savings-id').value, added, source, wallet); });
 
+        // LOGIKA PENYIMPANAN TRANSAKSI (TERMASUK TRANSFER)
         document.getElementById('add-form').addEventListener('submit', (e) => {
             e.preventDefault(); 
             const amount = Utils.parseRawCurrency(document.getElementById('input-amount').value); 
-            if(amount <= 0) return AppUI.showToast("Masukkan nominal!", "error");
-            const type = document.querySelector('input[name="tx-type"]:checked').value; const wallet = document.querySelector('input[name="tx-wallet"]:checked').value;
-            if (type === 'expense') { const balances = TransactionManager.getBalances(); const currentBal = wallet === 'cash' ? balances.cash : balances.bank; if (amount > currentBal) { return AppUI.showToast(`Saldo ${wallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup!`, "error"); } }
+            if (amount <= 0) return AppUI.showToast("Masukkan nominal!", "error");
+            
+            const type = document.querySelector('input[name="tx-type"]:checked').value; 
+            let wallet, fromWallet, toWallet, category;
+            const balances = TransactionManager.getBalances(); 
 
-            AppUI.showConfirm("Simpan Transaksi?", `Mencatat ${type === 'expense' ? 'Pengeluaran' : 'Pemasukan'} ${Utils.formatIDR(amount)}?`, () => {
-                const category = document.getElementById('input-category').value; const date = document.getElementById('input-date').value; const description = document.getElementById('input-desc').value;
-                if(LocalDB.addTransaction({ type, wallet, amount, category, date, description })) {
+            if (type === 'transfer') {
+                fromWallet = document.querySelector('input[name="tf-from"]:checked').value;
+                toWallet = document.querySelector('input[name="tf-to"]:checked').value;
+                
+                if (fromWallet === toWallet) return AppUI.showToast("Pilih dompet tujuan yang berbeda!", "error");
+                
+                const currentBal = fromWallet === 'cash' ? balances.cash : balances.bank; 
+                if (amount > currentBal) return AppUI.showToast(`Saldo ${fromWallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup!`, "error");
+                
+                wallet = fromWallet; // Kompatibilitas database
+                category = 'Transfer';
+            } else {
+                wallet = document.querySelector('input[name="tx-wallet"]:checked').value;
+                category = document.getElementById('input-category').value;
+                
+                if (type === 'expense') { 
+                    const currentBal = wallet === 'cash' ? balances.cash : balances.bank; 
+                    if (amount > currentBal) return AppUI.showToast(`Saldo ${wallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup!`, "error"); 
+                }
+            }
+
+            const typeLabel = type === 'expense' ? 'Pengeluaran' : (type === 'income' ? 'Pemasukan' : 'Transfer Saldo');
+
+            AppUI.showConfirm("Simpan Transaksi?", `Mencatat ${typeLabel} ${Utils.formatIDR(amount)}?`, () => {
+                const date = document.getElementById('input-date').value; 
+                const description = document.getElementById('input-desc').value;
+                
+                const payload = { type, wallet, amount, category, date, description };
+                if (type === 'transfer') {
+                    payload.fromWallet = fromWallet;
+                    payload.toWallet = toWallet;
+                }
+
+                if(LocalDB.addTransaction(payload)) {
                     document.getElementById('input-amount').value = ''; document.getElementById('input-desc').value = '';
-                    document.querySelector('input[name="tx-type"][value="expense"]').checked = true; Utils.renderTxCategories('expense', 'tx-category-select'); document.querySelector('input[name="tx-wallet"][value="cash"]').checked = true; document.getElementById('input-date').value = Utils.getTodayDateStr(); document.getElementById('display-date').innerText = Utils.formatDate(Utils.getTodayDateStr());
+                    
+                    // Kembalikan form ke state "Pengeluaran"
+                    document.querySelector('input[name="tx-type"][value="expense"]').checked = true; 
+                    document.getElementById('normal-group').classList.remove('hidden');
+                    document.getElementById('normal-group').classList.add('grid');
+                    document.getElementById('transfer-group').classList.add('hidden');
+                    document.getElementById('transfer-group').classList.remove('grid');
+                    Utils.renderTxCategories('expense', 'tx-category-select'); 
+                    document.querySelector('input[name="tx-wallet"][value="cash"]').checked = true; 
+                    document.getElementById('wallet-label').innerText = 'Sumber Dana';
+                    
+                    document.getElementById('input-date').value = Utils.getTodayDateStr(); 
+                    document.getElementById('display-date').innerText = Utils.formatDate(Utils.getTodayDateStr());
                     AppUI.showToast("Transaksi disimpan!"); AppUI.switchTab('dashboard');
                 }
             });
