@@ -3,19 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Keuanganku - Premium Finance</title>
+    <title>Keuanganku - Modern UI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = { 
             darkMode: 'class', 
             theme: { 
                 extend: {
-                    fontFamily: { sans: ['"Inter"', 'sans-serif'] },
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
                     colors: {
-                        'brand-bg': '#F7F7F5', // Sophisticated paper/cream tone
-                        'brand-dark': '#183D2A', // Deep forest green
-                        'brand-light': '#E8EDE7',
-                        'brand-border': '#E5E5E5'
+                        brand: {
+                            light: '#7C3AED', // Purple-600
+                            DEFAULT: '#5D5FEF', // Custom Blue-Purple from mockup
+                            dark: '#4F46E5', // Indigo-600
+                        },
+                        background: '#F9FAFB', // Light gray background
+                        card: '#FFFFFF'
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -4px rgba(0,0,0,0.05)',
+                        'floating': '0 10px 25px -5px rgba(93, 95, 239, 0.4)',
                     }
                 } 
             } 
@@ -23,1317 +30,688 @@
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         * { -webkit-tap-highlight-color: transparent; }
-        
-        html, body { scroll-behavior: smooth; overflow-x: hidden; min-height: 100%; background-color: #F7F7F5; }
-        .dark body { background-color: #0A0A0A; } 
-        
-        /* Typography adjustments for financial numbers */
-        .tabular-nums { font-variant-numeric: tabular-nums; }
+        html, body { scroll-behavior: smooth; overflow-x: hidden; min-height: 100%; background-color: #F9FAFB; }
+        .dark body { background-color: #121212; } 
         
         .view-section { display: none; opacity: 0; transition: opacity 0.3s ease; }
         .view-section.active { display: block; opacity: 1; animation: smoothFade 0.4s ease forwards; }
-        @keyframes smoothFade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes smoothFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         
-        .modal-overlay { backdrop-filter: blur(2px); transition: opacity 0.3s ease; }
+        .modal-overlay { backdrop-filter: blur(4px); transition: opacity 0.3s ease; }
         
-        /* Refined Custom Scrollbar */
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #E4E4E7; border-radius: 4px; }
-        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #27272A; }
-
-        /* Minimal Navigation Styles */
-        .nav-btn.active .icon-outline { display: none; }
-        .nav-btn.active .icon-fill { display: block; }
-        .nav-btn:not(.active) .icon-fill { display: none; }
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; display: none; }
         
-        .mobile-nav { 
-            transition: color 0.2s ease; 
-            color: #A1A1AA; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 4px;
-            padding: 8px 0;
+        /* Gradient Cards */
+        .card-gradient {
+            background: linear-gradient(135deg, #5D5FEF 0%, #7C3AED 100%);
+            position: relative;
+            overflow: hidden;
         }
-        .mobile-nav.active { color: #183D2A; }
-        .dark .mobile-nav { color: #52525B; }
-        .dark .mobile-nav.active { color: #E5E5E5; }
-
-        .desktop-nav {
-            border-left: 2px solid transparent;
-            transition: all 0.2s ease;
+        .card-gradient::after {
+            content: ''; position: absolute; right: -20%; top: -20%; width: 150px; height: 150px;
+            background: rgba(255,255,255,0.1); border-radius: 50%;
         }
-        .desktop-nav.active { border-left-color: #183D2A; color: #183D2A; font-weight: 500; background: linear-gradient(90deg, rgba(24, 61, 42, 0.04) 0%, rgba(24, 61, 42, 0) 100%); }
-        .dark .desktop-nav.active { border-left-color: #E5E5E5; color: #E5E5E5; background: linear-gradient(90deg, rgba(229, 229, 229, 0.05) 0%, rgba(229, 229, 229, 0) 100%); }
+        .card-gradient::before {
+            content: ''; position: absolute; left: -10%; bottom: -30%; width: 200px; height: 200px;
+            background: rgba(255,255,255,0.05); border-radius: 50%;
+        }
 
-        /* Dropdowns & Forms */
-        .custom-select-options { transition: all 0.2s ease; opacity: 0; pointer-events: none; transform: translateY(-4px); }
-        .custom-select.open .custom-select-options { opacity: 1; pointer-events: auto; transform: translateY(0); }
-        .custom-select.open .caret-icon { transform: rotate(180deg); }
+        /* Customizable Bg Class */
+        .custom-bg-applied {
+            background-blend-mode: overlay;
+            background-color: rgba(93, 95, 239, 0.8) !important;
+        }
 
-        .input-premium { background-color: transparent; border: 1px solid #D4D4D8; transition: all 0.2s ease; color: #18181B; }
-        .input-premium:focus { border-color: #183D2A; box-shadow: 0 0 0 1px #183D2A; outline: none; }
-        
-        .dark .input-premium { border-color: #27272A; color: #F4F4F5; }
-        .dark .input-premium:focus { border-color: #71717A; box-shadow: 0 0 0 1px #71717A; }
-        
-        input::placeholder { color: #A1A1AA; font-weight: 400; }
-        .dark input::placeholder { color: #52525B; }
+        /* Mobile Nav Styles */
+        .mobile-nav { color: #9CA3AF; transition: all 0.2s ease; position: relative; }
+        .mobile-nav.active { color: #5D5FEF; font-weight: 600; }
+        .dark .mobile-nav.active { color: #818CF8; }
+        .mobile-nav.active::after {
+            content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+            width: 24px; height: 3px; background-color: #5D5FEF; border-radius: 4px;
+        }
+        .dark .mobile-nav.active::after { background-color: #818CF8; }
+
+        .input-premium { background-color: #F3F4F6; border: 1px solid transparent; transition: all 0.2s ease; color: #1F2937; }
+        .input-premium:focus { border-color: #5D5FEF; background-color: #FFFFFF; outline: none; }
+        .dark .input-premium { background-color: #1F2937; color: #F9FAFB; border-color: #374151; }
+        .dark .input-premium:focus { border-color: #818CF8; }
     </style>
 </head>
-<body class="text-zinc-800 dark:text-zinc-200 antialiased transition-colors duration-300 min-h-screen">
+<body class="text-gray-800 dark:text-gray-200 antialiased transition-colors duration-300 min-h-screen pb-24">
 
-<script>
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-    }
-</script>
-
+<!-- AREA NOTIFIKASI / MODAL TETAP SAMA FUNGSINYA, HANYA DISESUAIKAN WARNANYA -->
 <div id="toast-container" class="fixed top-6 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-3 w-11/12 max-w-sm pointer-events-none"></div>
 
 <!-- MODAL CONFIRM -->
 <div id="modal-confirm" class="fixed inset-0 z-[80] flex items-center justify-center hidden px-4">
-    <div class="absolute inset-0 bg-zinc-900/20 dark:bg-black/40 modal-overlay" onclick="AppUI.closeConfirm()"></div>
-    <div class="bg-white dark:bg-[#121212] w-full max-w-sm rounded-xl p-6 relative z-10 border border-zinc-200 dark:border-zinc-800 shadow-2xl">
-        <h3 class="font-medium text-lg text-zinc-900 dark:text-white mb-2 tracking-tight" id="confirm-title">Konfirmasi</h3>
-        <p class="text-sm text-zinc-500 dark:text-zinc-400 mb-6 leading-relaxed" id="confirm-msg">Apakah Anda yakin?</p>
+    <div class="absolute inset-0 bg-black/40 modal-overlay" onclick="AppUI.closeConfirm()"></div>
+    <div class="bg-white dark:bg-gray-800 w-full max-w-sm rounded-2xl p-6 relative z-10 shadow-2xl">
+        <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2" id="confirm-title">Konfirmasi</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-6" id="confirm-msg">Apakah Anda yakin?</p>
         <div class="flex gap-3">
-            <button onclick="AppUI.closeConfirm()" class="flex-1 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg py-2.5 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors">Batal</button>
-            <button id="btn-confirm-action" class="flex-1 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-lg py-2.5 text-sm font-medium hover:opacity-90 transition-opacity">Ya, Lanjut</button>
+            <button onclick="AppUI.closeConfirm()" class="flex-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl py-3 text-sm font-semibold hover:bg-gray-200 transition-colors">Batal</button>
+            <button id="btn-confirm-action" class="flex-1 bg-brand text-white rounded-xl py-3 text-sm font-semibold hover:bg-brand-dark transition-colors">Ya, Lanjut</button>
         </div>
     </div>
 </div>
 
-<!-- MODAL ANGGARAN -->
-<div id="modal-set-budget" class="fixed inset-0 z-[60] flex items-center justify-center hidden px-4">
-    <div class="absolute inset-0 bg-zinc-900/20 dark:bg-black/40 modal-overlay" onclick="AppUI.closeModal('modal-set-budget')"></div>
-    <div class="bg-white dark:bg-[#121212] w-full max-w-md rounded-xl p-6 relative z-10 border border-zinc-200 dark:border-zinc-800 shadow-2xl">
-        <h3 class="font-medium text-lg tracking-tight text-zinc-900 dark:text-white mb-1">Atur Anggaran</h3>
-        <p class="text-xs text-zinc-500 dark:text-zinc-400 mb-6">Batas pengeluaran bulanan per kategori.</p>
-        <form id="form-set-budget" class="space-y-5">
-            <div class="relative custom-select z-50" id="budget-category-select">
-                <label class="block text-[11px] font-medium text-zinc-500 mb-1.5 uppercase tracking-wider">Kategori</label>
-                <div class="w-full input-premium text-zinc-900 dark:text-white text-sm rounded-lg px-3.5 py-2.5 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('budget-category-select')">
-                    <div class="flex items-center gap-2 min-w-0" id="budget-category-display"><span>Makanan</span></div>
-                    <svg class="w-4 h-4 text-zinc-400 caret-icon transition-transform shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-                </div>
-                <div class="custom-select-options absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-lg overflow-hidden z-[100] max-h-48 overflow-y-auto custom-scrollbar"></div>
-                <input type="hidden" id="input-budget-category" value="Makanan">
-            </div>
-            <div>
-                <label class="block text-[11px] font-medium text-zinc-500 mb-1.5 uppercase tracking-wider">Batas (Rp)</label>
-                <input type="text" inputmode="numeric" id="input-budget-limit" placeholder="Cth: 1.000.000" required class="currency-input w-full input-premium tabular-nums text-zinc-900 dark:text-white text-base rounded-lg px-3.5 py-2.5">
-            </div>
-            <div class="flex gap-3 pt-4 border-t border-zinc-100 dark:border-zinc-800">
-                <button type="button" id="btn-delete-budget" onclick="BudgetManager.deleteCurrent()" class="hidden flex-1 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-900/50 rounded-lg py-2.5 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">Hapus</button>
-                <button type="button" onclick="AppUI.closeModal('modal-set-budget')" class="flex-1 border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg py-2.5 text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors">Batal</button>
-                <button type="submit" class="flex-[1.5] bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-lg py-2.5 font-medium hover:opacity-90 transition-opacity text-sm">Simpan</button>
-            </div>
-        </form>
-    </div>
-</div>
+<!-- KONTEN UTAMA -->
+<div class="w-full max-w-md mx-auto relative min-h-screen flex flex-col">
 
-<!-- MODAL KALENDER -->
-<div id="modal-datepicker" class="fixed inset-0 z-[70] flex items-center justify-center hidden px-4">
-    <div class="absolute inset-0 bg-zinc-900/20 dark:bg-black/40 modal-overlay" onclick="AppUI.closeModal('modal-datepicker')"></div>
-    <div class="bg-white dark:bg-[#121212] w-full max-w-sm rounded-xl p-6 relative z-10 border border-zinc-200 dark:border-zinc-800 shadow-2xl">
+    <!-- VIEW: BERANDA (HOME) -->
+    <section id="view-dashboard" class="view-section active flex-1 px-5 pt-8">
+        
+        <!-- Header -->
         <div class="flex justify-between items-center mb-6">
-            <button onclick="CalendarManager.changeMonth(-1)" class="w-8 h-8 rounded border border-zinc-200 dark:border-zinc-700 flex items-center justify-center hover:bg-zinc-50 dark:hover:bg-zinc-800"><svg class="w-4 h-4 text-zinc-600 dark:text-zinc-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg></button>
-            <h3 id="cal-month-year" class="font-medium text-zinc-900 dark:text-white text-sm tracking-tight truncate px-2">Bulan Tahun</h3>
-            <button onclick="CalendarManager.changeMonth(1)" class="w-8 h-8 rounded border border-zinc-200 dark:border-zinc-700 flex items-center justify-center hover:bg-zinc-50 dark:hover:bg-zinc-800"><svg class="w-4 h-4 text-zinc-600 dark:text-zinc-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button>
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Halo, Andi</h1>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Semoga harimu menyenangkan!</p>
+            </div>
+            <div onclick="AppUI.switchTab('settings')" class="w-11 h-11 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center cursor-pointer hover:opacity-80 transition">
+                <svg class="w-6 h-6 text-gray-500 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </div>
         </div>
-        <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-medium text-zinc-400 uppercase tracking-widest mb-3">
-            <div>MIN</div><div>SEN</div><div>SEL</div><div>RAB</div><div>KAM</div><div>JUM</div><div>SAB</div>
-        </div>
-        <div id="cal-days" class="grid grid-cols-7 gap-1 text-center tabular-nums"></div>
-        <div class="mt-6 flex gap-3">
-            <button onclick="AppUI.closeModal('modal-datepicker')" class="flex-1 py-2.5 border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 rounded-lg font-medium text-sm">Batal</button>
-            <button onclick="CalendarManager.setToday()" class="flex-1 py-2.5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-lg font-medium text-sm">Hari Ini</button>
-        </div>
-    </div>
-</div>
 
-<!-- MODAL TARGET BARU -->
-<div id="modal-set-goal" class="fixed inset-0 z-[60] flex items-center justify-center hidden px-4">
-    <div class="absolute inset-0 bg-zinc-900/20 dark:bg-black/40 modal-overlay" onclick="AppUI.closeModal('modal-set-goal')"></div>
-    <div class="bg-white dark:bg-[#121212] w-full max-w-md rounded-xl p-6 relative z-10 border border-zinc-200 dark:border-zinc-800 shadow-2xl">
-        <h3 class="font-medium text-lg tracking-tight text-zinc-900 dark:text-white mb-6">Target Impian Baru</h3>
-        <form id="form-set-goal" class="space-y-5">
-            <div>
-                <label class="block text-[11px] font-medium text-zinc-500 mb-1.5 uppercase tracking-wider">Nama Impian</label>
-                <input type="text" id="input-goal-name" placeholder="Cth: Dana Darurat" required class="w-full input-premium text-zinc-900 dark:text-white text-sm rounded-lg px-3.5 py-2.5">
-            </div>
-            <div>
-                <label class="block text-[11px] font-medium text-zinc-500 mb-1.5 uppercase tracking-wider">Target Dana (Rp)</label>
-                <input type="text" inputmode="numeric" id="input-goal-target" placeholder="10.000.000" required class="currency-input tabular-nums w-full input-premium text-zinc-900 dark:text-white text-base rounded-lg px-3.5 py-2.5">
-            </div>
-            <div class="flex gap-3 pt-4 border-t border-zinc-100 dark:border-zinc-800">
-                <button type="button" onclick="AppUI.closeModal('modal-set-goal')" class="flex-1 border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 font-medium rounded-lg py-2.5 text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors">Batal</button>
-                <button type="submit" class="flex-1 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-medium rounded-lg py-2.5 hover:opacity-90 transition-opacity text-sm">Simpan</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- MODAL ISI TABUNGAN -->
-<div id="modal-add-savings" class="fixed inset-0 z-[60] flex items-center justify-center hidden px-4">
-    <div class="absolute inset-0 bg-zinc-900/20 dark:bg-black/40 modal-overlay" onclick="AppUI.closeModal('modal-add-savings')"></div>
-    <div class="bg-white dark:bg-[#121212] w-full max-w-md rounded-xl p-6 relative z-10 border border-zinc-200 dark:border-zinc-800 shadow-2xl">
-        <h3 class="font-medium text-lg tracking-tight text-zinc-900 dark:text-white mb-6 truncate" id="modal-add-savings-title">Isi Tabungan</h3>
-        <form id="form-add-savings" class="space-y-5">
-            <input type="hidden" id="input-savings-id">
-            <div>
-                <label class="block text-[11px] font-medium text-zinc-500 mb-1.5 uppercase tracking-wider">Nominal (Rp)</label>
-                <input type="text" inputmode="numeric" id="input-add-savings" placeholder="100.000" required class="currency-input tabular-nums w-full input-premium text-zinc-900 dark:text-white text-lg rounded-lg px-3.5 py-2.5">
-            </div>
-            <div>
-                <label class="block text-[11px] font-medium text-zinc-500 mb-2 uppercase tracking-wider">Sumber Dana</label>
-                <div class="flex gap-3">
-                    <label class="flex-1 cursor-pointer">
-                        <input type="radio" name="savings-source" value="external" class="peer hidden" checked>
-                        <div class="text-center py-2 rounded border border-zinc-200 dark:border-zinc-700 text-sm font-medium peer-checked:border-zinc-900 dark:peer-checked:border-white peer-checked:text-zinc-900 dark:peer-checked:text-white text-zinc-500 transition-all">Dana Luar</div>
-                    </label>
-                    <label class="flex-1 cursor-pointer">
-                        <input type="radio" name="savings-source" value="balance" class="peer hidden">
-                        <div class="text-center py-2 rounded border border-zinc-200 dark:border-zinc-700 text-sm font-medium peer-checked:border-zinc-900 dark:peer-checked:border-white peer-checked:text-zinc-900 dark:peer-checked:text-white text-zinc-500 transition-all">Potong Saldo</div>
-                    </label>
+        <!-- Kartu Total Saldo (Bisa di-custom fotonya) -->
+        <div id="main-balance-card" class="card-gradient rounded-3xl p-6 text-white mb-6 shadow-floating bg-cover bg-center transition-all duration-300">
+            <div class="flex justify-between items-start mb-2 relative z-10">
+                <div class="flex items-center gap-2">
+                    <span class="text-sm font-medium text-white/90">Total saldo</span>
+                    <svg class="w-4 h-4 text-white/80" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                 </div>
             </div>
-            <div id="savings-wallet-wrapper">
-                <div class="flex gap-3 mt-1">
-                    <label class="cursor-pointer flex-1">
-                        <input type="radio" name="savings-wallet" value="cash" class="peer hidden" checked>
-                        <div class="text-center py-2 rounded border border-zinc-200 dark:border-zinc-700 text-sm font-medium peer-checked:bg-zinc-100 dark:peer-checked:bg-zinc-800 peer-checked:text-zinc-900 dark:peer-checked:text-white text-zinc-500 transition-all">Cash</div>
-                    </label>
-                    <label class="cursor-pointer flex-1">
-                        <input type="radio" name="savings-wallet" value="bank" class="peer hidden">
-                        <div class="text-center py-2 rounded border border-zinc-200 dark:border-zinc-700 text-sm font-medium peer-checked:bg-zinc-100 dark:peer-checked:bg-zinc-800 peer-checked:text-zinc-900 dark:peer-checked:text-white text-zinc-500 transition-all">Rekening</div>
-                    </label>
+            <h2 class="text-[32px] font-bold tracking-tight mb-4 relative z-10 tabular-nums" id="dash-balance">Rp 0</h2>
+            <div class="flex justify-between items-center relative z-10">
+                <span class="text-sm font-medium text-white/90 flex items-center gap-1 cursor-pointer">Bulan ini <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></span>
+                <div class="bg-emerald-400/20 text-emerald-300 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 border border-emerald-400/30">
+                    ▲ +12%
                 </div>
             </div>
-            <div class="flex gap-3 pt-4 border-t border-zinc-100 dark:border-zinc-800">
-                <button type="button" onclick="AppUI.closeModal('modal-add-savings')" class="flex-1 border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 font-medium rounded-lg py-2.5 text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors">Batal</button>
-                <button type="submit" class="flex-1 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-medium rounded-lg py-2.5 hover:opacity-90 transition-opacity text-sm">Simpan</button>
-            </div>
-        </form>
-    </div>
-</div>
+        </div>
 
-<!-- MODAL TAMBAH TAGIHAN -->
-<div id="modal-add-bill" class="fixed inset-0 z-[60] flex items-center justify-center hidden px-4">
-    <div class="absolute inset-0 bg-zinc-900/20 dark:bg-black/40 modal-overlay" onclick="AppUI.closeModal('modal-add-bill')"></div>
-    <div class="bg-white dark:bg-[#121212] w-full max-w-md rounded-xl p-6 relative z-10 border border-zinc-200 dark:border-zinc-800 shadow-2xl">
-        <h3 class="font-medium text-lg tracking-tight text-zinc-900 dark:text-white mb-6">Tagihan Rutin</h3>
-        <form id="add-bill-form" class="space-y-4">
-            <div>
-                <label class="block text-[11px] font-medium text-zinc-500 mb-1.5 uppercase tracking-wider">Nama Tagihan</label>
-                <input type="text" id="bill-name" placeholder="Cth: Internet, Kos" required class="w-full input-premium text-zinc-900 dark:text-white text-sm rounded-lg px-3.5 py-2.5">
+        <!-- Ringkasan Pemasukan & Pengeluaran -->
+        <div class="grid grid-cols-2 gap-4 mb-8">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-soft">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-500">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    </div>
+                    <span class="text-xs text-gray-500 dark:text-gray-400 font-medium">Pemasukan</span>
+                </div>
+                <h3 class="font-bold text-gray-900 dark:text-white text-base tabular-nums truncate" id="wallet-income">Rp 0</h3>
+                <p class="text-[10px] mt-1 text-gray-400 flex items-center gap-1"><span class="text-emerald-500 font-bold">↑ +8%</span> dari bulan lalu</p>
             </div>
+            <div class="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-soft">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-full bg-red-50 dark:bg-red-900/30 flex items-center justify-center text-red-500">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                    </div>
+                    <span class="text-xs text-gray-500 dark:text-gray-400 font-medium">Pengeluaran</span>
+                </div>
+                <h3 class="font-bold text-gray-900 dark:text-white text-base tabular-nums truncate" id="wallet-expense">Rp 0</h3>
+                <p class="text-[10px] mt-1 text-gray-400 flex items-center gap-1"><span class="text-emerald-500 font-bold">↓ -12%</span> dari bulan lalu</p>
+            </div>
+        </div>
+
+        <!-- Aktivitas Terbaru -->
+        <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-soft mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-bold text-gray-900 dark:text-white text-lg">Aktivitas terbaru</h3>
+                <button onclick="AppUI.switchTab('history')" class="text-brand dark:text-brand-light text-sm font-semibold flex items-center gap-1">Lihat semua <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button>
+            </div>
+            <div id="dash-empty" class="hidden flex-col items-center justify-center py-6">
+                <p class="text-sm text-gray-400">Belum ada transaksi.</p>
+            </div>
+            <div id="dash-recent-list" class="flex flex-col gap-5"></div>
+        </div>
+    </section>
+
+    <!-- VIEW: TRANSAKSI (HISTORY) -->
+    <section id="view-history" class="view-section flex-1 px-5 pt-8">
+        
+        <!-- Header Transaksi -->
+        <div class="card-gradient rounded-3xl p-6 text-white mb-6 shadow-floating flex justify-between items-center">
+            <h1 class="text-3xl font-bold">Transaksi</h1>
+            <button onclick="Utils.toggleAdvancedFilter()" id="btn-toggle-filter" class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm hover:bg-white/30 transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+            </button>
+        </div>
+
+        <!-- Filter Panel (Tersembunyi by default) -->
+        <div id="advanced-filter-panel" class="hidden mb-6 bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-soft">
+            <input type="text" id="filter-search" placeholder="Cari catatan..." class="w-full input-premium text-sm rounded-xl px-4 py-3 mb-3">
+            <div class="grid grid-cols-2 gap-3">
+                <select id="filter-type-value" onchange="TransactionManager.renderHistory()" class="w-full input-premium text-sm rounded-xl px-3 py-2 outline-none">
+                    <option value="all">Semua Tipe</option>
+                    <option value="income">Pemasukan</option>
+                    <option value="expense">Pengeluaran</option>
+                </select>
+                <select id="filter-period-value" onchange="TransactionManager.renderHistory()" class="w-full input-premium text-sm rounded-xl px-3 py-2 outline-none">
+                    <option value="all">Semua Waktu</option>
+                    <option value="this_month">Bulan Ini</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Rekap Bulan Ini di halaman Transaksi -->
+        <div class="flex gap-4 mb-6">
+            <div class="flex-1 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl p-4 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-800/50 flex items-center justify-center text-emerald-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg></div>
+                <div class="font-bold text-emerald-600 dark:text-emerald-400 text-sm tabular-nums" id="history-income-total">Rp 0</div>
+            </div>
+            <div class="flex-1 bg-red-50 dark:bg-red-900/20 rounded-2xl p-4 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-800/50 flex items-center justify-center text-red-600"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg></div>
+                <div class="font-bold text-red-600 dark:text-red-400 text-sm tabular-nums" id="history-expense-total">Rp 0</div>
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white" id="history-month-title">Bulan Ini</h2>
+        </div>
+
+        <div id="history-empty" class="hidden flex-col items-center justify-center py-10">
+            <p class="text-sm text-gray-400">Tidak ada riwayat transaksi.</p>
+        </div>
+        
+        <div id="history-list" class="flex flex-col gap-6 pb-24"></div>
+
+        <!-- Float Button Tambah Transaksi -->
+        <div class="fixed bottom-24 left-1/2 -translate-x-1/2 w-full max-w-md px-5 z-40">
+            <button onclick="AppUI.switchTab('add')" class="w-full bg-brand text-white rounded-2xl py-4 font-bold text-base shadow-floating flex justify-center items-center gap-2 hover:bg-brand-dark transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                Tambah transaksi
+            </button>
+        </div>
+    </section>
+
+    <!-- VIEW: BUDGET (Dulu Wallet, dirombak jadi halaman Budget) -->
+    <section id="view-wallet" class="view-section flex-1 px-5 pt-8 pb-20">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Budget</h1>
+            <div class="bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-2">
+                Bulan Ini <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </div>
+        </div>
+
+        <!-- Main Budget Card -->
+        <div class="card-gradient rounded-3xl p-6 text-white mb-6 shadow-floating flex items-center">
+            <div class="flex-1 border-r border-white/20 pr-4">
+                <p class="text-xs text-white/80 mb-1">Terpakai</p>
+                <h3 class="text-2xl font-bold tabular-nums mb-1" id="budget-total-used">Rp 0</h3>
+                <p class="text-[10px] text-white/70 mb-3" id="budget-total-limit">dari Rp 0</p>
+                <div class="w-full bg-white/20 rounded-full h-1.5">
+                    <div class="bg-white h-1.5 rounded-full" id="budget-total-bar" style="width: 0%"></div>
+                </div>
+                <p class="text-[10px] text-right mt-1 font-bold" id="budget-total-percent">0%</p>
+            </div>
+            <div class="flex-1 pl-4 relative">
+                <div class="absolute top-0 right-0 w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/></svg>
+                </div>
+                <p class="text-xs text-white/80 mb-1 mt-6">Sisa budget</p>
+                <h3 class="text-lg font-bold tabular-nums" id="budget-total-remain">Rp 0</h3>
+            </div>
+        </div>
+
+        <div id="dashboard-budgets-list" class="flex flex-col gap-4 mb-6"></div>
+
+        <button onclick="AppUI.openModal('modal-set-budget')" class="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl py-4 font-bold text-base flex justify-center items-center gap-2 hover:opacity-90 transition shadow-soft">
+            Atur budget <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </button>
+    </section>
+
+    <!-- VIEW: TAMBAH TRANSAKSI -->
+    <section id="view-add" class="view-section flex-1 px-5 pt-8">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Tambah Catatan</h2>
+        <form id="add-form" class="space-y-6 bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-soft">
+            <!-- Tab Toggle -->
+            <div class="flex bg-gray-100 dark:bg-gray-700 rounded-xl p-1 relative">
+                <label class="flex-1 text-center py-2 text-sm font-semibold cursor-pointer z-10 text-gray-500 peer-checked:text-gray-900 transition has-[:checked]:text-white">
+                    <input type="radio" name="tx-type" value="expense" class="peer hidden" checked onchange="Utils.updateAddFormStyle()">
+                    Pengeluaran
+                </label>
+                <label class="flex-1 text-center py-2 text-sm font-semibold cursor-pointer z-10 text-gray-500 peer-checked:text-gray-900 transition has-[:checked]:text-white">
+                    <input type="radio" name="tx-type" value="income" class="peer hidden" onchange="Utils.updateAddFormStyle()">
+                    Pemasukan
+                </label>
+                <div id="add-tab-bg" class="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-brand rounded-lg transition-all duration-300 z-0"></div>
+            </div>
+            
+            <div>
+                <label class="block text-xs font-bold text-gray-500 mb-2">Nominal</label>
+                <div class="flex items-center input-premium rounded-xl px-4 py-3">
+                    <span class="text-gray-500 font-bold mr-2">Rp</span>
+                    <input type="text" inputmode="numeric" id="input-amount" placeholder="0" required class="w-full bg-transparent text-xl font-bold outline-none tabular-nums text-gray-900 dark:text-white">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-gray-500 mb-2">Kategori</label>
+                <select id="input-category" class="w-full input-premium text-sm rounded-xl px-4 py-3 font-semibold appearance-none outline-none"></select>
+            </div>
+
             <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block text-[11px] font-medium text-zinc-500 mb-1.5 uppercase tracking-wider">Nominal (Rp)</label>
-                    <input type="text" inputmode="numeric" id="bill-amount" placeholder="0" required class="currency-input tabular-nums w-full input-premium text-zinc-900 dark:text-white text-sm rounded-lg px-3.5 py-2.5">
+                    <label class="block text-xs font-bold text-gray-500 mb-2">Tanggal</label>
+                    <input type="date" id="input-date" required class="w-full input-premium text-sm rounded-xl px-4 py-3 outline-none font-semibold">
                 </div>
                 <div>
-                    <label class="block text-[11px] font-medium text-zinc-500 mb-1.5 uppercase tracking-wider">Tgl Jatuh Tempo</label>
-                    <input type="number" id="bill-date" placeholder="1-31" min="1" max="31" required class="w-full input-premium tabular-nums text-zinc-900 dark:text-white text-sm rounded-lg px-3.5 py-2.5">
+                    <label class="block text-xs font-bold text-gray-500 mb-2">Dompet</label>
+                    <select id="input-wallet" class="w-full input-premium text-sm rounded-xl px-4 py-3 font-semibold appearance-none outline-none">
+                        <option value="cash">Tunai</option>
+                        <option value="bank">Rekening</option>
+                    </select>
                 </div>
             </div>
-            <div class="relative custom-select z-50" id="bill-category-select">
-                <label class="block text-[11px] font-medium text-zinc-500 mb-1.5 uppercase tracking-wider">Kategori</label>
-                <div class="w-full input-premium text-zinc-900 dark:text-white text-sm rounded-lg px-3.5 py-2.5 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('bill-category-select')">
-                    <div class="flex items-center gap-2 min-w-0" id="bill-category-display"><span>Tagihan</span></div>
-                    <svg class="w-4 h-4 text-zinc-400 caret-icon transition-transform shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-                </div>
-                <div class="custom-select-options absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-lg overflow-hidden z-[100] max-h-48 overflow-y-auto custom-scrollbar"></div>
-                <input type="hidden" id="bill-category-value" value="Tagihan">
+
+            <div>
+                <label class="block text-xs font-bold text-gray-500 mb-2">Catatan Tambahan</label>
+                <input type="text" id="input-desc" placeholder="Cth: Beli kopi" required class="w-full input-premium text-sm rounded-xl px-4 py-3 outline-none">
             </div>
-            <div class="flex gap-3 pt-4 border-t border-zinc-100 dark:border-zinc-800">
-                <button type="button" onclick="AppUI.closeModal('modal-add-bill')" class="flex-1 border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 font-medium rounded-lg py-2.5 text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors">Batal</button>
-                <button type="submit" class="flex-1 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-medium rounded-lg py-2.5 hover:opacity-90 transition-opacity text-sm">Simpan</button>
-            </div>
+
+            <button type="submit" class="w-full bg-brand text-white rounded-xl py-4 font-bold text-base shadow-floating hover:bg-brand-dark transition">Simpan Transaksi</button>
         </form>
-    </div>
-</div>
+    </section>
 
-<!-- MODAL BAYAR TAGIHAN -->
-<div id="modal-pay-bill" class="fixed inset-0 z-[60] flex items-center justify-center hidden px-4">
-    <div class="absolute inset-0 bg-zinc-900/20 dark:bg-black/40 modal-overlay" onclick="AppUI.closeModal('modal-pay-bill')"></div>
-    <div class="bg-white dark:bg-[#121212] w-full max-w-sm rounded-xl p-6 relative z-10 border border-zinc-200 dark:border-zinc-800 text-center shadow-2xl">
-        <h3 class="font-medium text-sm text-zinc-500 dark:text-zinc-400 mb-2 tracking-wide uppercase" id="pay-bill-name">Bayar Tagihan?</h3>
-        <p class="text-3xl font-light tracking-tight text-zinc-900 dark:text-white mb-6 truncate tabular-nums" id="pay-bill-amount">Rp 0</p>
-        <div class="mb-6 text-left">
-            <label class="block text-[11px] font-medium text-zinc-500 mb-2.5 uppercase tracking-wider text-center">Sumber Dana</label>
-            <div class="flex gap-3 justify-center">
-                <label class="cursor-pointer flex-1 max-w-[120px]">
-                    <input type="radio" name="pay-bill-wallet" value="cash" class="peer hidden" checked>
-                    <div class="text-center py-2 rounded border border-zinc-200 dark:border-zinc-700 text-sm font-medium peer-checked:bg-zinc-100 dark:peer-checked:bg-zinc-800 peer-checked:text-zinc-900 dark:peer-checked:text-white text-zinc-500 transition-all">Cash</div>
-                </label>
-                <label class="cursor-pointer flex-1 max-w-[120px]">
-                    <input type="radio" name="pay-bill-wallet" value="bank" class="peer hidden">
-                    <div class="text-center py-2 rounded border border-zinc-200 dark:border-zinc-700 text-sm font-medium peer-checked:bg-zinc-100 dark:peer-checked:bg-zinc-800 peer-checked:text-zinc-900 dark:peer-checked:text-white text-zinc-500 transition-all">Rekening</div>
-                </label>
-            </div>
-        </div>
-        <div class="flex gap-3 pt-4 border-t border-zinc-100 dark:border-zinc-800">
-            <button onclick="AppUI.closeModal('modal-pay-bill')" class="flex-1 border border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 font-medium rounded-lg py-2.5 text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors">Batal</button>
-            <button id="btn-confirm-pay" class="flex-1 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-medium rounded-lg py-2.5 hover:opacity-90 transition-opacity text-sm">Lunasi</button>
-        </div>
-    </div>
-</div>
-
-<!-- ================= WRAPPER UTAMA ================= -->
-<div class="flex w-full min-h-screen">
-
-    <!-- SIDEBAR DESKTOP -->
-    <aside class="hidden md:flex flex-col w-[260px] bg-[#F7F7F5] dark:bg-[#0A0A0A] border-r border-zinc-200 dark:border-zinc-800/50 z-50 fixed left-0 top-0 h-full">
-        <div class="px-8 py-8 flex items-center gap-3 shrink-0">
-            <div class="w-8 h-8 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 flex items-center justify-center shrink-0 rounded">
-                <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
-            </div>
-            <h1 class="text-sm font-semibold tracking-wide text-zinc-900 dark:text-zinc-100 uppercase">Keuanganku</h1>
-        </div>
-
-        <nav class="flex-grow py-4 flex flex-col gap-1 overflow-y-auto custom-scrollbar">
-            <button onclick="AppUI.switchTab('dashboard')" class="nav-btn nav-btn-dashboard desktop-nav w-full flex items-center gap-4 px-8 py-3 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors text-sm active">
-                <span class="truncate">Overview</span>
-            </button>
-            <button onclick="AppUI.switchTab('wallet')" class="nav-btn nav-btn-wallet desktop-nav w-full flex items-center gap-4 px-8 py-3 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors text-sm">
-                <span class="truncate">Wallets & Budget</span>
-            </button>
-            <button onclick="AppUI.switchTab('recap')" class="nav-btn nav-btn-recap desktop-nav w-full flex items-center gap-4 px-8 py-3 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors text-sm">
-                <span class="truncate">Monthly Recap</span>
-            </button>
-            <button onclick="AppUI.switchTab('history')" class="nav-btn nav-btn-history desktop-nav w-full flex items-center gap-4 px-8 py-3 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors text-sm">
-                <span class="truncate">Transactions</span>
-            </button>
-            <button onclick="AppUI.switchTab('goals')" class="nav-btn nav-btn-goals desktop-nav w-full flex items-center gap-4 px-8 py-3 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors text-sm">
-                <span class="truncate">Savings Goals</span>
-            </button>
-        </nav>
+    <!-- VIEW: PROFIL & SETTINGS (Custom Gambar Disini) -->
+    <section id="view-settings" class="view-section flex-1 px-5 pt-8">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Profil & Pengaturan</h2>
         
-        <div class="p-6 shrink-0 border-t border-zinc-200 dark:border-zinc-800/50">
-            <button onclick="AppUI.switchTab('add')" class="w-full bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-medium rounded-lg py-3 hover:bg-zinc-800 dark:hover:bg-white transition-colors flex justify-center items-center gap-2 text-sm shadow-sm">
-                <span>+ New Transaction</span>
-            </button>
-        </div>
-    </aside>
+        <div class="bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-soft space-y-6">
+            
+            <div>
+                <h3 class="font-bold text-gray-900 dark:text-white text-base mb-3">Tampilan Beranda</h3>
+                <label class="block text-xs font-bold text-gray-500 mb-2">URL Gambar Latar Kartu Saldo (Opsional)</label>
+                <input type="text" id="input-bg-url" placeholder="https://..." class="w-full input-premium text-sm rounded-xl px-4 py-3 outline-none mb-2">
+                <button onclick="CustomBgManager.save()" class="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 rounded-lg text-xs font-bold hover:bg-gray-200 transition">Terapkan Gambar</button>
+            </div>
 
-    <!-- MAIN CONTENT AREA -->
-    <div class="md:ml-[260px] flex flex-col flex-1 min-w-0 min-h-screen bg-white dark:bg-[#121212]">
-        
-        <!-- HEADER (FIXED: Agar tidak ikut ke-scroll) -->
-        <header class="fixed top-0 left-0 right-0 md:left-[260px] z-40 bg-white/90 dark:bg-[#121212]/90 backdrop-blur-md px-4 py-4 md:px-8 flex items-center justify-between border-b border-zinc-100 dark:border-zinc-800/50 transition-colors">
-            <div class="flex items-center gap-3 md:hidden min-w-0">
-                <div class="w-8 h-8 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 flex items-center justify-center shrink-0 rounded">
-                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
+            <hr class="border-gray-100 dark:border-gray-700">
+
+            <div>
+                <h3 class="font-bold text-gray-900 dark:text-white text-base mb-3">Manajemen Data</h3>
+                <div class="flex gap-2">
+                    <button onclick="LocalDB.hardReset()" class="flex-1 bg-red-50 text-red-600 px-4 py-3 rounded-xl text-sm font-bold hover:bg-red-100 transition">Reset Semua Data</button>
                 </div>
-                <h1 class="text-sm font-semibold tracking-wide text-zinc-900 dark:text-zinc-100 uppercase truncate">Keuanganku</h1>
             </div>
             
-            <div class="hidden md:block min-w-0"><h2 id="desktop-page-title" class="text-sm font-medium tracking-wide text-zinc-500 uppercase">Overview</h2></div>
+            <hr class="border-gray-100 dark:border-gray-700">
             
-            <div class="flex items-center gap-3 shrink-0">
-                <button onclick="ThemeManager.toggle()" class="text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">
-                    <svg class="w-5 h-5 shrink-0 dark:hidden" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-                    <svg class="w-5 h-5 shrink-0 hidden dark:block" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                </button>
-                <button onclick="AppUI.switchTab('settings')" class="text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">
-                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <div class="flex items-center justify-between">
+                <span class="font-bold text-sm text-gray-900 dark:text-white">Mode Gelap</span>
+                <button onclick="ThemeManager.toggle()" class="w-12 h-6 bg-gray-200 dark:bg-brand rounded-full relative transition-colors">
+                    <div class="w-4 h-4 bg-white rounded-full absolute top-1 transition-all left-1 dark:translate-x-6"></div>
                 </button>
             </div>
-        </header>
+        </div>
+    </section>
 
-        <!-- AREA KONTEN UTAMA -->
-        <main class="flex-1 px-4 sm:px-8 pt-24 sm:pt-28 pb-24 md:pb-12 w-full min-w-0 max-w-4xl mx-auto">
-            
-            <!-- ==================== VIEW: BERANDA ==================== -->
-            <section id="view-dashboard" class="view-section active">
-
-                <div id="reminder-banner" class="hidden mb-8 border border-red-200 dark:border-red-900/50 bg-red-50/50 dark:bg-red-900/10 rounded-lg p-4 flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div class="flex items-center gap-3 min-w-0">
-                        <svg class="w-5 h-5 shrink-0 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                        <div class="min-w-0 flex-1"><h4 class="font-medium text-sm text-red-900 dark:text-red-300 tracking-tight truncate">Tagihan Menunggu</h4><p class="text-xs text-red-700 dark:text-red-400 truncate mt-0.5" id="reminder-text">Ada tagihan rutin yang harus dibayar.</p></div>
-                    </div>
-                    <button onclick="AppUI.switchTab('wallet')" class="shrink-0 bg-red-600 text-white font-medium text-xs px-4 py-2 rounded border border-transparent hover:bg-red-700 transition-colors">Review Bills</button>
-                </div>
-
-                <!-- Balance Header -->
-                <div class="pt-2 pb-10 border-b border-zinc-100 dark:border-zinc-800/50 mb-10">
-                    <p class="text-[11px] font-medium text-zinc-500 uppercase tracking-widest mb-2">Total Available Balance</p>
-                    <h2 class="text-4xl md:text-5xl font-light tracking-tight text-zinc-900 dark:text-white tabular-nums" id="dash-balance">Rp 0</h2>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-10">
-                    <!-- Left Col (Transactions) -->
-                    <div class="md:col-span-7">
-                        <div class="flex justify-between items-end mb-4">
-                            <h3 class="font-medium text-zinc-900 dark:text-white text-sm uppercase tracking-wide">Recent Activity</h3>
-                            <button onclick="AppUI.switchTab('history')" class="text-xs font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors">View All</button>
-                        </div>
-                        
-                        <div id="dash-empty" class="hidden flex-col items-center justify-center py-12 border-t border-zinc-100 dark:border-zinc-800/50">
-                            <p class="text-sm text-zinc-400">No recent transactions.</p>
-                        </div>
-                        
-                        <div id="dash-recent-list" class="flex flex-col min-w-0 border-t border-zinc-100 dark:border-zinc-800/50"></div>
-                    </div>
-
-                    <!-- Right Col (Summary Goals/Budgets) -->
-                    <div class="md:col-span-5 space-y-10">
-                        <!-- Targets/Goals -->
-                        <div>
-                            <div class="flex justify-between items-end mb-4">
-                                <h3 class="font-medium text-zinc-900 dark:text-white text-sm uppercase tracking-wide">Savings Goals</h3>
-                                <button onclick="AppUI.switchTab('goals')" class="text-xs font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors">Manage</button>
-                            </div>
-                            <div id="dash-goals-summary" class="border-t border-zinc-100 dark:border-zinc-800/50 pt-2 flex flex-col min-w-0"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ==================== VIEW: DOMPET ==================== -->
-            <section id="view-wallet" class="view-section">
-                
-                <!-- Rincian Saldo -->
-                <div class="grid grid-cols-2 gap-px bg-zinc-200 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden mb-10">
-                    <div class="bg-white dark:bg-[#121212] p-6 flex flex-col justify-center">
-                        <p class="text-[10px] font-medium text-zinc-500 uppercase tracking-widest mb-1.5 truncate">Uang Tunai</p>
-                        <p class="text-xl font-medium text-zinc-900 dark:text-white truncate tabular-nums" id="wallet-cash">Rp 0</p>
-                    </div>
-                    <div class="bg-white dark:bg-[#121212] p-6 flex flex-col justify-center">
-                        <p class="text-[10px] font-medium text-zinc-500 uppercase tracking-widest mb-1.5 truncate">Di Rekening</p>
-                        <p class="text-xl font-medium text-zinc-900 dark:text-white truncate tabular-nums" id="wallet-bank">Rp 0</p>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-10">
-                    <!-- Arus Kas -->
-                    <div>
-                        <h3 class="font-medium text-zinc-900 dark:text-white text-sm uppercase tracking-wide mb-4">Cashflow (This Month)</h3>
-                        <div class="border-t border-zinc-100 dark:border-zinc-800/50">
-                            <div class="flex justify-between items-center py-4 border-b border-zinc-100 dark:border-zinc-800/50">
-                                <span class="text-sm text-zinc-600 dark:text-zinc-400">Income</span>
-                                <span class="text-sm font-medium text-green-700 dark:text-green-500 tabular-nums" id="wallet-income">Rp 0</span>
-                            </div>
-                            <div class="flex justify-between items-center py-4 border-b border-zinc-100 dark:border-zinc-800/50">
-                                <span class="text-sm text-zinc-600 dark:text-zinc-400">Expenses</span>
-                                <span class="text-sm font-medium text-red-700 dark:text-red-400 tabular-nums" id="wallet-expense">Rp 0</span>
-                            </div>
-                            <div class="flex justify-between items-center py-4 border-b border-zinc-100 dark:border-zinc-800/50">
-                                <span class="text-sm font-medium text-zinc-900 dark:text-white">Net Cashflow</span>
-                                <span class="text-sm font-medium tabular-nums" id="wallet-cashflow">Rp 0</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Budgets -->
-                    <div>
-                        <div class="flex justify-between items-end mb-4">
-                            <h3 class="font-medium text-zinc-900 dark:text-white text-sm uppercase tracking-wide">Budgets</h3>
-                            <button onclick="AppUI.switchTab('settings')" class="text-xs font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors">Edit Limits</button>
-                        </div>
-                        <div id="dashboard-budgets-list" class="border-t border-zinc-100 dark:border-zinc-800/50 flex flex-col min-w-0"></div>
-                    </div>
-                </div>
-
-                <!-- Tagihan Rutin -->
-                <div class="pt-4 border-t border-zinc-100 dark:border-zinc-800/50">
-                    <div class="flex justify-between items-end mb-4 min-w-0">
-                        <h3 class="font-medium text-zinc-900 dark:text-white text-sm uppercase tracking-wide truncate">Recurring Bills</h3>
-                        <button onclick="AppUI.openModal('modal-add-bill'); Utils.renderTxCategories('expense', 'bill-category-select')" class="shrink-0 text-xs font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors flex items-center gap-1"><svg class="w-3 h-3 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg> Add Bill</button>
-                    </div>
-                    <div id="bills-list-container" class="flex flex-col min-w-0 border-t border-zinc-100 dark:border-zinc-800/50"></div>
-                </div>
-            </section>
-
-            <!-- ==================== VIEW: REKAP BULANAN ==================== -->
-            <section id="view-recap" class="view-section">
-                <div class="mb-10" id="recap-analysis"></div>
-                <h3 class="font-medium text-zinc-900 dark:text-white text-sm uppercase tracking-wide mb-4">Monthly Statements</h3>
-                <div id="recap-list" class="border-t border-zinc-100 dark:border-zinc-800/50 min-w-0"></div>
-            </section>
-
-            <!-- ==================== VIEW: RIWAYAT TRANSAKSI ==================== -->
-            <section id="view-history" class="view-section">
-                
-                <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-8">
-                    <div class="relative flex-grow min-w-0">
-                        <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                        <input type="text" id="filter-search" placeholder="Search transactions..." class="w-full bg-transparent border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-sm rounded-lg pl-9 pr-3 py-2 focus:border-zinc-400 dark:focus:border-zinc-600 outline-none transition-colors">
-                    </div>
-                    <button onclick="Utils.toggleAdvancedFilter()" id="btn-toggle-filter" class="shrink-0 text-xs font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-white transition-colors flex items-center gap-1 border border-zinc-200 dark:border-zinc-800 rounded-lg px-3 py-2">
-                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg> Filters
-                    </button>
-                </div>
-                
-                <div id="advanced-filter-panel" class="hidden mb-8 min-w-0">
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 min-w-0">
-                        <div class="relative custom-select z-50 min-w-0" id="filter-period-select">
-                            <div class="w-full border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-white text-xs rounded-lg px-3 py-2.5 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('filter-period-select')"><div id="filter-period-display" class="truncate pr-1">Semua Waktu</div><svg class="w-3 h-3 text-zinc-400 caret-icon shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
-                            <div class="custom-select-options absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-lg overflow-hidden max-h-48 overflow-y-auto custom-scrollbar">
-                                <div class="px-3 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer text-xs dark:text-zinc-200" onclick="Utils.selectOption('filter-period-select', 'this_month', 'Bulan Ini')">Bulan Ini</div>
-                                <div class="px-3 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer text-xs dark:text-zinc-200" onclick="Utils.selectOption('filter-period-select', 'last_month', 'Bulan Lalu')">Bulan Lalu</div>
-                                <div class="px-3 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer text-xs dark:text-zinc-200" onclick="Utils.selectOption('filter-period-select', 'all', 'Semua Waktu')">Semua Waktu</div>
-                            </div>
-                            <input type="hidden" id="filter-period-value" value="all">
-                        </div>
-                        <div class="relative custom-select z-40 min-w-0" id="filter-type-select">
-                            <div class="w-full border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-white text-xs rounded-lg px-3 py-2.5 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('filter-type-select')"><div id="filter-type-display" class="truncate pr-1">Semua Tipe</div><svg class="w-3 h-3 text-zinc-400 caret-icon shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
-                            <div class="custom-select-options absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-lg overflow-hidden max-h-48 overflow-y-auto custom-scrollbar">
-                                <div class="px-3 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer text-xs dark:text-zinc-200" onclick="Utils.selectOption('filter-type-select', 'all', 'Semua Tipe')">Semua Tipe</div>
-                                <div class="px-3 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer text-xs dark:text-zinc-200" onclick="Utils.selectOption('filter-type-select', 'income', 'Pemasukan')">Pemasukan</div>
-                                <div class="px-3 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer text-xs dark:text-zinc-200" onclick="Utils.selectOption('filter-type-select', 'expense', 'Pengeluaran')">Pengeluaran</div>
-                                <div class="px-3 py-2 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer text-xs dark:text-zinc-200" onclick="Utils.selectOption('filter-type-select', 'transfer', 'Transfer')">Transfer</div>
-                            </div>
-                            <input type="hidden" id="filter-type-value" value="all">
-                        </div>
-                        <div class="relative custom-select z-30 min-w-0" id="filter-category-select">
-                            <div class="w-full border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-white text-xs rounded-lg px-3 py-2.5 flex items-center justify-between cursor-pointer" onclick="Utils.toggleDropdown('filter-category-select')"><div id="filter-category-display" class="truncate pr-1">Kategori</div><svg class="w-3 h-3 text-zinc-400 caret-icon shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg></div>
-                            <div class="custom-select-options absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-lg overflow-hidden max-h-48 overflow-y-auto custom-scrollbar" id="filter-category-options"></div>
-                            <input type="hidden" id="filter-category-value" value="all">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex flex-col min-w-0">
-                    <div id="history-empty" class="flex-col items-center justify-center py-16 hidden">
-                        <p class="text-sm text-zinc-400">Tidak ada riwayat yang sesuai.</p>
-                    </div>
-                    <ul id="history-list" class="flex-grow min-w-0 border-t border-zinc-100 dark:border-zinc-800/50"></ul>
-                    
-                    <div id="pagination-controls" class="hidden flex justify-between items-center py-6 mt-4 border-t border-zinc-100 dark:border-zinc-800/50">
-                        <button onclick="TransactionManager.changePage(-1)" id="btn-prev" class="px-3 py-1.5 text-xs text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 rounded disabled:opacity-40 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800 shrink-0">Prev</button>
-                        <span id="page-info" class="text-[10px] text-zinc-400 uppercase tracking-widest px-2 text-center">Hal 1/1</span>
-                        <button onclick="TransactionManager.changePage(1)" id="btn-next" class="px-3 py-1.5 text-xs text-zinc-600 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700 rounded disabled:opacity-40 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800 shrink-0">Next</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ==================== VIEW: TARGET TABUNGAN ==================== -->
-            <section id="view-goals" class="view-section">
-                
-                <div class="flex flex-col sm:flex-row justify-between sm:items-end gap-6 border-b border-zinc-100 dark:border-zinc-800/50 pb-8 mb-8">
-                    <div class="min-w-0">
-                        <p class="text-[11px] font-medium text-zinc-500 uppercase tracking-widest mb-1.5">Total Terkumpul</p>
-                        <h3 class="text-4xl font-light tracking-tight text-zinc-900 dark:text-white truncate tabular-nums" id="goals-total-saved">Rp 0</h3>
-                    </div>
-                    <button onclick="AppUI.openModal('modal-set-goal')" class="shrink-0 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-medium text-sm px-4 py-2.5 rounded-lg flex justify-center items-center gap-2 hover:opacity-90 transition-opacity"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg> Target Baru</button>
-                </div>
-                <div id="goals-list-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 min-w-0"></div>
-            </section>
-
-            <!-- ==================== VIEW: TAMBAH TRANSAKSI ==================== -->
-            <section id="view-add" class="view-section">
-                <form id="add-form" class="max-w-2xl mx-auto space-y-8 min-w-0">
-                    
-                    <!-- Clean Tab Toggle -->
-                    <div class="flex gap-4 border-b border-zinc-200 dark:border-zinc-800">
-                        <label class="cursor-pointer pb-3 px-1 border-b-2 border-transparent transition-colors has-[:checked]:border-zinc-900 dark:has-[:checked]:border-white">
-                            <input type="radio" name="tx-type" value="expense" class="peer hidden" checked>
-                            <span class="text-sm font-medium text-zinc-500 peer-checked:text-zinc-900 dark:peer-checked:text-white transition-colors">Pengeluaran</span>
-                        </label>
-                        <label class="cursor-pointer pb-3 px-1 border-b-2 border-transparent transition-colors has-[:checked]:border-zinc-900 dark:has-[:checked]:border-white">
-                            <input type="radio" name="tx-type" value="income" class="peer hidden">
-                            <span class="text-sm font-medium text-zinc-500 peer-checked:text-zinc-900 dark:peer-checked:text-white transition-colors">Pemasukan</span>
-                        </label>
-                        <label class="cursor-pointer pb-3 px-1 border-b-2 border-transparent transition-colors has-[:checked]:border-zinc-900 dark:has-[:checked]:border-white">
-                            <input type="radio" name="tx-type" value="transfer" class="peer hidden">
-                            <span class="text-sm font-medium text-zinc-500 peer-checked:text-zinc-900 dark:peer-checked:text-white transition-colors">Transfer</span>
-                        </label>
-                    </div>
-                    
-                    <div class="py-6">
-                        <label class="block text-[11px] font-medium text-zinc-400 mb-2 uppercase tracking-widest text-center">Amount</label>
-                        <div class="flex items-center justify-center border-b border-zinc-200 dark:border-zinc-800 focus-within:border-zinc-500 transition-colors max-w-sm mx-auto pb-2">
-                            <span class="text-zinc-400 text-2xl mr-2 shrink-0">Rp</span>
-                            <input type="text" inputmode="numeric" id="input-amount" placeholder="0" required class="currency-input w-full bg-transparent text-zinc-900 dark:text-white text-5xl font-light tracking-tight text-center outline-none border-none focus:ring-0 tabular-nums placeholder:text-zinc-200 dark:placeholder:text-zinc-800">
-                        </div>
-                    </div>
-
-                    <!-- KELOMPOK NORMAL -->
-                    <div id="normal-group" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div class="min-w-0">
-                            <label class="block text-[11px] font-medium text-zinc-500 mb-1.5 uppercase tracking-wider">Kategori</label>
-                            <div class="relative custom-select" id="tx-category-select">
-                                <div class="w-full input-premium text-zinc-900 dark:text-white text-sm rounded-lg px-3.5 py-2.5 flex justify-between items-center cursor-pointer" onclick="Utils.toggleDropdown('tx-category-select')">
-                                    <div class="flex items-center gap-2 min-w-0" id="tx-category-display"><span>Makanan</span></div><svg class="w-4 h-4 text-zinc-400 caret-icon transition-transform shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-                                </div>
-                                <div class="custom-select-options absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-lg overflow-hidden z-[100] max-h-48 overflow-y-auto custom-scrollbar"></div>
-                                <input type="hidden" id="input-category" value="Makanan">
-                            </div>
-                        </div>
-                        <div class="min-w-0">
-                            <label id="wallet-label" class="block text-[11px] font-medium text-zinc-500 mb-1.5 uppercase tracking-wider">Sumber Dana</label>
-                            <div class="flex gap-3">
-                                <label class="cursor-pointer flex-1">
-                                    <input type="radio" name="tx-wallet" value="cash" class="peer hidden" checked>
-                                    <div class="text-center py-2.5 rounded border border-zinc-200 dark:border-zinc-700 text-sm font-medium peer-checked:border-zinc-900 dark:peer-checked:border-white peer-checked:text-zinc-900 dark:peer-checked:text-white text-zinc-500 transition-all">Cash</div>
-                                </label>
-                                <label class="cursor-pointer flex-1">
-                                    <input type="radio" name="tx-wallet" value="bank" class="peer hidden">
-                                    <div class="text-center py-2.5 rounded border border-zinc-200 dark:border-zinc-700 text-sm font-medium peer-checked:border-zinc-900 dark:peer-checked:border-white peer-checked:text-zinc-900 dark:peer-checked:text-white text-zinc-500 transition-all">Rekening</div>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- KELOMPOK TRANSFER -->
-                    <div id="transfer-group" class="hidden grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div class="min-w-0">
-                            <label class="block text-[11px] font-medium text-zinc-500 mb-1.5 uppercase tracking-wider">Transfer Dari</label>
-                            <div class="flex gap-3">
-                                <label class="cursor-pointer flex-1">
-                                    <input type="radio" name="tf-from" value="cash" class="peer hidden" checked>
-                                    <div class="text-center py-2.5 rounded border border-zinc-200 dark:border-zinc-700 text-sm font-medium peer-checked:border-zinc-900 dark:peer-checked:border-white peer-checked:text-zinc-900 dark:peer-checked:text-white text-zinc-500 transition-all">Cash</div>
-                                </label>
-                                <label class="cursor-pointer flex-1">
-                                    <input type="radio" name="tf-from" value="bank" class="peer hidden">
-                                    <div class="text-center py-2.5 rounded border border-zinc-200 dark:border-zinc-700 text-sm font-medium peer-checked:border-zinc-900 dark:peer-checked:border-white peer-checked:text-zinc-900 dark:peer-checked:text-white text-zinc-500 transition-all">Rekening</div>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="min-w-0">
-                            <label class="block text-[11px] font-medium text-zinc-500 mb-1.5 uppercase tracking-wider">Tujuan Ke</label>
-                            <div class="flex gap-3">
-                                <label class="cursor-pointer flex-1">
-                                    <input type="radio" name="tf-to" value="cash" class="peer hidden">
-                                    <div class="text-center py-2.5 rounded border border-zinc-200 dark:border-zinc-700 text-sm font-medium peer-checked:border-zinc-900 dark:peer-checked:border-white peer-checked:text-zinc-900 dark:peer-checked:text-white text-zinc-500 transition-all">Cash</div>
-                                </label>
-                                <label class="cursor-pointer flex-1">
-                                    <input type="radio" name="tf-to" value="bank" class="peer hidden" checked>
-                                    <div class="text-center py-2.5 rounded border border-zinc-200 dark:border-zinc-700 text-sm font-medium peer-checked:border-zinc-900 dark:peer-checked:border-white peer-checked:text-zinc-900 dark:peer-checked:text-white text-zinc-500 transition-all">Rekening</div>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div class="min-w-0">
-                            <label class="block text-[11px] font-medium text-zinc-500 mb-1.5 uppercase tracking-wider">Tanggal</label>
-                            <div class="w-full input-premium text-zinc-900 dark:text-white text-sm rounded-lg px-3.5 py-2.5 flex justify-between items-center cursor-pointer" onclick="CalendarManager.open('input-date')">
-                                <span id="display-date" class="truncate pr-2">Pilih Tanggal</span><svg class="w-4 h-4 text-zinc-400 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                            </div>
-                            <input type="hidden" id="input-date" required>
-                        </div>
-                        <div class="min-w-0">
-                            <label class="block text-[11px] font-medium text-zinc-500 mb-1.5 uppercase tracking-wider">Catatan</label>
-                            <input type="text" id="input-desc" placeholder="Opsional" required class="w-full input-premium text-zinc-900 dark:text-white text-sm rounded-lg px-3.5 py-2.5">
-                        </div>
-                    </div>
-
-                    <div class="pt-4">
-                        <button type="submit" class="w-full bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-medium rounded-lg py-3.5 hover:opacity-90 transition-opacity text-sm">Save Transaction</button>
-                    </div>
-                </form>
-            </section>
-
-            <!-- ==================== VIEW: SETTINGS ==================== -->
-            <section id="view-settings" class="view-section">
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl min-w-0">
-                    <div>
-                        <h3 class="font-medium text-zinc-900 dark:text-white text-sm uppercase tracking-wide mb-4">Preferences</h3>
-                        <div class="border-t border-zinc-100 dark:border-zinc-800/50">
-                            <div class="flex justify-between items-center py-5 border-b border-zinc-100 dark:border-zinc-800/50">
-                                <div>
-                                    <h4 class="text-sm text-zinc-900 dark:text-white font-medium">Monthly Budgets</h4>
-                                    <p class="text-xs text-zinc-500 mt-0.5">Set category spending limits.</p>
-                                </div>
-                                <button onclick="AppUI.openModal('modal-set-budget'); Utils.renderTxCategories('expense', 'budget-category-select'); BudgetManager.populateModal(document.getElementById('input-budget-category').value);" class="text-xs font-medium text-zinc-500 border border-zinc-200 dark:border-zinc-700 px-3 py-1.5 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors">Manage</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <h3 class="font-medium text-zinc-900 dark:text-white text-sm uppercase tracking-wide mb-4">Data Management</h3>
-                        <div class="border-t border-zinc-100 dark:border-zinc-800/50">
-                            <div class="flex justify-between items-center py-5 border-b border-zinc-100 dark:border-zinc-800/50">
-                                <div>
-                                    <h4 class="text-sm text-zinc-900 dark:text-white font-medium">Backup & Restore</h4>
-                                    <p class="text-xs text-zinc-500 mt-0.5">Export or import JSON/CSV.</p>
-                                </div>
-                                <div class="flex gap-2">
-                                    <button onclick="BackupManager.exportJSON()" class="text-xs font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-colors">JSON</button>
-                                    <span class="text-zinc-300 dark:text-zinc-700">|</span>
-                                    <button onclick="BackupManager.exportCSV()" class="text-xs font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-colors">CSV</button>
-                                    <span class="text-zinc-300 dark:text-zinc-700">|</span>
-                                    <input type="file" id="import-file" class="hidden" accept=".json" onchange="BackupManager.importJSON(event)">
-                                    <button onclick="document.getElementById('import-file').click()" class="text-xs font-medium text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-colors">Import</button>
-                                </div>
-                            </div>
-                            
-                            <div class="flex justify-between items-center py-5 border-b border-zinc-100 dark:border-zinc-800/50">
-                                <div>
-                                    <h4 class="text-sm text-red-600 dark:text-red-500 font-medium">Reset Data</h4>
-                                    <p class="text-xs text-zinc-500 mt-0.5">Permanently delete all local data.</p>
-                                </div>
-                                <button onclick="LocalDB.hardReset()" class="text-xs font-medium text-red-600 dark:text-red-500 border border-red-200 dark:border-red-900/50 px-3 py-1.5 rounded hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">Erase All</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
 </div>
 
-<!-- BOTTOM NAV BAR HP -->
-<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-[#121212]/95 backdrop-blur-md border-t border-zinc-100 dark:border-zinc-800/50 z-50 px-2 pb-safe pt-1 flex justify-around items-center">
-    <button onclick="AppUI.switchTab('dashboard')" class="nav-btn nav-btn-dashboard mobile-nav active flex-1">
-        <svg class="w-6 h-6 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-        <svg class="w-6 h-6 shrink-0 icon-fill" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-        <span class="text-[10px] font-medium tracking-wide">Home</span>
+<!-- BOTTOM NAV BAR (Sesuai mockup: Beranda, Transaksi, Budget, Profil) -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 z-50 px-6 py-3 flex justify-between items-center shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
+    <button onclick="AppUI.switchTab('dashboard')" class="nav-btn nav-btn-dashboard mobile-nav active flex flex-col items-center gap-1 w-16">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        <span class="text-[10px] font-medium tracking-wide">Beranda</span>
     </button>
-    <button onclick="AppUI.switchTab('wallet')" class="nav-btn nav-btn-wallet mobile-nav flex-1">
-        <svg class="w-6 h-6 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2v-5zm-5 0h.01M16 12a1 1 0 11-2 0 1 1 0 012 0z"/></svg>
-        <svg class="w-6 h-6 shrink-0 icon-fill" fill="currentColor" viewBox="0 0 24 24"><path d="M21 7v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2zm-5 5h.01M16 12a1 1 0 10-2 0 1 1 0 002 0z"/></svg>
-        <span class="text-[10px] font-medium tracking-wide">Wallets</span>
+    <button onclick="AppUI.switchTab('history')" class="nav-btn nav-btn-history mobile-nav flex flex-col items-center gap-1 w-16">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+        <span class="text-[10px] font-medium tracking-wide">Transaksi</span>
     </button>
-    <button onclick="AppUI.switchTab('add')" class="nav-btn nav-btn-add mobile-nav flex-1">
-        <svg class="w-6 h-6 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-        <svg class="w-6 h-6 shrink-0 icon-fill" fill="currentColor" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-        <span class="text-[10px] font-medium tracking-wide">Add</span>
+    <button onclick="AppUI.switchTab('wallet')" class="nav-btn nav-btn-wallet mobile-nav flex flex-col items-center gap-1 w-16">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/><path stroke-linecap="round" stroke-linejoin="round" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/></svg>
+        <span class="text-[10px] font-medium tracking-wide">Budget</span>
     </button>
-    <button onclick="AppUI.switchTab('recap')" class="nav-btn nav-btn-recap mobile-nav flex-1">
-        <svg class="w-6 h-6 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-        <svg class="w-6 h-6 shrink-0 icon-fill" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-10 14H7v-6h2v6zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
-        <span class="text-[10px] font-medium tracking-wide">Recap</span>
-    </button>
-    <button onclick="AppUI.switchTab('history')" class="nav-btn nav-btn-history mobile-nav flex-1">
-        <svg class="w-6 h-6 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
-        <svg class="w-6 h-6 shrink-0 icon-fill" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-        <span class="text-[10px] font-medium tracking-wide">History</span>
+    <button onclick="AppUI.switchTab('settings')" class="nav-btn nav-btn-settings mobile-nav flex flex-col items-center gap-1 w-16">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        <span class="text-[10px] font-medium tracking-wide">Profil</span>
     </button>
 </nav>
 
-<style> @supports (padding-bottom: env(safe-area-inset-bottom)) { .pb-safe { padding-bottom: env(safe-area-inset-bottom); } } </style>
+<!-- MODAL SET BUDGET -->
+<div id="modal-set-budget" class="fixed inset-0 z-[60] flex items-center justify-center hidden px-4">
+    <div class="absolute inset-0 bg-black/40 modal-overlay" onclick="AppUI.closeModal('modal-set-budget')"></div>
+    <div class="bg-white dark:bg-gray-800 w-full max-w-sm rounded-3xl p-6 relative z-10 shadow-2xl">
+        <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-4">Atur Budget</h3>
+        <form id="form-set-budget" class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-gray-500 mb-2">Kategori</label>
+                <select id="input-budget-category" class="w-full input-premium text-sm rounded-xl px-4 py-3 font-semibold appearance-none outline-none"></select>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-500 mb-2">Batas (Rp)</label>
+                <div class="flex items-center input-premium rounded-xl px-4 py-3">
+                    <span class="text-gray-500 font-bold mr-2">Rp</span>
+                    <input type="text" inputmode="numeric" id="input-budget-limit" required class="w-full bg-transparent font-bold outline-none tabular-nums text-gray-900 dark:text-white">
+                </div>
+            </div>
+            <div class="flex gap-3 pt-4">
+                <button type="button" onclick="AppUI.closeModal('modal-set-budget')" class="flex-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl py-3 text-sm font-semibold hover:bg-gray-200 transition">Batal</button>
+                <button type="submit" class="flex-1 bg-brand text-white rounded-xl py-3 text-sm font-semibold hover:bg-brand-dark transition">Simpan</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <script>
+    // Inisialisasi Tema
     const ThemeManager = { toggle: () => { document.documentElement.classList.toggle('dark'); localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light'; } };
-    const AppState = { transactions: JSON.parse(localStorage.getItem('keuanganku_tx')) || [], currentPage: 1, itemsPerPage: 10, savingsGoals: JSON.parse(localStorage.getItem('keuanganku_goals')) || [], recurringBills: JSON.parse(localStorage.getItem('keuanganku_bills')) || [], budgets: JSON.parse(localStorage.getItem('keuanganku_budgets')) || {}, billToPay: null, confirmCallback: null };
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark'); }
+
+    // State Aplikasi Dasar
+    const AppState = { 
+        transactions: JSON.parse(localStorage.getItem('keuanganku_tx')) || [], 
+        budgets: JSON.parse(localStorage.getItem('keuanganku_budgets')) || {},
+        confirmCallback: null 
+    };
 
     const Utils = {
         formatIDR: (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(Number(num) || 0),
-        formatDate: (dateStr) => dateStr ? new Date(dateStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '-',
+        formatDate: (dateStr) => dateStr ? new Date(dateStr).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-',
         getCurrentMonthStr: () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`; },
-        getPreviousMonthStr: () => { const d = new Date(); d.setMonth(d.getMonth() - 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`; },
         getTodayDateStr: () => { const d = new Date(); const m = String(d.getMonth() + 1).padStart(2, '0'); const day = String(d.getDate()).padStart(2, '0'); return `${d.getFullYear()}-${m}-${day}`; },
         parseRawCurrency: (str) => parseFloat(String(str).replace(/[^0-9]/g, '')) || 0,
         formatCurrencyInputEvent: (e) => { let v = e.target.value.replace(/[^0-9]/g, ''); e.target.value = v ? new Intl.NumberFormat('id-ID').format(v) : ''; },
-        toggleAdvancedFilter: () => { const p = document.getElementById('advanced-filter-panel'); p.classList.toggle('hidden'); document.getElementById('btn-toggle-filter').classList.toggle('bg-zinc-100'); },
-
-        // Simplified neutral colors for editorial look
+        toggleAdvancedFilter: () => { const p = document.getElementById('advanced-filter-panel'); p.classList.toggle('hidden'); },
+        
+        // Data Kategori (Warna Pastel sesuai mockup)
         categoryData: {
-            'Makanan': { type: 'expense', svg: '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a7 7 0 00-7 7v1h14v-1a7 7 0 00-7-7zM5 13h14v2a4 4 0 01-4 4H9a4 4 0 01-4-4v-2z" /></svg>', bg: 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400' },
-            'Transport': { type: 'expense', svg: '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V9a2 2 0 012-2h8a2 2 0 012 2v5a2 2 0 01-2 2h-2m-4 0v2m0-2v-2m4 2h.01M9 16h.01" /></svg>', bg: 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400' },
-            'Belanja': { type: 'expense', svg: '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>', bg: 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400' },
-            'Hiburan': { type: 'expense', svg: '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>', bg: 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400' },
-            'Tagihan': { type: 'expense', svg: '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>', bg: 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400' },
-            'Gaji': { type: 'income', svg: '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>', bg: 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400' },
-            'Bonus': { type: 'income', svg: '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/></svg>', bg: 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400' },
-            'Investasi': { type: 'income', svg: '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>', bg: 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400' },
-            'Lainnya': { type: 'both', svg: '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>', bg: 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400' },
-            'Transfer': { type: 'system', svg: '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>', bg: 'bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400' }
+            'Makanan': { type: 'expense', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a7 7 0 00-7 7v1h14v-1a7 7 0 00-7-7zM5 13h14v2a4 4 0 01-4 4H9a4 4 0 01-4-4v-2z" /></svg>', bg: 'bg-orange-100 text-orange-500', bar: 'bg-orange-400' },
+            'Transportasi': { type: 'expense', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V9a2 2 0 012-2h8a2 2 0 012 2v5a2 2 0 01-2 2h-2m-4 0v2m0-2v-2m4 2h.01M9 16h.01" /></svg>', bg: 'bg-blue-100 text-blue-500', bar: 'bg-blue-500' },
+            'Belanja': { type: 'expense', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>', bg: 'bg-rose-100 text-rose-500', bar: 'bg-rose-400' },
+            'Hiburan': { type: 'expense', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>', bg: 'bg-purple-100 text-purple-500', bar: 'bg-purple-400' },
+            'Kebutuhan': { type: 'expense', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>', bg: 'bg-teal-100 text-teal-500', bar: 'bg-teal-400' },
+            'Gaji': { type: 'income', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>', bg: 'bg-emerald-100 text-emerald-500', bar: 'bg-emerald-400' },
+            'Lainnya': { type: 'both', svg: '<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"/></svg>', bg: 'bg-gray-100 text-gray-500', bar: 'bg-gray-400' }
         },
-        getCategoryStyle: (cat) => { const c = Utils.categoryData[cat] || Utils.categoryData['Lainnya']; return { svg: c.svg, bg: c.bg }; },
-        toggleDropdown: (id) => { document.querySelectorAll('.custom-select').forEach(el => { if (el.id !== id) el.classList.remove('open'); }); document.getElementById(id).classList.toggle('open'); },
-        renderTxCategories: (txType, containerId = 'tx-category-select') => {
-            const container = document.querySelector(`#${containerId} .custom-select-options`); let html = ''; 
-            const cats = Object.keys(Utils.categoryData).filter(c => Utils.categoryData[c].type === txType || Utils.categoryData[c].type === 'both');
-            cats.forEach(cat => { const style = Utils.categoryData[cat]; html += `<div class="px-3.5 py-3 flex items-center gap-3 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer border-b border-zinc-100 dark:border-zinc-800 transition-colors min-w-0" onclick="Utils.selectOption('${containerId}', '${cat}', '${cat}')"><div class="w-6 h-6 flex items-center justify-center rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 shrink-0">${style.svg}</div><span class="text-sm font-medium text-zinc-900 dark:text-zinc-200 truncate">${cat}</span></div>`; });
-            if(container) container.innerHTML = html; Utils.selectOption(containerId, cats[0], cats[0]);
+        getCategoryStyle: (cat) => Utils.categoryData[cat] || Utils.categoryData['Lainnya'],
+        
+        populateCategorySelects: () => {
+            const addSelect = document.getElementById('input-category');
+            const budgetSelect = document.getElementById('input-budget-category');
+            addSelect.innerHTML = ''; budgetSelect.innerHTML = '';
+            const type = document.querySelector('input[name="tx-type"]:checked')?.value || 'expense';
+            
+            Object.keys(Utils.categoryData).forEach(cat => {
+                if(Utils.categoryData[cat].type === type || Utils.categoryData[cat].type === 'both') {
+                    addSelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+                }
+                if(Utils.categoryData[cat].type === 'expense' || Utils.categoryData[cat].type === 'both') {
+                    if(budgetSelect.innerHTML.indexOf(cat) === -1) budgetSelect.innerHTML += `<option value="${cat}">${cat}</option>`;
+                }
+            });
         },
-        setupCustomSelects: () => {
-            Utils.renderTxCategories('expense', 'tx-category-select');
-            const filterCatOptions = document.getElementById('filter-category-options');
-            if(filterCatOptions) {
-                let catHtml = `<div class="px-3 py-2 flex items-center gap-2 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer border-b border-zinc-100 dark:border-zinc-800 text-xs text-zinc-700 dark:text-zinc-200 transition-colors min-w-0" onclick="Utils.selectOption('filter-category-select', 'all', 'Kategori')"><span class="truncate">Semua Kategori</span></div>`;
-                Object.keys(Utils.categoryData).forEach(cat => { catHtml += `<div class="px-3 py-2 flex items-center gap-2 hover:bg-zinc-50 dark:hover:bg-zinc-800 cursor-pointer border-b border-zinc-100 dark:border-zinc-800 transition-colors min-w-0" onclick="Utils.selectOption('filter-category-select', '${cat}', '${cat}')"><span class="text-xs text-zinc-700 dark:text-zinc-200 truncate">${cat}</span></div>`; });
-                filterCatOptions.innerHTML = catHtml;
-            }
-            document.addEventListener('click', (e) => { if(!e.target.closest('.custom-select')) document.querySelectorAll('.custom-select').forEach(el => el.classList.remove('open')); });
+        updateAddFormStyle: () => {
+            const isIncome = document.querySelector('input[name="tx-type"][value="income"]').checked;
+            document.getElementById('add-tab-bg').style.transform = isIncome ? 'translateX(100%)' : 'translateX(0)';
+            Utils.populateCategorySelects();
         },
-        selectOption: (selectId, value, displayText) => {
-            const s = document.getElementById(selectId); if(!s) return;
-            s.querySelector('input[type="hidden"]').value = value;
-            const displayContainer = s.querySelector('div[id$="-display"]');
-            if (Utils.categoryData[value] && !selectId.startsWith('filter-')) { const style = Utils.categoryData[value]; displayContainer.innerHTML = `<div class="flex items-center gap-2 min-w-0"><div class="w-6 h-6 flex items-center justify-center rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 shrink-0">${style.svg}</div> <span class="dark:text-white font-medium text-sm truncate">${value}</span></div>`; } 
-            else { displayContainer.innerHTML = `<span class="dark:text-white truncate pr-1">${displayText || value}</span>`; }
-            s.classList.remove('open');
-            if (selectId.startsWith('filter-')) { AppState.currentPage = 1; TransactionManager.renderHistory(); }
-            if (selectId === 'budget-category-select') { BudgetManager.populateModal(value); }
+        getDateGroupLabel: (dateStr) => {
+            const today = Utils.getTodayDateStr();
+            const d = new Date(dateStr); const t = new Date(today);
+            const diffTime = Math.abs(t - d); const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+            if(dateStr === today) return "Hari ini";
+            if(diffDays === 1) return "Kemarin";
+            return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
         }
     };
 
-    const CalendarManager = {
-        currentDate: new Date(), selectedDate: new Date(), targetId: '', months: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
-        open: (id) => { CalendarManager.targetId = id; const val = document.getElementById(id).value; if(val) { CalendarManager.selectedDate = new Date(val); CalendarManager.currentDate = new Date(val); } CalendarManager.render(); AppUI.openModal('modal-datepicker'); },
-        changeMonth: (delta) => { CalendarManager.currentDate.setMonth(CalendarManager.currentDate.getMonth() + delta); CalendarManager.render(); },
-        setToday: () => { CalendarManager.selectedDate = new Date(); CalendarManager.currentDate = new Date(); CalendarManager.selectDay(CalendarManager.selectedDate.getDate()); },
-        selectDay: (day) => {
-            CalendarManager.selectedDate = new Date(CalendarManager.currentDate.getFullYear(), CalendarManager.currentDate.getMonth(), day);
-            const y = CalendarManager.selectedDate.getFullYear(); const m = String(CalendarManager.selectedDate.getMonth() + 1).padStart(2, '0'); const d = String(day).padStart(2, '0');
-            const finalStr = `${y}-${m}-${d}`; document.getElementById(CalendarManager.targetId).value = finalStr; document.getElementById('display-date').innerText = Utils.formatDate(finalStr); document.getElementById('display-date').classList.add('text-zinc-900', 'dark:text-white'); AppUI.closeModal('modal-datepicker');
+    // Fitur Custom Background
+    const CustomBgManager = {
+        init: () => {
+            const bgUrl = localStorage.getItem('keuanganku_card_bg');
+            const card = document.getElementById('main-balance-card');
+            const input = document.getElementById('input-bg-url');
+            if(bgUrl) {
+                card.style.backgroundImage = `url('${bgUrl}')`;
+                card.classList.add('custom-bg-applied');
+                input.value = bgUrl;
+            } else {
+                card.style.backgroundImage = '';
+                card.classList.remove('custom-bg-applied');
+            }
         },
-        render: () => {
-            document.getElementById('cal-month-year').innerText = `${CalendarManager.months[CalendarManager.currentDate.getMonth()]} ${CalendarManager.currentDate.getFullYear()}`;
-            const daysContainer = document.getElementById('cal-days'); daysContainer.innerHTML = '';
-            const firstDay = new Date(CalendarManager.currentDate.getFullYear(), CalendarManager.currentDate.getMonth(), 1).getDay(); const totalDays = new Date(CalendarManager.currentDate.getFullYear(), CalendarManager.currentDate.getMonth() + 1, 0).getDate();
-            for (let i = 0; i < firstDay; i++) daysContainer.innerHTML += `<div></div>`;
-            for (let i = 1; i <= totalDays; i++) { const isSelected = (i === CalendarManager.selectedDate.getDate() && CalendarManager.currentDate.getMonth() === CalendarManager.selectedDate.getMonth() && CalendarManager.currentDate.getFullYear() === CalendarManager.selectedDate.getFullYear()); const style = isSelected ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 rounded font-medium shadow-sm" : "text-zinc-700 dark:text-zinc-300 font-medium hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded cursor-pointer transition-colors"; daysContainer.innerHTML += `<div onclick="CalendarManager.selectDay(${i})" class="aspect-square flex items-center justify-center text-sm ${style}">${i}</div>`; }
+        save: () => {
+            const url = document.getElementById('input-bg-url').value.trim();
+            if(url) { localStorage.setItem('keuanganku_card_bg', url); AppUI.showToast("Latar belakang diperbarui!"); } 
+            else { localStorage.removeItem('keuanganku_card_bg'); AppUI.showToast("Latar belakang dihapus!"); }
+            CustomBgManager.init();
         }
     };
 
     const AppUI = {
-        showToast: (message, type = 'success') => {
-            const c = document.getElementById('toast-container'); const t = document.createElement('div'); const s = type === 'success' ? 'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 border-transparent' : 'bg-red-50 dark:bg-red-900/50 text-red-900 dark:text-red-100 border-red-200 dark:border-red-900';
-            t.className = `${s} px-4 py-3 rounded-lg shadow-xl flex items-center gap-3 text-sm font-medium border w-full max-w-sm`; t.innerHTML = `<span class="shrink-0 text-xs">●</span> <span class="truncate">${message}</span>`;
+        showToast: (message) => {
+            const c = document.getElementById('toast-container'); const t = document.createElement('div');
+            t.className = `bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-5 py-3 rounded-xl shadow-floating flex items-center gap-3 text-sm font-bold w-full max-w-sm`; 
+            t.innerHTML = `<span>${message}</span>`;
             c.appendChild(t); setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(-10px)'; t.style.transition = 'all 0.3s ease'; setTimeout(() => t.remove(), 300); }, 3000);
         },
-        showConfirm: (title, message, callback) => {
-            document.getElementById('confirm-title').innerText = title; document.getElementById('confirm-msg').innerText = message; AppState.confirmCallback = callback; AppUI.openModal('modal-confirm');
-        },
-        closeConfirm: () => { AppUI.closeModal('modal-confirm'); AppState.confirmCallback = null; },
-        openModal: (id) => { document.getElementById(id).classList.remove('hidden'); document.body.style.overflow = 'hidden'; },
-        closeModal: (id) => { 
-            document.getElementById(id).classList.add('hidden'); document.body.style.overflow = '';
-            if(id === 'modal-add-savings') { document.getElementById('input-add-savings').value = ''; document.querySelector('input[name="savings-source"][value="external"]').checked = true; }
-        },
+        showConfirm: (title, message, callback) => { document.getElementById('confirm-title').innerText = title; document.getElementById('confirm-msg').innerText = message; AppState.confirmCallback = callback; document.getElementById('modal-confirm').classList.remove('hidden'); },
+        closeConfirm: () => { document.getElementById('modal-confirm').classList.add('hidden'); AppState.confirmCallback = null; },
+        openModal: (id) => { document.getElementById(id).classList.remove('hidden'); },
+        closeModal: (id) => { document.getElementById(id).classList.add('hidden'); },
         switchTab: (tabId) => {
-            const titles = { 'dashboard': 'Overview', 'wallet': 'Wallets & Budget', 'recap': 'Monthly Recap', 'history': 'Transactions', 'add': 'New Transaction', 'settings': 'Settings', 'goals': 'Savings Goals' };
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active')); 
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-            
-            const viewTarget = document.getElementById(`view-${tabId}`);
-            if(viewTarget) viewTarget.classList.add('active'); 
-            
-            if(document.getElementById('desktop-page-title')) document.getElementById('desktop-page-title').innerText = titles[tabId] || 'Overview';
-            
-            document.querySelectorAll(`.nav-btn-${tabId}`).forEach(el => { el.classList.add('active'); });
+            const target = document.getElementById(`view-${tabId}`);
+            if(target) target.classList.add('active'); 
+            document.querySelectorAll(`.nav-btn-${tabId}`).forEach(el => el.classList.add('active'));
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    };
-
-    const BudgetManager = {
-        saveBudgets: () => localStorage.setItem('keuanganku_budgets', JSON.stringify(AppState.budgets)),
-        setBudget: (category, amount) => {
-            if (amount <= 0) { delete AppState.budgets[category]; AppUI.showToast(`Anggaran ${category} dihapus.`); }
-            else { AppState.budgets[category] = amount; AppUI.showToast(`Anggaran ${category} disetel.`); }
-            BudgetManager.saveBudgets(); TransactionManager.renderDashboard(); AppUI.closeModal('modal-set-budget');
-        },
-        populateModal: (category) => {
-            const limitInput = document.getElementById('input-budget-limit'); const delBtn = document.getElementById('btn-delete-budget');
-            if(AppState.budgets[category]) { limitInput.value = new Intl.NumberFormat('id-ID').format(AppState.budgets[category]); delBtn.classList.remove('hidden'); delBtn.classList.add('block'); } 
-            else { limitInput.value = ''; delBtn.classList.add('hidden'); delBtn.classList.remove('block'); }
-        },
-        deleteCurrent: () => {
-            const cat = document.getElementById('input-budget-category').value;
-            AppUI.showConfirm("Hapus Anggaran?", `Hapus batas anggaran ${cat}?`, () => {
-                delete AppState.budgets[cat]; BudgetManager.saveBudgets(); TransactionManager.renderDashboard(); AppUI.closeModal('modal-set-budget'); AppUI.showToast(`Anggaran dihapus.`);
-            });
         }
     };
 
     const LocalDB = {
         saveTx: () => localStorage.setItem('keuanganku_tx', JSON.stringify(AppState.transactions)),
         addTransaction: (txData) => { 
-            const newTx = { ...txData, id: Date.now() }; 
-            AppState.transactions.unshift(newTx); 
+            AppState.transactions.unshift({ ...txData, id: Date.now() }); 
             AppState.transactions.sort((a, b) => new Date(b.date) - new Date(a.date)); 
-            LocalDB.saveTx(); 
-            AppState.currentPage = 1; 
-            try { TransactionManager.renderAll(); } catch(err) {}
-            return true; 
+            LocalDB.saveTx(); TransactionManager.renderAll(); return true; 
         },
-        hardReset: () => { AppUI.showConfirm("Reset Total Aplikasi?", "Seluruh data akan hilang selamanya.", () => { localStorage.clear(); location.reload(); }); }
-    };
-
-    const BackupManager = {
-        exportJSON: () => { const data = { tx: AppState.transactions, goals: AppState.savingsGoals, bills: AppState.recurringBills, budgets: AppState.budgets }; const blob = new Blob([JSON.stringify(data)], {type: "application/json"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `Keuanganku_FullBackup_${Utils.getTodayDateStr()}.json`; a.click(); AppUI.showToast("JSON berhasil diunduh."); },
-        exportCSV: () => { 
-            if(AppState.transactions.length === 0) return AppUI.showToast("Tidak ada data", "error"); 
-            const headers = ["Tanggal", "Tipe", "Kategori", "Dompet", "Nominal", "Deskripsi"]; 
-            const csvRows = [headers.join(",")]; 
-            AppState.transactions.forEach(tx => { 
-                if(!tx) return; 
-                const amt = tx.amount || 0; 
-                const typeText = tx.type === 'income' ? 'Pemasukan' : (tx.type === 'expense' ? 'Pengeluaran' : 'Transfer');
-                const dompetText = tx.type === 'transfer' ? `${tx.fromWallet} ke ${tx.toWallet}` : (tx.wallet === 'cash' ? 'Cash' : 'Rekening');
-                const row = [ tx.date, typeText, tx.category || 'Lainnya', dompetText, amt, `"${(tx.description || '').replace(/"/g, '""')}"` ]; 
-                csvRows.push(row.join(",")); 
-            }); 
-            const blob = new Blob([csvRows.join("\n")], {type: "text/csv"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `Keuanganku_Riwayat_${Utils.getTodayDateStr()}.csv`; a.click(); AppUI.showToast("CSV berhasil diunduh."); 
-        },
-        importJSON: (e) => { const file = e.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = (ev) => { try { const data = JSON.parse(ev.target.result); AppUI.showConfirm("Pulihkan Data?", "Data saat ini akan TERTEMPA oleh backup. Lanjutkan?", () => { if(data.tx) localStorage.setItem('keuanganku_tx', JSON.stringify(data.tx)); if(data.goals) localStorage.setItem('keuanganku_goals', JSON.stringify(data.goals)); if(data.bills) localStorage.setItem('keuanganku_bills', JSON.stringify(data.bills)); if(data.budgets) localStorage.setItem('keuanganku_budgets', JSON.stringify(data.budgets)); location.reload(); }); } catch(err) { AppUI.showToast("Gagal membaca file.", "error"); } }; reader.readAsText(file); e.target.value = ''; }
+        hardReset: () => { AppUI.showConfirm("Reset Aplikasi?", "Seluruh data transaksi dan pengaturan akan hilang.", () => { localStorage.clear(); location.reload(); }); }
     };
 
     const TransactionManager = {
         getBalances: () => { 
-            let cash = 0, bank = 0; 
+            let total = 0, incThisMonth = 0, expThisMonth = 0; 
+            const curMonth = Utils.getCurrentMonthStr();
             AppState.transactions.forEach(tx => { 
-                if(!tx) return; 
-                const nominal = Number(tx.amount) || 0; 
-                if (tx.type === 'income') { 
-                    if (tx.wallet === 'cash') cash += nominal; else bank += nominal; 
-                } else if (tx.type === 'expense') { 
-                    if (tx.wallet === 'cash') cash -= nominal; else bank -= nominal; 
-                } else if (tx.type === 'transfer') {
-                    if (tx.fromWallet === 'cash') cash -= nominal; else bank -= nominal;
-                    if (tx.toWallet === 'cash') cash += nominal; else bank += nominal;
-                }
+                const nom = Number(tx.amount) || 0; 
+                if (tx.type === 'income') { total += nom; if(tx.date.startsWith(curMonth)) incThisMonth += nom; } 
+                else if (tx.type === 'expense') { total -= nom; if(tx.date.startsWith(curMonth)) expThisMonth += nom; } 
             }); 
-            return { cash, bank, total: cash + bank }; 
+            return { total, incThisMonth, expThisMonth }; 
         },
-        changePage: (delta) => { const filteredData = TransactionManager.getFilteredHistory(); const totalPages = Math.ceil(filteredData.length / AppState.itemsPerPage) || 1; AppState.currentPage += delta; if(AppState.currentPage < 1) AppState.currentPage = 1; if(AppState.currentPage > totalPages) AppState.currentPage = totalPages; TransactionManager.renderHistory(); },
-        renderAll: () => { TransactionManager.renderDashboard(); TransactionManager.renderWallet(); TransactionManager.renderRecap(); TransactionManager.renderHistory(); },
+        renderAll: () => { TransactionManager.renderDashboard(); TransactionManager.renderHistory(); TransactionManager.renderWallet(); },
         
         renderDashboard: () => {
-            const balances = TransactionManager.getBalances();
-            document.getElementById('dash-balance').innerText = Utils.formatIDR(balances.total);
+            const bal = TransactionManager.getBalances();
+            document.getElementById('dash-balance').innerText = Utils.formatIDR(bal.total);
+            document.getElementById('wallet-income').innerText = Utils.formatIDR(bal.incThisMonth);
+            document.getElementById('wallet-expense').innerText = Utils.formatIDR(bal.expThisMonth);
 
             const dashRecent = document.getElementById('dash-recent-list'); dashRecent.innerHTML = '';
-            if (AppState.transactions.length === 0) { document.getElementById('dash-empty').classList.remove('hidden'); document.getElementById('dash-empty').classList.add('flex'); } 
-            else {
+            if (AppState.transactions.length === 0) { 
+                document.getElementById('dash-empty').classList.remove('hidden'); document.getElementById('dash-empty').classList.add('flex'); 
+            } else {
                 document.getElementById('dash-empty').classList.add('hidden'); document.getElementById('dash-empty').classList.remove('flex');
-                AppState.transactions.slice(0, 5).forEach((tx) => { 
-                    if(!tx) return;
+                
+                // Ambil 4 transaksi terakhir
+                AppState.transactions.slice(0, 4).forEach((tx) => { 
                     const style = Utils.getCategoryStyle(tx.category || 'Lainnya'); 
+                    const sign = tx.type === 'income' ? '+' : '-';
+                    const amountClass = tx.type === 'income' ? 'text-emerald-500' : 'text-gray-900 dark:text-white';
                     
-                    let sign = '', amountColor = '';
-                    if (tx.type === 'income') { sign = '+'; amountColor = 'text-green-700 dark:text-green-500'; } 
-                    else if (tx.type === 'expense') { sign = '-'; amountColor = 'text-red-700 dark:text-red-400'; } 
-                    else if (tx.type === 'transfer') { sign = ''; amountColor = 'text-zinc-600 dark:text-zinc-400'; }
-
                     dashRecent.innerHTML += `
-                    <div class="flex items-center justify-between py-4 border-b border-zinc-100 dark:border-zinc-800/50 min-w-0">
-                        <div class="flex items-center gap-4 min-w-0">
-                            <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${style.bg}">${style.svg}</div>
-                            <div class="min-w-0">
-                                <p class="text-sm font-medium text-zinc-900 dark:text-white truncate">${tx.description || (tx.type === 'transfer' ? 'Transfer Saldo' : tx.category)}</p>
-                                <p class="text-xs text-zinc-500 mt-0.5 truncate">${Utils.formatDate(tx.date)} • ${tx.category || 'Lainnya'}</p>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${style.bg} bg-opacity-50 dark:bg-opacity-20">${style.svg}</div>
+                            <div>
+                                <p class="text-sm font-bold text-gray-900 dark:text-white">${tx.category}</p>
+                                <p class="text-xs text-gray-500 mt-0.5">${Utils.formatDate(tx.date)}</p>
                             </div>
                         </div>
-                        <div class="text-right shrink-0 ml-3">
-                            <p class="text-sm font-medium tabular-nums ${amountColor}">${sign} ${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p>
-                        </div>
+                        <p class="text-sm font-bold tabular-nums ${amountClass}">${sign} ${Utils.formatIDR(tx.amount)}</p>
                     </div>`; 
                 });
             }
         },
 
-        renderWallet: () => {
-            const balances = TransactionManager.getBalances();
-            document.getElementById('wallet-cash').innerText = Utils.formatIDR(balances.cash);
-            document.getElementById('wallet-bank').innerText = Utils.formatIDR(balances.bank);
-
-            let currentMonthIncome = 0, currentMonthExpense = 0; 
-            const categoryData = {}; 
-            const currentMonthStr = Utils.getCurrentMonthStr();
-            
-            AppState.transactions.forEach(tx => { 
-                if(!tx || !tx.date) return;
-                const nominal = Number(tx.amount) || 0; 
-                const txMonthStr = tx.date.substring(0, 7);
-                if (txMonthStr === currentMonthStr) { 
-                    if (tx.type === 'income') currentMonthIncome += nominal; 
-                    if (tx.type === 'expense') { 
-                        currentMonthExpense += nominal; 
-                        const cat = tx.category || 'Lainnya'; 
-                        categoryData[cat] = (categoryData[cat] || 0) + nominal; 
-                    } 
-                } 
-            });
-
-            document.getElementById('wallet-income').innerText = Utils.formatIDR(currentMonthIncome);
-            document.getElementById('wallet-expense').innerText = Utils.formatIDR(currentMonthExpense);
-            
-            const cashflow = currentMonthIncome - currentMonthExpense;
-            const cfEl = document.getElementById('wallet-cashflow');
-            cfEl.innerText = Utils.formatIDR(cashflow);
-            cfEl.className = cashflow >= 0 ? "text-sm font-medium tabular-nums text-green-700 dark:text-green-500" : "text-sm font-medium tabular-nums text-red-700 dark:text-red-400";
-
-            const budgetListEl = document.getElementById('dashboard-budgets-list'); budgetListEl.innerHTML = '';
-            const budgetsSafe = AppState.budgets || {};
-            if(Object.keys(budgetsSafe).length === 0) { 
-                budgetListEl.innerHTML = `<div class="flex flex-col items-center justify-center py-10 min-w-0 border-b border-zinc-100 dark:border-zinc-800/50"><p class="text-sm text-zinc-400">Belum ada anggaran.</p></div>`; 
-            } else {
-                Object.keys(budgetsSafe).forEach(cat => {
-                    const limit = budgetsSafe[cat]; const spent = categoryData[cat] || 0; const persen = Math.min((spent / limit) * 100, 100);
-                    let barColor = 'bg-zinc-900 dark:bg-zinc-300';
-                    if (persen >= 100) { barColor = 'bg-red-600'; } else if (persen >= 80) { barColor = 'bg-amber-500'; }
-                    
-                    budgetListEl.innerHTML += `
-                    <div class="py-4 border-b border-zinc-100 dark:border-zinc-800/50 min-w-0">
-                        <div class="flex justify-between items-end mb-2 min-w-0">
-                            <div>
-                                <p class="text-sm font-medium text-zinc-900 dark:text-white truncate">${cat}</p>
-                                <p class="text-xs text-zinc-500 mt-0.5">${Utils.formatIDR(spent)} of ${Utils.formatIDR(limit)}</p>
-                            </div>
-                            <span class="text-sm font-medium tabular-nums ${persen >= 100 ? 'text-red-600 dark:text-red-500' : 'text-zinc-900 dark:text-white'}">${Math.round(persen)}%</span>
-                        </div>
-                        <div class="w-full bg-zinc-200 dark:bg-zinc-800 rounded-full h-1 overflow-hidden">
-                            <div class="${barColor} h-1 rounded-full transition-all duration-300" style="width: ${persen}%"></div>
-                        </div>
-                    </div>`;
-                });
-            }
-        },
-
-        renderRecap: () => {
-            const recapList = document.getElementById('recap-list'); recapList.innerHTML = '';
-            const analysisEl = document.getElementById('recap-analysis');
-            
-            if (AppState.transactions.length === 0) { 
-                analysisEl.innerHTML = '';
-                recapList.innerHTML = `<div class="text-center py-12 min-w-0 border-b border-zinc-100 dark:border-zinc-800/50"><p class="text-sm text-zinc-400">Belum ada data rekap bulanan.</p></div>`; 
-                return;
-            }
-
-            const monthlyData = {}; const categoryDataPerMonth = {};
-            AppState.transactions.forEach(tx => { 
-                if(!tx || !tx.date) return; const monthYear = tx.date.substring(0, 7); 
-                if (!monthlyData[monthYear]) monthlyData[monthYear] = { monthYear: monthYear, label: new Date(tx.date).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }), income: 0, expense: 0, count: 0 }; 
-                if (!categoryDataPerMonth[monthYear]) categoryDataPerMonth[monthYear] = {};
-                const nominal = Number(tx.amount) || 0; 
-                if (tx.type === 'income') monthlyData[monthYear].income += nominal; 
-                if (tx.type === 'expense') { monthlyData[monthYear].expense += nominal; const cat = tx.category || 'Lainnya'; categoryDataPerMonth[monthYear][cat] = (categoryDataPerMonth[monthYear][cat] || 0) + nominal; }
-                if (tx.type !== 'transfer') monthlyData[monthYear].count += 1; 
-            });
-
-            let runningBalance = 0;
-            const sortedMonthsAsc = Object.keys(monthlyData).sort((a, b) => a.localeCompare(b));
-            sortedMonthsAsc.forEach(my => {
-                runningBalance += monthlyData[my].income;
-                runningBalance -= monthlyData[my].expense;
-                monthlyData[my].cumulativeBalance = runningBalance;
-            });
-
-            const curr = Utils.getCurrentMonthStr(); const prev = Utils.getPreviousMonthStr();
-            if (monthlyData[curr] && monthlyData[prev]) {
-                const incDiff = monthlyData[curr].income - monthlyData[prev].income; const expDiff = monthlyData[curr].expense - monthlyData[prev].expense;
-                const incPercent = monthlyData[prev].income > 0 ? (incDiff / monthlyData[prev].income) * 100 : (incDiff > 0 ? 100 : 0);
-                const expPercent = monthlyData[prev].expense > 0 ? (expDiff / monthlyData[prev].expense) * 100 : (expDiff > 0 ? 100 : 0);
-                
-                const incHtml = incDiff >= 0 ? `<span class="text-green-700 dark:text-green-500 font-medium text-xs ml-2 tabular-nums">↑ ${Math.abs(incPercent).toFixed(0)}%</span>` : `<span class="text-red-700 dark:text-red-500 font-medium text-xs ml-2 tabular-nums">↓ ${Math.abs(incPercent).toFixed(0)}%</span>`;
-                const expHtml = expDiff >= 0 ? `<span class="text-red-700 dark:text-red-500 font-medium text-xs ml-2 tabular-nums">↑ ${Math.abs(expPercent).toFixed(0)}%</span>` : `<span class="text-green-700 dark:text-green-500 font-medium text-xs ml-2 tabular-nums">↓ ${Math.abs(expPercent).toFixed(0)}%</span>`;
-                
-                analysisEl.innerHTML = `
-                <div class="mb-4">
-                    <h3 class="font-medium text-zinc-900 dark:text-white text-sm uppercase tracking-wide mb-4">Comparison (Vs Last Month)</h3>
-                    <div class="grid grid-cols-2 gap-px bg-zinc-200 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden">
-                        <div class="bg-white dark:bg-[#121212] p-5 min-w-0">
-                            <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-medium mb-1 truncate">Income</p>
-                            <p class="text-base truncate font-medium text-zinc-900 dark:text-white flex items-baseline tabular-nums">${Utils.formatIDR(monthlyData[curr].income)} ${incHtml}</p>
-                        </div>
-                        <div class="bg-white dark:bg-[#121212] p-5 min-w-0">
-                            <p class="text-[10px] uppercase tracking-widest text-zinc-500 font-medium mb-1 truncate">Expenses</p>
-                            <p class="text-base truncate font-medium text-zinc-900 dark:text-white flex items-baseline tabular-nums">${Utils.formatIDR(monthlyData[curr].expense)} ${expHtml}</p>
-                        </div>
-                    </div>
-                </div>`;
-            } else { analysisEl.innerHTML = ''; }
-
-            const sortedMonthsDesc = sortedMonthsAsc.reverse();
-            sortedMonthsDesc.forEach(my => {
-                const data = monthlyData[my]; 
-                if (data.count === 0 && data.income === 0 && data.expense === 0) return; 
-                
-                recapList.innerHTML += `
-                <div class="py-6 border-b border-zinc-100 dark:border-zinc-800/50 min-w-0">
-                    <div class="flex justify-between items-end mb-4 min-w-0">
-                        <h4 class="font-medium text-zinc-900 dark:text-white text-lg tracking-tight truncate">${data.label}</h4>
-                        <span class="text-xs text-zinc-500 shrink-0">${data.count} txs</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-6 mb-4 min-w-0">
-                        <div class="min-w-0">
-                            <p class="text-[10px] font-medium text-zinc-500 uppercase tracking-widest mb-1 truncate">In</p>
-                            <p class="font-medium text-sm text-green-700 dark:text-green-500 truncate tabular-nums">${Utils.formatIDR(data.income)}</p>
-                        </div>
-                        <div class="min-w-0">
-                            <p class="text-[10px] font-medium text-zinc-500 uppercase tracking-widest mb-1 truncate">Out</p>
-                            <p class="font-medium text-sm text-red-700 dark:text-red-400 truncate tabular-nums">${Utils.formatIDR(data.expense)}</p>
-                        </div>
-                    </div>
-                    <div class="pt-4 border-t border-zinc-100 dark:border-zinc-800/50 flex justify-between items-center min-w-0">
-                        <span class="text-xs font-medium text-zinc-600 dark:text-zinc-400">Closing Balance</span>
-                        <span class="font-medium text-sm text-zinc-900 dark:text-white truncate tabular-nums">${Utils.formatIDR(data.cumulativeBalance)}</span>
-                    </div>
-                </div>`;
-            });
-        },
-
-        getFilteredHistory: () => {
-            const search = document.getElementById('filter-search').value.toLowerCase();
-            const period = document.getElementById('filter-period-value').value;
-            const type = document.getElementById('filter-type-value').value;
-            const category = document.getElementById('filter-category-value').value;
-            
-            const currentMonthStr = Utils.getCurrentMonthStr();
-            const lastMonthStr = Utils.getPreviousMonthStr();
-
-            let filtered = AppState.transactions.filter(tx => {
-                if(!tx || !tx.date) return false;
-                const amtString = tx.amount ? tx.amount.toString() : '0';
-                const matchSearch = (tx.description || '').toLowerCase().includes(search) || (tx.category || '').toLowerCase().includes(search) || amtString.includes(search);
-                const matchType = type === 'all' || tx.type === type;
-                const matchCategory = category === 'all' || tx.category === category;
-                
-                let matchDate = true; 
-                const txDate = tx.date || '';
-                if(period === 'this_month') matchDate = txDate.startsWith(currentMonthStr); 
-                else if(period === 'last_month') matchDate = txDate.startsWith(lastMonthStr);
-                
-                return matchSearch && matchType && matchCategory && matchDate;
-            });
-            filtered.sort((a,b) => new Date(b.date) - new Date(a.date));
-            return filtered;
-        },
-
         renderHistory: () => {
-            const historyList = document.getElementById('history-list'); const pagination = document.getElementById('pagination-controls'); historyList.innerHTML = '';
-            const filteredData = TransactionManager.getFilteredHistory();
-            if (filteredData.length === 0) { document.getElementById('history-empty').classList.remove('hidden'); document.getElementById('history-empty').classList.add('flex'); pagination.classList.add('hidden'); pagination.classList.remove('flex'); return; }
+            const historyList = document.getElementById('history-list'); historyList.innerHTML = '';
+            const typeFilter = document.getElementById('filter-type-value').value;
+            const periodFilter = document.getElementById('filter-period-value').value;
+            const curMonth = Utils.getCurrentMonthStr();
+            
+            let filtered = AppState.transactions.filter(tx => {
+                const matchType = typeFilter === 'all' || tx.type === typeFilter;
+                const matchDate = periodFilter === 'all' || tx.date.startsWith(curMonth);
+                return matchType && matchDate;
+            });
+
+            // Update Total Banner di halaman Transaksi
+            let tInc = 0, tExp = 0;
+            filtered.forEach(tx => { if(tx.type === 'income') tInc += Number(tx.amount); else if(tx.type === 'expense') tExp += Number(tx.amount); });
+            document.getElementById('history-income-total').innerText = '+ ' + Utils.formatIDR(tInc).replace('Rp', 'Rp ');
+            document.getElementById('history-expense-total').innerText = '- ' + Utils.formatIDR(tExp).replace('Rp', 'Rp ');
+
+            if (filtered.length === 0) { document.getElementById('history-empty').classList.remove('hidden'); document.getElementById('history-empty').classList.add('flex'); return; }
             document.getElementById('history-empty').classList.add('hidden'); document.getElementById('history-empty').classList.remove('flex');
 
-            const totalPages = Math.ceil(filteredData.length / AppState.itemsPerPage) || 1; if(AppState.currentPage > totalPages) AppState.currentPage = totalPages;
-            if (filteredData.length > AppState.itemsPerPage) { pagination.classList.remove('hidden'); pagination.classList.add('flex'); document.getElementById('page-info').innerText = `Page ${AppState.currentPage}/${totalPages}`; document.getElementById('btn-prev').disabled = AppState.currentPage === 1; document.getElementById('btn-next').disabled = AppState.currentPage === totalPages; } else { pagination.classList.add('hidden'); pagination.classList.remove('flex'); }
-
-            const paginated = filteredData.slice((AppState.currentPage - 1) * AppState.itemsPerPage, ((AppState.currentPage - 1) * AppState.itemsPerPage) + AppState.itemsPerPage);
-            paginated.forEach((tx) => { 
-                if(!tx) return;
-                const style = Utils.getCategoryStyle(tx.category || 'Lainnya'); 
-                
-                let sign = '', amountColor = '';
-                if (tx.type === 'income') { sign = '+'; amountColor = 'text-green-700 dark:text-green-500'; } 
-                else if (tx.type === 'expense') { sign = '-'; amountColor = 'text-red-700 dark:text-red-400'; } 
-                else if (tx.type === 'transfer') { sign = ''; amountColor = 'text-zinc-600 dark:text-zinc-400'; }
-
-                historyList.innerHTML += `
-                <li class="flex items-center justify-between py-4 border-b border-zinc-100 dark:border-zinc-800/50 min-w-0">
-                    <div class="flex items-center gap-4 min-w-0">
-                        <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${style.bg}">${style.svg}</div>
-                        <div class="min-w-0">
-                            <p class="text-sm font-medium text-zinc-900 dark:text-white truncate">${tx.description || (tx.type === 'transfer' ? 'Transfer Saldo' : tx.category)}</p>
-                            <p class="text-xs text-zinc-500 mt-0.5 truncate">${Utils.formatDate(tx.date)} • ${tx.category || 'Lainnya'} • ${tx.wallet === 'bank' ? 'Rek' : 'Cash'}</p>
-                        </div>
-                    </div>
-                    <div class="text-right shrink-0 ml-3">
-                        <p class="text-sm font-medium tabular-nums ${amountColor}">${sign} ${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p>
-                    </div>
-                </li>`;
-            });
-        }
-    };
-
-    const GoalManager = {
-        saveState: () => localStorage.setItem('keuanganku_goals', JSON.stringify(AppState.savingsGoals)),
-        render: () => {
-            const listEl = document.getElementById('goals-list-container'); const summaryEl = document.getElementById('dash-goals-summary'); listEl.innerHTML = ''; summaryEl.innerHTML = ''; let totalSaved = 0;
-            if (AppState.savingsGoals.length === 0) {
-                summaryEl.innerHTML = `<div class="py-6 border-b border-zinc-100 dark:border-zinc-800/50 min-w-0"><p class="text-sm text-zinc-400">No savings goals set.</p></div>`;
-                listEl.innerHTML = `<div class="col-span-full py-12 border-t border-zinc-100 dark:border-zinc-800/50 min-w-0"><p class="text-sm text-zinc-400">Create a savings goal to start tracking.</p></div>`;
-            } else {
-                AppState.savingsGoals.forEach((goal, idx) => {
-                    totalSaved += goal.saved; let persen = Math.min((goal.saved / goal.target) * 100, 100);
-                    if(idx < 3) {
-                        summaryEl.innerHTML += `
-                        <div class="py-4 border-b border-zinc-100 dark:border-zinc-800/50 min-w-0 last:border-0">
-                            <div class="flex justify-between items-end mb-2 min-w-0">
-                                <p class="text-sm font-medium text-zinc-900 dark:text-white truncate pr-2">${goal.name}</p>
-                                <span class="text-xs text-zinc-500 tabular-nums shrink-0">${Math.round(persen)}%</span>
-                            </div>
-                            <div class="w-full bg-zinc-200 dark:bg-zinc-800 rounded-full h-1 overflow-hidden">
-                                <div class="bg-zinc-900 dark:bg-zinc-300 h-1 rounded-full" style="width: ${persen}%"></div>
-                            </div>
-                        </div>`;
-                    }
-                    
-                    listEl.innerHTML += `
-                    <div class="border border-zinc-200 dark:border-zinc-800 p-6 rounded-xl flex flex-col justify-between h-full min-w-0">
-                        <div>
-                            <div class="flex justify-between items-start mb-6 gap-2 min-w-0">
-                                <h3 class="font-medium text-zinc-900 dark:text-white text-base tracking-tight truncate flex-grow">${goal.name}</h3>
-                                <button onclick="GoalManager.deleteGoal(${goal.id})" class="shrink-0 text-zinc-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
-                            </div>
-                            <div class="flex justify-between items-end text-sm mb-2 min-w-0 tabular-nums">
-                                <span class="text-zinc-900 dark:text-white font-medium truncate">${Utils.formatIDR(goal.saved)}</span>
-                                <span class="text-zinc-500 truncate text-right">of ${Utils.formatIDR(goal.target)}</span>
-                            </div>
-                            <div class="w-full bg-zinc-200 dark:bg-zinc-800 rounded-full h-1 mb-6 overflow-hidden">
-                                <div class="bg-zinc-900 dark:bg-zinc-300 h-1 rounded-full" style="width: ${persen}%"></div>
-                            </div>
-                        </div>
-                        <button onclick="GoalManager.openAddModal(${goal.id}, '${goal.name}')" class="w-full border border-zinc-200 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 font-medium rounded-lg py-2 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors text-xs">Add Funds</button>
-                    </div>`;
-                });
-            }
-            document.getElementById('goals-total-saved').innerText = Utils.formatIDR(totalSaved);
-        },
-        addGoal: (name, target) => { AppState.savingsGoals.push({ id: Date.now(), name, target, saved: 0 }); GoalManager.saveState(); GoalManager.render(); AppUI.showToast("Target impian dibuat!"); },
-        deleteGoal: (id) => { AppUI.showConfirm("Hapus Target?", "Target ini akan dihapus dari sistem.", () => { AppState.savingsGoals = AppState.savingsGoals.filter(g => g.id !== id); GoalManager.saveState(); GoalManager.render(); TransactionManager.renderDashboard(); }); },
-        openAddModal: (id, name) => { document.getElementById('input-savings-id').value = id; document.getElementById('modal-add-savings-title').innerText = `${name}`; AppUI.openModal('modal-add-savings'); },
-        addSavings: (id, amount, source, wallet) => { 
-            const goal = AppState.savingsGoals.find(g => g.id == id); 
-            if(goal) { 
-                if (source === 'balance') {
-                    const balances = TransactionManager.getBalances(); const currentBal = wallet === 'cash' ? balances.cash : balances.bank;
-                    if (amount > currentBal) { return AppUI.showToast(`Saldo ${wallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup!`, "error"); }
-                    LocalDB.addTransaction({ type: 'expense', wallet: wallet, amount: amount, category: 'Lainnya', date: Utils.getTodayDateStr(), description: `[Tabungan] ${goal.name}` }); 
+            // Group By Date
+            let lastDateStr = null;
+            filtered.forEach((tx) => {
+                const groupLabel = Utils.getDateGroupLabel(tx.date);
+                if (groupLabel !== lastDateStr) {
+                    historyList.innerHTML += `<h3 class="text-sm font-bold text-gray-500 mt-4 mb-1">${groupLabel}</h3>`;
+                    lastDateStr = groupLabel;
                 }
-                goal.saved += amount; GoalManager.saveState(); GoalManager.render(); 
+
+                const style = Utils.getCategoryStyle(tx.category || 'Lainnya'); 
+                const sign = tx.type === 'income' ? '+' : '-';
+                const amountClass = tx.type === 'income' ? 'text-emerald-500' : 'text-red-500';
                 
-                try { TransactionManager.renderAll(); } catch(e) {}
-
-                AppUI.closeModal('modal-add-savings');
-                AppUI.showToast(goal.saved >= goal.target ? "Target tercapai!" : "Dana ditambahkan."); 
-            } 
-        }
-    };
-
-    const BillManager = {
-        saveState: () => localStorage.setItem('keuanganku_bills', JSON.stringify(AppState.recurringBills)),
-        addBill: (name, amount, category, dateNum) => { AppState.recurringBills.push({ id: Date.now().toString(), name, amount, category, date: parseInt(dateNum), lastPaidMonth: null }); BillManager.saveState(); BillManager.render(); BillManager.checkDueBills(); AppUI.showToast("Tagihan rutin ditambahkan."); AppUI.closeModal('modal-add-bill'); },
-        deleteBill: (id) => { AppUI.showConfirm("Hapus Tagihan?", "Tagihan ini akan dihapus dari daftar.", () => { AppState.recurringBills = AppState.recurringBills.filter(b => b.id !== id); BillManager.saveState(); BillManager.render(); BillManager.checkDueBills(); AppUI.showToast("Tagihan dihapus."); }); },
-        checkDueBills: () => {
-            const currentMonthStr = Utils.getCurrentMonthStr(); const currentDay = new Date().getDate();
-            AppState.dueBillsCache = AppState.recurringBills.filter(b => (currentDay >= b.date) && (b.lastPaidMonth !== currentMonthStr));
-            const banner = document.getElementById('reminder-banner');
-            if (AppState.dueBillsCache.length > 0) { document.getElementById('reminder-text').innerText = `Ada ${AppState.dueBillsCache.length} tagihan butuh perhatian.`; banner.classList.remove('hidden'); banner.classList.add('flex'); } else { banner.classList.add('hidden'); banner.classList.remove('flex'); }
-        },
-        openPayModal: (id) => { const bill = AppState.recurringBills.find(b => b.id === id); if(!bill) return; AppState.billToPay = bill; document.getElementById('pay-bill-name').innerText = `Pay ${bill.name}?`; document.getElementById('pay-bill-amount').innerText = Utils.formatIDR(bill.amount); AppUI.openModal('modal-pay-bill'); },
-        confirmPayBill: () => {
-            const bill = AppState.billToPay; if(!bill) return;
-            const chosenWallet = document.querySelector('input[name="pay-bill-wallet"]:checked').value; const balances = TransactionManager.getBalances(); const currentBal = chosenWallet === 'cash' ? balances.cash : balances.bank;
-            if (bill.amount > currentBal) { AppUI.closeModal('modal-pay-bill'); return AppUI.showToast(`Saldo ${chosenWallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup!`, "error"); }
-            LocalDB.addTransaction({ type: 'expense', wallet: chosenWallet, amount: bill.amount, category: bill.category, date: Utils.getTodayDateStr(), description: `[Otomatis] Tagihan ${bill.name}` });
-            const billRef = AppState.recurringBills.find(b => b.id === bill.id); if(billRef) billRef.lastPaidMonth = Utils.getCurrentMonthStr();
-            BillManager.saveState(); BillManager.render(); BillManager.checkDueBills(); AppUI.closeModal('modal-pay-bill'); AppUI.showToast(`${bill.name} Lunas!`);
-        },
-        render: () => {
-            const container = document.getElementById('bills-list-container'); container.innerHTML = '';
-            if (AppState.recurringBills.length === 0) { container.innerHTML = `<div class="py-8 min-w-0"><p class="text-sm text-zinc-400">Belum ada tagihan rutin.</p></div>`; return; }
-            const currentMonthStr = Utils.getCurrentMonthStr(); const currentDay = new Date().getDate();
-
-            AppState.recurringBills.forEach(bill => {
-                const isPaidThisMonth = bill.lastPaidMonth === currentMonthStr; const isDue = currentDay >= bill.date;
-                let statusHtml, btnHtml;
-                if (isPaidThisMonth) { statusHtml = `<span class="text-[10px] text-zinc-500 font-medium tracking-wide">Paid</span>`; btnHtml = `<button onclick="BillManager.deleteBill('${bill.id}')" class="text-xs text-zinc-400 hover:text-red-500 transition-colors shrink-0 px-2 py-1">Remove</button>`; } 
-                else if (isDue) { statusHtml = `<span class="text-[10px] text-red-600 dark:text-red-400 font-medium tracking-wide">Due Now</span>`; btnHtml = `<div class="flex items-center gap-3 shrink-0"><button onclick="BillManager.openPayModal('${bill.id}')" class="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-medium text-xs px-3 py-1.5 rounded hover:opacity-90 transition-opacity">Pay</button><button onclick="BillManager.deleteBill('${bill.id}')" class="text-zinc-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div>`; } 
-                else { statusHtml = `<span class="text-[10px] text-zinc-500 font-medium tracking-wide">Due on ${bill.date}</span>`; btnHtml = `<button onclick="BillManager.deleteBill('${bill.id}')" class="text-xs text-zinc-400 hover:text-red-500 transition-colors shrink-0 px-2 py-1">Remove</button>`; }
-                
-                const style = Utils.getCategoryStyle(bill.category);
-                container.innerHTML += `
-                <div class="flex items-center justify-between gap-4 py-4 border-b border-zinc-100 dark:border-zinc-800/50 min-w-0">
-                    <div class="flex items-center gap-4 min-w-0">
-                        <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${style.bg}">${style.svg}</div>
-                        <div class="min-w-0">
-                            <h4 class="font-medium text-sm text-zinc-900 dark:text-white truncate tracking-tight">${bill.name}</h4>
-                            <p class="text-xs mt-0.5 truncate tabular-nums text-zinc-500">${Utils.formatIDR(bill.amount)} • ${statusHtml}</p>
+                // Memakai card style mirip desain terbaru
+                historyList.innerHTML += `
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-soft flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${style.bg} bg-opacity-50 dark:bg-opacity-20">${style.svg}</div>
+                        <div>
+                            <p class="text-sm font-bold text-gray-900 dark:text-white">${tx.description || tx.category}</p>
                         </div>
                     </div>
-                    <div class="flex items-center shrink-0">${btnHtml}</div>
+                    <div class="flex items-center gap-2">
+                        <p class="text-sm font-bold tabular-nums ${amountClass}">${sign} ${Utils.formatIDR(tx.amount).replace('Rp','Rp ')}</p>
+                        <svg class="w-4 h-4 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                    </div>
                 </div>`;
             });
+        },
+
+        renderWallet: () => {
+            const budgetListEl = document.getElementById('dashboard-budgets-list'); budgetListEl.innerHTML = '';
+            const curMonth = Utils.getCurrentMonthStr();
+            let totalLimit = 0; let totalSpent = 0;
+            
+            // Hitung pengeluaran per kategori bulan ini
+            const spentData = {};
+            AppState.transactions.forEach(tx => {
+                if(tx.type === 'expense' && tx.date.startsWith(curMonth)) {
+                    spentData[tx.category] = (spentData[tx.category] || 0) + Number(tx.amount);
+                }
+            });
+
+            // Tampilkan daftar budget
+            Object.keys(AppState.budgets).forEach(cat => {
+                const limit = Number(AppState.budgets[cat]) || 0;
+                const spent = spentData[cat] || 0;
+                totalLimit += limit; totalSpent += Math.min(spent, limit); // Batasi totalSpent logis max sebatas limit agar bar total masuk akal, atau bebas
+
+                const percent = Math.min((spent / limit) * 100, 100);
+                const style = Utils.getCategoryStyle(cat);
+
+                budgetListEl.innerHTML += `
+                <div class="bg-white dark:bg-gray-800 p-5 rounded-3xl shadow-soft">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${style.bg} bg-opacity-50 dark:bg-opacity-20">${style.svg}</div>
+                        <div class="flex-1 flex justify-between items-center">
+                            <h4 class="font-bold text-gray-900 dark:text-white text-sm">${cat}</h4>
+                            <span class="text-sm font-bold text-gray-900 dark:text-white">${Math.round(percent)}% <svg class="w-3 h-3 inline text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></span>
+                        </div>
+                    </div>
+                    <div class="w-full bg-gray-100 dark:bg-gray-700 rounded-full h-2 mb-2">
+                        <div class="${style.bar} h-2 rounded-full" style="width: ${percent}%"></div>
+                    </div>
+                    <div class="flex justify-between items-center text-[10px] font-bold text-gray-400">
+                        <span>${Utils.formatIDR(spent)}</span>
+                        <span>${Utils.formatIDR(limit)}</span>
+                    </div>
+                </div>`;
+            });
+
+            if (Object.keys(AppState.budgets).length === 0) {
+                budgetListEl.innerHTML = `<div class="text-center py-6 text-sm text-gray-400">Belum ada budget yang diatur.</div>`;
+            }
+
+            // Update Kartu Total Budget
+            const totalRemain = Math.max(totalLimit - totalSpent, 0);
+            const totalPercent = totalLimit > 0 ? Math.min((totalSpent / totalLimit) * 100, 100) : 0;
+            
+            document.getElementById('budget-total-used').innerText = Utils.formatIDR(totalSpent);
+            document.getElementById('budget-total-limit').innerText = 'dari ' + Utils.formatIDR(totalLimit);
+            document.getElementById('budget-total-remain').innerText = Utils.formatIDR(totalRemain);
+            document.getElementById('budget-total-bar').style.width = `${totalPercent}%`;
+            document.getElementById('budget-total-percent').innerText = `${Math.round(totalPercent)}%`;
         }
     };
 
     document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('input-date').value = Utils.getTodayDateStr(); document.getElementById('display-date').innerText = Utils.formatDate(Utils.getTodayDateStr()); document.getElementById('display-date').classList.add('text-zinc-900', 'dark:text-white');
-        document.querySelectorAll('.currency-input').forEach(el => el.addEventListener('input', Utils.formatCurrencyInputEvent)); 
-        Utils.setupCustomSelects();
+        // Setup Awal
+        document.getElementById('input-date').value = Utils.getTodayDateStr();
+        document.querySelectorAll('.currency-input, #input-amount, #input-budget-limit').forEach(el => el.addEventListener('input', Utils.formatCurrencyInputEvent)); 
+        Utils.populateCategorySelects();
+        CustomBgManager.init();
 
-        document.querySelectorAll('input[name="tx-type"]').forEach(radio => { 
-            radio.addEventListener('change', (e) => { 
-                const val = e.target.value;
-                const normalGroup = document.getElementById('normal-group');
-                const transferGroup = document.getElementById('transfer-group');
-                
-                if (val === 'transfer') {
-                    normalGroup.classList.add('hidden');
-                    normalGroup.classList.remove('grid');
-                    transferGroup.classList.remove('hidden');
-                    transferGroup.classList.add('grid');
-                } else {
-                    normalGroup.classList.remove('hidden');
-                    normalGroup.classList.add('grid');
-                    transferGroup.classList.add('hidden');
-                    transferGroup.classList.remove('grid');
-                    Utils.renderTxCategories(val, 'tx-category-select'); 
-                    document.getElementById('wallet-label').innerText = val === 'income' ? 'Simpan Ke' : 'Sumber Dana';
-                }
-            }); 
-        });
-
-        document.getElementById('filter-search').addEventListener('input', () => { AppState.currentPage = 1; TransactionManager.renderHistory(); });
-        document.getElementById('btn-confirm-action').addEventListener('click', () => { if (AppState.confirmCallback) AppState.confirmCallback(); AppUI.closeConfirm(); });
-        document.getElementById('form-set-budget').addEventListener('submit', (e) => { e.preventDefault(); const limit = Utils.parseRawCurrency(document.getElementById('input-budget-limit').value); const category = document.getElementById('input-budget-category').value; BudgetManager.setBudget(category, limit); document.getElementById('input-budget-limit').value = ''; });
-        document.getElementById('form-set-goal').addEventListener('submit', (e) => { e.preventDefault(); const target = Utils.parseRawCurrency(document.getElementById('input-goal-target').value); if(target <= 0) return AppUI.showToast("Nominal tidak valid", 'error'); GoalManager.addGoal(document.getElementById('input-goal-name').value, target); AppUI.closeModal('modal-set-goal'); document.getElementById('form-set-goal').reset(); });
-        document.getElementById('form-add-savings').addEventListener('submit', (e) => { e.preventDefault(); const added = Utils.parseRawCurrency(document.getElementById('input-add-savings').value); if(added <= 0) return AppUI.showToast("Nominal tidak valid", "error"); const source = document.querySelector('input[name="savings-source"]:checked').value; const wallet = document.querySelector('input[name="savings-wallet"]:checked').value; GoalManager.addSavings(document.getElementById('input-savings-id').value, added, source, wallet); });
-
+        // Form Submit: Tambah Transaksi
         document.getElementById('add-form').addEventListener('submit', (e) => {
             e.preventDefault(); 
             const amount = Utils.parseRawCurrency(document.getElementById('input-amount').value); 
-            if (amount <= 0) return AppUI.showToast("Masukkan nominal!", "error");
+            if (amount <= 0) return AppUI.showToast("Masukkan nominal valid!");
             
             const type = document.querySelector('input[name="tx-type"]:checked').value; 
-            let wallet, fromWallet, toWallet, category;
-            const balances = TransactionManager.getBalances(); 
+            const category = document.getElementById('input-category').value;
+            const date = document.getElementById('input-date').value; 
+            const wallet = document.getElementById('input-wallet').value;
+            const description = document.getElementById('input-desc').value;
 
-            if (type === 'transfer') {
-                fromWallet = document.querySelector('input[name="tf-from"]:checked').value;
-                toWallet = document.querySelector('input[name="tf-to"]:checked').value;
-                if (fromWallet === toWallet) return AppUI.showToast("Pilih dompet tujuan yang berbeda!", "error");
-                const currentBal = fromWallet === 'cash' ? balances.cash : balances.bank; 
-                if (amount > currentBal) return AppUI.showToast(`Saldo ${fromWallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup!`, "error");
-                wallet = fromWallet;
-                category = 'Transfer';
-            } else {
-                wallet = document.querySelector('input[name="tx-wallet"]:checked').value;
-                category = document.getElementById('input-category').value;
-                if (type === 'expense') { 
-                    const currentBal = wallet === 'cash' ? balances.cash : balances.bank; 
-                    if (amount > currentBal) return AppUI.showToast(`Saldo ${wallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup!`, "error"); 
-                }
+            if(LocalDB.addTransaction({ type, wallet, amount, category, date, description })) {
+                document.getElementById('input-amount').value = ''; document.getElementById('input-desc').value = '';
+                AppUI.showToast("Berhasil dicatat!"); 
+                AppUI.switchTab('dashboard');
             }
-
-            const typeLabel = type === 'expense' ? 'Pengeluaran' : (type === 'income' ? 'Pemasukan' : 'Transfer Saldo');
-
-            AppUI.showConfirm("Simpan Transaksi?", `Mencatat ${typeLabel} ${Utils.formatIDR(amount)}?`, () => {
-                const date = document.getElementById('input-date').value; 
-                const description = document.getElementById('input-desc').value;
-                
-                const payload = { type, wallet, amount, category, date, description };
-                if (type === 'transfer') { payload.fromWallet = fromWallet; payload.toWallet = toWallet; }
-
-                if(LocalDB.addTransaction(payload)) {
-                    document.getElementById('input-amount').value = ''; document.getElementById('input-desc').value = '';
-                    document.querySelector('input[name="tx-type"][value="expense"]').checked = true; 
-                    document.getElementById('normal-group').classList.remove('hidden');
-                    document.getElementById('normal-group').classList.add('grid');
-                    document.getElementById('transfer-group').classList.add('hidden');
-                    document.getElementById('transfer-group').classList.remove('grid');
-                    Utils.renderTxCategories('expense', 'tx-category-select'); 
-                    document.querySelector('input[name="tx-wallet"][value="cash"]').checked = true; 
-                    document.getElementById('wallet-label').innerText = 'Sumber Dana';
-                    document.getElementById('input-date').value = Utils.getTodayDateStr(); 
-                    document.getElementById('display-date').innerText = Utils.formatDate(Utils.getTodayDateStr());
-                    AppUI.showToast("Transaksi disimpan!"); AppUI.switchTab('dashboard');
-                }
-            });
         });
 
-        document.getElementById('add-bill-form').addEventListener('submit', (e) => { e.preventDefault(); const amount = Utils.parseRawCurrency(document.getElementById('bill-amount').value); if(amount <= 0) return AppUI.showToast("Nominal tidak valid", 'error'); BillManager.addBill(document.getElementById('bill-name').value, amount, document.getElementById('bill-category-value').value, document.getElementById('bill-date').value); document.getElementById('add-bill-form').reset(); });
-        document.getElementById('btn-confirm-pay').addEventListener('click', BillManager.confirmPayBill);
+        // Form Submit: Set Budget
+        document.getElementById('form-set-budget').addEventListener('submit', (e) => {
+            e.preventDefault(); 
+            const limit = Utils.parseRawCurrency(document.getElementById('input-budget-limit').value); 
+            const category = document.getElementById('input-budget-category').value; 
+            if (limit <= 0) { delete AppState.budgets[category]; } 
+            else { AppState.budgets[category] = limit; }
+            localStorage.setItem('keuanganku_budgets', JSON.stringify(AppState.budgets));
+            TransactionManager.renderWallet(); 
+            document.getElementById('input-budget-limit').value = '';
+            AppUI.closeModal('modal-set-budget');
+            AppUI.showToast(`Budget ${category} diperbarui!`);
+        });
 
-        TransactionManager.renderAll(); GoalManager.render(); BillManager.render(); BillManager.checkDueBills(); AppUI.switchTab('dashboard');
+        // Render Pertama Kali
+        TransactionManager.renderAll(); 
     });
 </script>
 </body>
