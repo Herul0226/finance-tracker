@@ -71,8 +71,10 @@
         input::placeholder { color: #A1A1AA; }
         .dark input::placeholder { color: #52525B; }
 
-        input[type=range] { -webkit-appearance: none; background: rgba(255,255,255,0.2); border-radius: 8px; height: 4px; outline: none; }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #ffffff; cursor: pointer; }
+        input[type=range] { -webkit-appearance: none; background: #E4E4E7; border-radius: 8px; height: 6px; outline: none; }
+        .dark input[type=range] { background: #27272A; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #1B2E22; cursor: pointer; }
+        .dark input[type=range]::-webkit-slider-thumb { background: #3B82F6; }
     </style>
 </head>
 <body class="bg-[#F9F8F4] dark:bg-[#09090B] text-zinc-800 dark:text-zinc-100 antialiased transition-colors duration-300 min-h-screen">
@@ -85,6 +87,7 @@
 
 <div id="toast-container" class="fixed top-[80px] left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2.5 w-[90%] max-w-sm pointer-events-none"></div>
 
+<!-- MODAL CONFIRM -->
 <div id="modal-confirm" class="fixed inset-0 z-[80] flex items-center justify-center hidden px-4">
     <div class="absolute inset-0 bg-zinc-900/40 dark:bg-black/60 modal-overlay" onclick="AppUI.closeConfirm()"></div>
     <div class="bg-white dark:bg-zinc-900 w-full max-w-sm rounded-[24px] p-6 relative z-10 shadow-float border border-brand-border dark:border-zinc-800 overflow-visible">
@@ -93,6 +96,38 @@
         <div class="flex gap-3">
             <button onclick="AppUI.closeConfirm()" class="flex-1 bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 font-bold rounded-xl py-3 text-xs hover:bg-zinc-200 transition-colors">Batal</button>
             <button id="btn-confirm-action" class="flex-1 bg-brand-dark dark:bg-blue-600 text-white font-bold rounded-xl py-3 text-xs hover:opacity-90 transition-opacity">Ya, Lanjut</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL POPUP ATUR POSISI BACKGROUND FOTO -->
+<div id="modal-adjust-card-bg" class="fixed inset-0 z-[70] flex items-center justify-center hidden px-4">
+    <div class="absolute inset-0 bg-zinc-900/40 dark:bg-black/60 modal-overlay" onclick="AppUI.closeModal('modal-adjust-card-bg')"></div>
+    <div class="bg-white dark:bg-zinc-900 w-full max-w-sm rounded-[24px] p-6 relative z-10 shadow-float border border-brand-border dark:border-zinc-800 overflow-visible">
+        <h3 class="font-extrabold text-base text-zinc-900 dark:text-white mb-1 tracking-tight text-center">Atur Posisi Gambar</h3>
+        <p class="text-xs text-zinc-500 dark:text-zinc-400 mb-4 text-center">Geser slider di bawah untuk menyesuaikan posisi foto.</p>
+        
+        <!-- Box Preview Kartu -->
+        <div id="bg-preview-box" class="w-full h-[150px] rounded-2xl bg-brand-dark overflow-hidden mb-5 relative shadow-inner flex flex-col items-center justify-center text-white">
+            <div class="absolute inset-0 bg-black/40"></div>
+            <div class="relative z-10 flex flex-col items-center">
+                <span class="text-[9px] uppercase tracking-widest text-white/80 font-bold mb-0.5">Preview Kartu</span>
+                <span class="text-xl font-extrabold tracking-tight">Rp 12.345.678</span>
+            </div>
+        </div>
+
+        <div class="mb-6 flex flex-col items-center w-full">
+            <div class="flex justify-between w-full text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-2">
+                <span>Atas</span>
+                <span>Tengah</span>
+                <span>Bawah</span>
+            </div>
+            <input type="range" id="modal-bg-slider" min="0" max="100" value="50" class="w-full">
+        </div>
+
+        <div class="flex gap-2">
+            <button onclick="AppUI.closeModal('modal-adjust-card-bg')" class="flex-1 bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 font-bold rounded-xl py-3 text-xs hover:bg-zinc-200 transition-colors">Batal</button>
+            <button onclick="CardManager.saveFromModal()" class="flex-1 bg-brand-dark dark:bg-blue-600 text-white font-bold rounded-xl py-3 hover:opacity-90 transition-opacity text-xs">Simpan</button>
         </div>
     </div>
 </div>
@@ -345,22 +380,18 @@
                         </div>
                         <input type="file" id="card-bg-upload" class="hidden" accept="image/*" onchange="CardManager.uploadImage(event)">
 
-                        <!-- Slider Posisi Y Gambar (Tersembunyi by default) -->
-                        <div id="bg-position-slider-container" class="absolute bottom-3 left-4 right-4 z-20 hidden flex-col items-center">
-                            <span class="text-[8px] font-bold uppercase tracking-widest text-white/70 mb-1 drop-shadow-md">Geser Posisi Gambar</span>
-                            <input type="range" id="bg-position-slider" min="0" max="100" value="50" class="w-3/4 max-w-[200px]">
-                        </div>
-
-                        <!-- Konten Kartu -->
-                        <div class="relative z-10 w-full flex flex-col items-center mt-2 mb-4">
-                            <div class="flex items-center justify-center gap-1.5 mb-1">
-                                <p class="text-white/90 text-[10px] font-bold tracking-widest uppercase drop-shadow-md">Total Saldo Aktif</p>
-                                <button onclick="AppState.toggleHideBalance()" class="text-white/80 hover:text-white transition-colors" title="Sembunyikan Saldo">
-                                    <svg id="icon-eye-open" class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                                    <svg id="icon-eye-closed" class="w-3.5 h-3.5 hidden" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                        <!-- Konten Kartu Utama -->
+                        <div class="relative z-10 w-full flex flex-col items-center mt-2 mb-2">
+                            <p class="text-white/90 text-[10px] font-bold tracking-widest uppercase mb-1 drop-shadow-md">Total Saldo Aktif</p>
+                            
+                            <!-- Nominal + Logo Mata Samping -->
+                            <div class="flex items-center justify-center gap-2 w-full mb-4 px-2">
+                                <h2 class="text-3xl md:text-4xl font-extrabold tracking-tighter drop-shadow-md transition-all max-w-[85%] truncate" id="dash-balance">Rp 0</h2>
+                                <button onclick="AppState.toggleHideBalance()" class="text-white/80 hover:text-white transition-colors shrink-0 p-1.5 bg-black/20 hover:bg-black/40 backdrop-blur-md rounded-full shadow-sm" title="Sembunyikan / Tampilkan Saldo">
+                                    <svg id="icon-eye-open" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                                    <svg id="icon-eye-closed" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
                                 </button>
                             </div>
-                            <h2 class="text-3xl md:text-4xl font-extrabold tracking-tighter truncate w-full mb-4 drop-shadow-md transition-all" id="dash-balance">Rp 0</h2>
                             
                             <div class="flex gap-2.5 justify-center w-full">
                                 <button onclick="AppUI.switchTab('wallet')" class="bg-white/20 hover:bg-white/30 text-white text-xs font-bold py-2.5 px-4 rounded-xl backdrop-blur-md transition-colors flex-1 max-w-[130px] shadow-sm">Rincian</button>
@@ -416,7 +447,6 @@
                                 <span class="text-sm font-extrabold text-red-700 dark:text-red-300 truncate block mt-0.5" id="wallet-expense">Rp 0</span>
                             </div>
                         </div>
-                        <!-- Arus Kas disederhanakan -->
                         <div class="flex justify-between items-center bg-zinc-50 dark:bg-zinc-800/60 p-2.5 rounded-xl">
                             <span class="text-[11px] font-bold text-zinc-700 dark:text-zinc-300">Arus Kas (Bulan Ini)</span>
                             <span class="text-xs font-extrabold text-zinc-900 dark:text-white" id="wallet-cashflow">Rp 0</span>
@@ -707,19 +737,20 @@
     };
 
     const CardManager = {
+        tempDataUrl: null,
         init: () => {
             const savedBg = localStorage.getItem('keuanganku_card_bg');
             const savedPos = localStorage.getItem('keuanganku_card_pos') || '50';
             if (savedBg) CardManager.applyImage(savedBg, savedPos);
 
-            // Listener untuk slider pengatur posisi gambar
-            const slider = document.getElementById('bg-position-slider');
-            slider.value = savedPos;
-            slider.addEventListener('input', (e) => {
-                const card = document.getElementById('main-balance-card');
-                card.style.backgroundPosition = `center ${e.target.value}%`;
-                localStorage.setItem('keuanganku_card_pos', e.target.value);
-            });
+            // Listener slider pada Popup Modal
+            const modalSlider = document.getElementById('modal-bg-slider');
+            if (modalSlider) {
+                modalSlider.addEventListener('input', (e) => {
+                    const preview = document.getElementById('bg-preview-box');
+                    preview.style.backgroundPosition = `center ${e.target.value}%`;
+                });
+            }
         },
         uploadImage: (e) => {
             const file = e.target.files[0];
@@ -747,27 +778,41 @@
                     ctx.drawImage(img, 0, 0, width, height);
                     const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
                     
-                    try {
-                        localStorage.setItem('keuanganku_card_bg', dataUrl);
-                        localStorage.setItem('keuanganku_card_pos', '50'); // reset ke tengah
-                        document.getElementById('bg-position-slider').value = 50;
-                        CardManager.applyImage(dataUrl, '50');
-                        AppUI.showToast("Background berhasil diganti!");
-                    } catch (err) {
-                        AppUI.showToast("Gambar terlalu besar. Coba gunakan foto lain.", "error");
-                    }
+                    CardManager.tempDataUrl = dataUrl;
+
+                    // Tampilkan gambar pada box preview modal popup
+                    const preview = document.getElementById('bg-preview-box');
+                    preview.style.backgroundImage = `url('${dataUrl}')`;
+                    preview.style.backgroundSize = 'cover';
+                    preview.style.backgroundPosition = 'center 50%';
+                    preview.style.backgroundRepeat = 'no-repeat';
+
+                    document.getElementById('modal-bg-slider').value = 50;
+                    AppUI.openModal('modal-adjust-card-bg');
                 };
                 img.src = event.target.result;
             };
             reader.readAsDataURL(file);
             e.target.value = ''; 
         },
+        saveFromModal: () => {
+            if (!CardManager.tempDataUrl) return;
+            const pos = document.getElementById('modal-bg-slider').value;
+            try {
+                localStorage.setItem('keuanganku_card_bg', CardManager.tempDataUrl);
+                localStorage.setItem('keuanganku_card_pos', pos);
+                CardManager.applyImage(CardManager.tempDataUrl, pos);
+                AppUI.closeModal('modal-adjust-card-bg');
+                AppUI.showToast("Background berhasil dipasang!");
+            } catch (err) {
+                AppUI.showToast("Gambar terlalu besar. Coba gunakan foto lain.", "error");
+            }
+        },
         applyImage: (dataUrl, posY) => {
             const card = document.getElementById('main-balance-card');
             const overlay = document.getElementById('main-balance-card-overlay');
             const btnRemove = document.getElementById('btn-remove-bg');
             const divider = document.getElementById('divider-bg');
-            const sliderContainer = document.getElementById('bg-position-slider-container');
             
             card.style.backgroundImage = `url('${dataUrl}')`;
             card.style.backgroundSize = 'cover';
@@ -777,8 +822,6 @@
             overlay.classList.remove('hidden');
             btnRemove.classList.remove('hidden');
             if(divider) divider.classList.remove('hidden');
-            if(sliderContainer) sliderContainer.classList.remove('hidden');
-            if(sliderContainer) sliderContainer.classList.add('flex');
         },
         removeImage: () => {
             AppUI.showConfirm("Hapus Background?", "Gambar background akan dikembalikan ke warna semula.", () => {
@@ -788,14 +831,11 @@
                 const overlay = document.getElementById('main-balance-card-overlay');
                 const btnRemove = document.getElementById('btn-remove-bg');
                 const divider = document.getElementById('divider-bg');
-                const sliderContainer = document.getElementById('bg-position-slider-container');
                 
                 card.style.backgroundImage = 'none';
                 overlay.classList.add('hidden');
                 btnRemove.classList.add('hidden');
                 if(divider) divider.classList.add('hidden');
-                if(sliderContainer) sliderContainer.classList.add('hidden');
-                if(sliderContainer) sliderContainer.classList.remove('flex');
                 
                 AppUI.showToast("Background dihapus.");
             });
@@ -965,7 +1005,6 @@
         hardReset: () => { AppUI.showConfirm("Reset Total Aplikasi?", "Seluruh data akan hilang selamanya.", () => { localStorage.clear(); location.reload(); }); }
     };
 
-    // FUNGSI EKSPORT APK SUPER ROBUST (Web Share API)
     const BackupManager = {
         exportJSON: async () => { 
             const data = { tx: AppState.transactions, goals: AppState.savingsGoals, bills: AppState.recurringBills, budgets: AppState.budgets }; 
@@ -973,7 +1012,6 @@
             const fileName = `Keuanganku_FullBackup_${Utils.getTodayDateStr()}.json`;
             const blob = new Blob([jsonString], {type: "application/json"});
             
-            // Cek apakah jalan di HP dan dukung fitur Share bawaan
             if (navigator.canShare && navigator.canShare({ files: [new File([blob], fileName, { type: "application/json" })] })) {
                 try {
                     const file = new File([blob], fileName, { type: "application/json" });
@@ -989,7 +1027,6 @@
                 }
             }
             
-            // Fallback (Browser biasa / WebView lama)
             const url = URL.createObjectURL(blob); 
             const a = document.createElement('a'); 
             a.href = url; a.download = fileName; 
@@ -1014,7 +1051,6 @@
             const fileName = `Keuanganku_Riwayat_${Utils.getTodayDateStr()}.csv`;
             const blob = new Blob([csvString], {type: "text/csv;charset=utf-8;"});
             
-            // Web Share API untuk HP Android
             if (navigator.canShare && navigator.canShare({ files: [new File([blob], fileName, { type: "text/csv" })] })) {
                 try {
                     const file = new File([blob], fileName, { type: "text/csv" });
@@ -1030,7 +1066,6 @@
                 }
             }
 
-            // Fallback (Browser biasa / WebView lama)
             const url = URL.createObjectURL(blob); 
             const a = document.createElement('a'); 
             a.href = url; a.download = fileName; 
@@ -1064,7 +1099,6 @@
         renderDashboard: () => {
             const balances = TransactionManager.getBalances();
             
-            // Logic fitur Sembunyikan Saldo
             const eyeOpen = document.getElementById('icon-eye-open');
             const eyeClosed = document.getElementById('icon-eye-closed');
             const balanceEl = document.getElementById('dash-balance');
@@ -1360,7 +1394,6 @@
             }); 
         });
 
-        // Fitur Logika Otomatis Pilihan Dompet pada Transfer
         document.querySelectorAll('input[name="tf-from"]').forEach(el => {
             el.addEventListener('change', (e) => {
                 const opposite = e.target.value === 'cash' ? 'bank' : 'cash';
