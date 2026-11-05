@@ -725,15 +725,27 @@
                 const img = new Image();
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 800;
-                    const scaleSize = MAX_WIDTH / img.width;
-                    canvas.width = MAX_WIDTH;
-                    canvas.height = img.height * scaleSize;
+                    
+                    // Optimasi proporsi agar foto portrait tinggi tidak kebesaran size-nya
+                    const MAX_SIZE = 800;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height && width > MAX_SIZE) {
+                        height *= MAX_SIZE / width;
+                        width = MAX_SIZE;
+                    } else if (height > MAX_SIZE) {
+                        width *= MAX_SIZE / height;
+                        height = MAX_SIZE;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
 
                     const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0, width, height);
 
-                    const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
                     
                     try {
                         localStorage.setItem('keuanganku_card_bg', dataUrl);
@@ -754,14 +766,23 @@
             const btnRemove = document.getElementById('btn-remove-bg');
             const divider = document.getElementById('divider-bg');
             
-            card.style.backgroundImage = `url('${dataUrl}')`;
-            card.style.backgroundSize = 'cover';
-            card.style.backgroundPosition = 'center';
-            card.style.backgroundRepeat = 'no-repeat';
-            
-            overlay.classList.remove('hidden');
-            btnRemove.classList.remove('hidden');
-            if(divider) divider.classList.remove('hidden');
+            // Deteksi otomatis orientasi gambar agar potrait tidak terpotong bagian wajahnya
+            const img = new Image();
+            img.onload = () => {
+                const isPortrait = img.height > img.width;
+                
+                card.style.backgroundImage = `url('${dataUrl}')`;
+                card.style.backgroundSize = 'cover';
+                
+                // Jika potrait, titik fokus digeser ke atas (25%). Jika landscape, di tengah.
+                card.style.backgroundPosition = isPortrait ? 'center 25%' : 'center center';
+                card.style.backgroundRepeat = 'no-repeat';
+                
+                overlay.classList.remove('hidden');
+                btnRemove.classList.remove('hidden');
+                if(divider) divider.classList.remove('hidden');
+            };
+            img.src = dataUrl;
         },
         removeImage: () => {
             AppUI.showConfirm("Hapus Background?", "Gambar background akan dikembalikan ke warna semula.", () => {
