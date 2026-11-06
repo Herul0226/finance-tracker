@@ -32,8 +32,13 @@
         * { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-user-drag: none; }
         input, textarea, select { -webkit-user-select: auto; user-select: auto; }
 
-        html, body { scroll-behavior: smooth; overflow-x: hidden; min-height: 100%; }
+        /* Mengunci layar desktop agar tidak bisa di-scroll global */
+        html, body { overflow: hidden; height: 100%; height: 100dvh; }
         
+        /* CSS untuk menghilangkan scroll bar bagian kanan sepenuhnya */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
         .view-section { display: none; opacity: 0; transition: opacity 0.2s ease, transform 0.2s ease; transform: translateY(5px); }
         .view-section.active { display: block; opacity: 1; transform: translateY(0); animation: smoothEnter 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes smoothEnter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -73,15 +78,13 @@
         .dark input[type=range]::-webkit-slider-thumb { background: #3B82F6; }
     </style>
 </head>
-<body class="bg-zinc-200 dark:bg-zinc-950 text-zinc-800 dark:text-zinc-100 antialiased transition-colors duration-300 min-h-screen flex justify-center">
+<body class="bg-zinc-200 dark:bg-zinc-950 text-zinc-800 dark:text-zinc-100 antialiased transition-colors duration-300 h-[100dvh] w-full flex justify-center overflow-hidden">
 
 <script>
     if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
     }
 </script>
-
-<div id="toast-container" class="fixed top-[80px] left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2.5 w-[90%] max-w-sm pointer-events-none"></div>
 
 <!-- MODALS -->
 <!-- MODAL CONFIRM -->
@@ -274,10 +277,13 @@
 </div>
 
 <!-- ================= MAIN CONTAINER (MOBILE FRAME DI DESKTOP) ================= -->
-<div class="w-full max-w-md mx-auto bg-[#F9F8F4] dark:bg-[#09090B] min-h-screen relative shadow-[0_0_40px_rgba(0,0,0,0.1)] dark:shadow-[0_0_40px_rgba(0,0,0,0.5)] border-x border-zinc-300 dark:border-zinc-800 flex flex-col overflow-x-hidden">
+<div class="w-full max-w-md mx-auto h-full bg-[#F9F8F4] dark:bg-[#09090B] relative shadow-[0_0_40px_rgba(0,0,0,0.1)] dark:shadow-[0_0_40px_rgba(0,0,0,0.5)] border-x border-zinc-300 dark:border-zinc-800 flex flex-col overflow-hidden">
 
-    <!-- HEADER -->
-    <header class="sticky top-0 z-40 bg-[#F9F8F4]/95 dark:bg-[#09090B]/95 backdrop-blur-xl px-4 py-3 flex items-center justify-between border-b border-brand-border dark:border-zinc-800">
+    <!-- Container Notifikasi yang kini terikat di dalam frame -->
+    <div id="toast-container" class="absolute top-[80px] left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-2.5 w-[90%] pointer-events-none"></div>
+
+    <!-- HEADER STATIS -->
+    <header class="shrink-0 relative z-40 bg-[#F9F8F4]/95 dark:bg-[#09090B]/95 backdrop-blur-xl px-4 py-3 flex items-center justify-between border-b border-brand-border dark:border-zinc-800">
         <div class="flex items-center gap-3 min-w-0">
             <div class="w-10 h-10 rounded-xl bg-brand-dark dark:bg-blue-600 flex items-center justify-center text-white shrink-0 shadow-sm">
                 <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
@@ -295,8 +301,8 @@
         </div>
     </header>
 
-    <!-- KONTEN UTAMA -->
-    <main class="flex-1 p-4 pb-28 w-full min-w-0 flex flex-col">
+    <!-- KONTEN UTAMA (Yang Bisa Di-Scroll Tanpa Scrollbar) -->
+    <main id="main-content" class="flex-1 p-4 pb-28 w-full min-w-0 flex flex-col overflow-y-auto no-scrollbar scroll-smooth relative">
         <div class="w-full min-w-0">
 
             <!-- ==================== VIEW: BERANDA ==================== -->
@@ -564,7 +570,7 @@
                         <div class="min-w-0">
                             <label class="block text-[10px] font-bold text-zinc-500 mb-1 uppercase tracking-widest truncate">Tanggal</label>
                             <div class="w-full input-premium text-zinc-700 dark:text-white text-sm font-semibold rounded-xl px-4 py-3.5 flex justify-between items-center cursor-pointer" onclick="CalendarManager.open('input-date')">
-                                <span id="display-date" class="truncate pr-2 text-zinc-900 dark:text-white font-bold"></span><svg class="w-5 h-5 text-zinc-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                <span id="display-date" class="truncate pr-2 text-zinc-900 dark:text-white font-bold"></span><svg class="w-5 h-5 text-zinc-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v12a2 2 0 002 2z"></path></svg>
                             </div>
                             <input type="hidden" id="input-date" required="" value="">
                         </div>
@@ -618,7 +624,7 @@
     </main>
 
     <!-- BOTTOM NAV BAR FIXED DI DALAM WRAPPER -->
-    <nav class="fixed bottom-4 left-1/2 -translate-x-1/2 w-[94%] max-w-[400px] bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border border-brand-border dark:border-zinc-800 rounded-[26px] z-50 shadow-float px-2 py-2 flex justify-between items-center gap-1">
+    <nav class="absolute bottom-4 left-1/2 -translate-x-1/2 w-[94%] max-w-[400px] bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border border-brand-border dark:border-zinc-800 rounded-[26px] z-50 shadow-float px-2 py-2 flex justify-between items-center gap-1">
         <button onclick="AppUI.switchTab('dashboard')" class="nav-btn nav-btn-dashboard mobile-nav flex-1 active">
             <svg class="w-6 h-6 shrink-0 icon-outline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
             <svg class="w-6 h-6 shrink-0 icon-fill" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
@@ -876,10 +882,9 @@
             document.getElementById('confirm-title').innerText = title; document.getElementById('confirm-msg').innerText = message; AppState.confirmCallback = callback; AppUI.openModal('modal-confirm');
         },
         closeConfirm: () => { AppUI.closeModal('modal-confirm'); AppState.confirmCallback = null; },
-        openModal: (id) => { document.getElementById(id).classList.remove('hidden'); document.body.style.overflow = 'hidden'; },
+        openModal: (id) => { document.getElementById(id).classList.remove('hidden'); },
         closeModal: (id) => {
             document.getElementById(id).classList.add('hidden');
-            document.body.style.overflow = '';
             if(id === 'modal-add-savings') { document.getElementById('input-add-savings').value = ''; document.querySelector('input[name="savings-source"][value="external"]').checked = true; }
         },
         switchTab: (tabId) => {
@@ -888,7 +893,8 @@
             const viewTarget = document.getElementById(`view-${tabId}`);
             if(viewTarget) viewTarget.classList.add('active');
             document.querySelectorAll(`.nav-btn-${tabId}`).forEach(el => { el.classList.add('active'); });
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            const mainContent = document.getElementById('main-content');
+            if(mainContent) mainContent.scrollTo({ top: 0, behavior: 'smooth' });
         }
     };
 
