@@ -1,5 +1,5 @@
 
-# 📱 Cara Konfigurasi Project Menjadi APK
+# Cara Konfigurasi Project Menjadi APK
 
 Ikuti langkah-langkah berikut untuk mengonfigurasi project agar dapat dibuild menjadi aplikasi Android (`.apk`) menggunakan **Capacitor**.
 
@@ -69,7 +69,7 @@ Selanjutnya, Anda dapat melakukan proses build APK melalui Android Studio.
 
 ---
 
-## 🔄 Perintah Rutin Setelah Update Aplikasi
+## Perintah Rutin Setelah Update Aplikasi
 
 Jika terdapat perubahan atau pembaruan pada kode aplikasi, Anda **tidak perlu mengulangi seluruh proses instalasi** dari awal.
 
@@ -85,7 +85,7 @@ Setelah sinkronisasi selesai, buka kembali Android Studio untuk melakukan build 
 
 ---
 
-## 📦 Proses Build APK
+## Proses Build APK
 
 Setelah project terbuka di Android Studio:
 
@@ -104,6 +104,6 @@ android/app/build/outputs/apk/debug/app-debug.apk
 
 ---
 
-**🎉 Selesai!**
+**kelar!**
 
 Project aplikasi Anda kini sudah dikonfigurasi menggunakan Capacitor dan siap dibuild menjadi aplikasi Android (`.apk`).
