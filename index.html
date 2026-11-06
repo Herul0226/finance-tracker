@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="id" class="dark"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Keuanganku - Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { 
-            darkMode: 'class', 
-            theme: { 
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
                 extend: {
                     fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
                     colors: {
                         'brand-bg': '#F9F8F4',
-                        'brand-dark': '#1B2E22', 
+                        'brand-dark': '#1B2E22',
                         'brand-light': '#E8EDE7',
                         'brand-border': '#EBEAE4'
                     },
@@ -20,8 +20,8 @@
                         'soft': '0 8px 30px rgba(0, 0, 0, 0.04)',
                         'float': '0 12px 40px rgba(0, 0, 0, 0.12)'
                     }
-                } 
-            } 
+                }
+            }
         }
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com/">
@@ -31,16 +31,16 @@
     <style>
         * { -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-user-drag: none; }
         input, textarea, select { -webkit-user-select: auto; user-select: auto; }
-        
+
         html, body { scroll-behavior: smooth; overflow-x: hidden; min-height: 100%; background-color: #F9F8F4; }
-        .dark body { background-color: #09090B; } 
-        
+        .dark body { background-color: #09090B; }
+
         .view-section { display: none; opacity: 0; transition: opacity 0.2s ease, transform 0.2s ease; transform: translateY(5px); }
         .view-section.active { display: block; opacity: 1; transform: translateY(0); animation: smoothEnter 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes smoothEnter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
+
         .modal-overlay { backdrop-filter: blur(4px); transition: opacity 0.3s ease; }
-        
+
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #D4D4D8; border-radius: 10px; }
@@ -49,7 +49,7 @@
         .nav-btn.active .icon-outline { display: none; }
         .nav-btn.active .icon-fill { display: block; }
         .nav-btn:not(.active) .icon-fill { display: none; }
-        
+
         .mobile-nav { transition: all 0.2s ease; padding: 6px 8px; border-radius: 16px; color: #71717A; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
         .mobile-nav.active { background-color: #E8EDE7; color: #1B2E22; font-weight: 700; }
         .dark .mobile-nav { color: #A1A1AA; }
@@ -64,10 +64,10 @@
 
         .input-premium { background-color: #ffffff; border: 1px solid #EBEAE4; transition: all 0.2s ease; color: #27272A; }
         .input-premium:focus { border-color: #1B2E22; box-shadow: 0 0 0 3px rgba(27, 46, 34, 0.1); outline: none; }
-        
+
         .dark .input-premium { background-color: #18181B; border-color: #27272A; color: #F4F4F5; }
         .dark .input-premium:focus { border-color: #3B82F6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); }
-        
+
         input::placeholder { color: #A1A1AA; }
         .dark input::placeholder { color: #52525B; }
 
@@ -106,7 +106,7 @@
     <div class="bg-white dark:bg-zinc-900 w-full max-w-sm rounded-[24px] p-6 relative z-10 shadow-float border border-brand-border dark:border-zinc-800 overflow-visible">
         <h3 class="font-extrabold text-base text-zinc-900 dark:text-white mb-1 tracking-tight text-center">Atur Posisi Gambar</h3>
         <p class="text-xs text-zinc-500 dark:text-zinc-400 mb-4 text-center">Geser slider di bawah untuk menyesuaikan posisi foto.</p>
-        
+
         <!-- Box Preview Kartu -->
         <div id="bg-preview-box" class="w-full h-[150px] rounded-2xl bg-brand-dark overflow-hidden mb-5 relative shadow-inner flex flex-col items-center justify-center text-white">
             <div class="absolute inset-0 bg-black/40"></div>
@@ -365,7 +365,7 @@
 
                     <!-- KARTU SALDO UTAMA -->
                     <div id="main-balance-card" class="bg-brand-dark dark:bg-blue-600 rounded-3xl p-6 text-white shadow-soft relative overflow-hidden flex flex-col justify-center items-center text-center transition-all min-h-[180px]">
-                        
+
                         <div id="main-balance-card-overlay" class="absolute inset-0 bg-black/40 hidden z-0 pointer-events-none"></div>
 
                         <!-- Kapsul Aksi Background -->
@@ -384,7 +384,7 @@
                         <!-- Konten Kartu Utama -->
                         <div class="relative z-10 w-full flex flex-col items-center mt-2 mb-2">
                             <p class="text-white/90 text-[10px] font-bold tracking-widest uppercase mb-1 drop-shadow-md">Total Saldo Aktif</p>
-                            
+
                             <!-- Nominal + Logo Mata Samping -->
                             <div class="flex items-center justify-center gap-2 w-full mb-4 px-2">
                                 <h2 class="text-3xl md:text-4xl font-extrabold tracking-tighter drop-shadow-md transition-all max-w-[85%] truncate" id="dash-balance">Rp 0</h2>
@@ -393,7 +393,7 @@
                                     <svg id="icon-eye-closed" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
                                 </button>
                             </div>
-                            
+
                             <div class="flex gap-2.5 justify-center w-full">
                                 <button onclick="AppUI.switchTab('wallet')" class="bg-white/20 hover:bg-white/30 text-white text-xs font-bold py-2.5 px-4 rounded-xl backdrop-blur-md transition-colors flex-1 max-w-[130px] shadow-sm">Rincian</button>
                                 <button onclick="AppUI.switchTab('add')" class="bg-white text-brand-dark dark:text-blue-600 text-xs font-bold py-2.5 px-4 rounded-xl transition-colors flex-1 max-w-[130px] shadow-sm">+ Catat</button>
@@ -424,7 +424,7 @@
                 <!-- ==================== VIEW: DOMPET ==================== -->
                 <section id="view-wallet" class="view-section space-y-4">
                     <div class="md:hidden mb-1 px-1 min-w-0"><h2 class="text-lg font-extrabold tracking-tight text-zinc-900 dark:text-white truncate">Dompet &amp; Anggaran</h2></div>
-                    
+
                     <div class="grid grid-cols-2 gap-2.5">
                         <div class="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-brand-border dark:border-zinc-800 shadow-sm flex flex-col justify-center">
                             <p class="text-[9px] font-bold text-zinc-400 uppercase tracking-widest mb-0.5 truncate">Uang Tunai</p>
@@ -461,7 +461,7 @@
                         </div>
                         <div id="dashboard-budgets-list" class="space-y-2 flex-grow min-w-0"></div>
                     </div>
-                    
+
                     <div class="pt-2 pb-2">
                         <div class="flex justify-between items-center px-1 mb-3 min-w-0">
                             <h2 class="text-base font-extrabold tracking-tight text-zinc-900 dark:text-white truncate">Tagihan Rutin</h2>
@@ -504,7 +504,7 @@
                                 <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
                             </button>
                         </div>
-                        
+
                         <div id="advanced-filter-panel" class="hidden mt-3 pt-3 border-t border-brand-border dark:border-zinc-800 min-w-0">
                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 min-w-0">
                                 <div class="relative custom-select z-50 min-w-0" id="filter-period-select">
@@ -565,7 +565,7 @@
                 <section id="view-add" class="view-section">
                     <div class="md:hidden mb-3 px-1"><h2 class="text-lg font-extrabold tracking-tight text-zinc-900 dark:text-white">Catat Transaksi</h2></div>
                     <form id="add-form" class="bg-white dark:bg-zinc-900 p-5 sm:p-6 rounded-2xl shadow-sm border border-brand-border dark:border-zinc-800 space-y-5 min-w-0">
-                        
+
                         <div class="bg-zinc-100 dark:bg-zinc-800/80 p-1.5 rounded-xl flex gap-1.5 relative border border-brand-border dark:border-zinc-700 shadow-inner">
                             <label class="flex-1 cursor-pointer">
                                 <input type="radio" name="tx-type" value="expense" class="peer hidden" checked="">
@@ -580,7 +580,7 @@
                                 <div class="text-center py-2.5 rounded-lg text-sm font-bold peer-checked:bg-blue-500 dark:peer-checked:bg-blue-600 peer-checked:text-white peer-checked:shadow-md text-zinc-500 dark:text-zinc-400 transition-all">Transfer</div>
                             </label>
                         </div>
-                        
+
                         <div class="py-2">
                             <label class="block text-[11px] font-bold text-zinc-400 mb-1 uppercase tracking-widest text-center truncate">Jumlah Nominal</label>
                             <div class="relative max-w-[240px] mx-auto flex items-center justify-center border-b-2 border-zinc-200 dark:border-zinc-700 focus-within:border-brand-dark dark:focus-within:border-blue-500 transition-colors">
@@ -626,7 +626,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
                             <div class="min-w-0">
                                 <label class="block text-[10px] font-bold text-zinc-500 mb-1 uppercase tracking-widest truncate">Tanggal</label>
@@ -719,17 +719,17 @@
 
 <script>
     const ThemeManager = { toggle: () => { document.documentElement.classList.toggle('dark'); localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light'; } };
-    const AppState = { 
-        transactions: JSON.parse(localStorage.getItem('keuanganku_tx')) || [], 
-        currentPage: 1, 
-        itemsPerPage: 10, 
-        savingsGoals: JSON.parse(localStorage.getItem('keuanganku_goals')) || [], 
-        recurringBills: JSON.parse(localStorage.getItem('keuanganku_bills')) || [], 
-        budgets: JSON.parse(localStorage.getItem('keuanganku_budgets')) || {}, 
-        billToPay: null, 
+    const AppState = {
+        transactions: JSON.parse(localStorage.getItem('keuanganku_tx')) || [],
+        currentPage: 1,
+        itemsPerPage: 10,
+        savingsGoals: JSON.parse(localStorage.getItem('keuanganku_goals')) || [],
+        recurringBills: JSON.parse(localStorage.getItem('keuanganku_bills')) || [],
+        budgets: JSON.parse(localStorage.getItem('keuanganku_budgets')) || {},
+        billToPay: null,
         confirmCallback: null,
         isBalanceHidden: localStorage.getItem('keuanganku_hide_balance') === 'true',
-        
+
         toggleHideBalance: () => {
             AppState.isBalanceHidden = !AppState.isBalanceHidden;
             localStorage.setItem('keuanganku_hide_balance', AppState.isBalanceHidden);
@@ -778,7 +778,7 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
                     const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-                    
+
                     CardManager.tempDataUrl = dataUrl;
 
                     // Tampilkan gambar pada box preview modal popup
@@ -794,7 +794,7 @@
                 img.src = event.target.result;
             };
             reader.readAsDataURL(file);
-            e.target.value = ''; 
+            e.target.value = '';
         },
         saveFromModal: () => {
             if (!CardManager.tempDataUrl) return;
@@ -814,12 +814,12 @@
             const overlay = document.getElementById('main-balance-card-overlay');
             const btnRemove = document.getElementById('btn-remove-bg');
             const divider = document.getElementById('divider-bg');
-            
+
             card.style.backgroundImage = `url('${dataUrl}')`;
             card.style.backgroundSize = 'cover';
             card.style.backgroundPosition = `center ${posY}%`;
             card.style.backgroundRepeat = 'no-repeat';
-            
+
             overlay.classList.remove('hidden');
             btnRemove.classList.remove('hidden');
             if(divider) divider.classList.remove('hidden');
@@ -832,12 +832,12 @@
                 const overlay = document.getElementById('main-balance-card-overlay');
                 const btnRemove = document.getElementById('btn-remove-bg');
                 const divider = document.getElementById('divider-bg');
-                
+
                 card.style.backgroundImage = 'none';
                 overlay.classList.add('hidden');
                 btnRemove.classList.add('hidden');
                 if(divider) divider.classList.add('hidden');
-                
+
                 AppUI.showToast("Background dihapus.");
             });
         }
@@ -868,7 +868,7 @@
         getCategoryStyle: (cat) => { const c = Utils.categoryData[cat] || Utils.categoryData['Lainnya']; return { svg: c.svg, text: c.colorText, bg: c.bg }; },
         toggleDropdown: (id) => { document.querySelectorAll('.custom-select').forEach(el => { if (el.id !== id) el.classList.remove('open'); }); document.getElementById(id).classList.toggle('open'); },
         renderTxCategories: (txType, containerId = 'tx-category-select') => {
-            const container = document.querySelector(`#${containerId} .custom-select-options`); let html = ''; 
+            const container = document.querySelector(`#${containerId} .custom-select-options`); let html = '';
             const cats = Object.keys(Utils.categoryData).filter(c => Utils.categoryData[c].type === txType || Utils.categoryData[c].type === 'both');
             cats.forEach(cat => { const style = Utils.categoryData[cat]; html += `<div class="px-3.5 py-3 flex items-center gap-3 hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer border-b border-brand-border dark:border-zinc-800 transition-colors min-w-0" onclick="Utils.selectOption('${containerId}', '${cat}', '${cat}')"><div class="${style.colorText} shrink-0 w-5 h-5 flex items-center justify-center">${style.svg}</div><span class="font-bold text-zinc-700 dark:text-zinc-200 text-xs truncate">${cat}</span></div>`; });
             if(container) container.innerHTML = html; Utils.selectOption(containerId, cats[0], cats[0]);
@@ -887,7 +887,7 @@
             const s = document.getElementById(selectId); if(!s) return;
             s.querySelector('input[type="hidden"]').value = value;
             const displayContainer = s.querySelector('div[id$="-display"]');
-            if (Utils.categoryData[value] && !selectId.startsWith('filter-')) { const style = Utils.categoryData[value]; displayContainer.innerHTML = `<div class="flex items-center gap-2.5 min-w-0"><div class="${style.colorText} shrink-0 w-5 h-5 flex items-center justify-center">${style.svg}</div> <span class="dark:text-white font-bold text-sm truncate">${value}</span></div>`; } 
+            if (Utils.categoryData[value] && !selectId.startsWith('filter-')) { const style = Utils.categoryData[value]; displayContainer.innerHTML = `<div class="flex items-center gap-2.5 min-w-0"><div class="${style.colorText} shrink-0 w-5 h-5 flex items-center justify-center">${style.svg}</div> <span class="dark:text-white font-bold text-sm truncate">${value}</span></div>`; }
             else { displayContainer.innerHTML = `<span class="dark:text-white font-bold truncate pr-1">${displayText || value}</span>`; }
             s.classList.remove('open');
             if (selectId.startsWith('filter-')) { AppState.currentPage = 1; TransactionManager.renderHistory(); }
@@ -916,35 +916,35 @@
 
     const AppUI = {
         showToast: (message, type = 'success') => {
-            const c = document.getElementById('toast-container'); 
-            const t = document.createElement('div'); 
-            
+            const c = document.getElementById('toast-container');
+            const t = document.createElement('div');
+
             const isSuccess = type === 'success';
             const borderCol = isSuccess ? 'border-brand-dark dark:border-emerald-500' : 'border-red-500';
-            const iconSvg = isSuccess 
+            const iconSvg = isSuccess
                 ? `<svg class="w-5 h-5 text-brand-dark dark:text-emerald-500" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>`
                 : `<svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>`;
 
-            t.className = `bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white border-l-4 ${borderCol} px-4 py-3.5 rounded-xl shadow-float flex items-center gap-3 w-full`; 
+            t.className = `bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white border-l-4 ${borderCol} px-4 py-3.5 rounded-xl shadow-float flex items-center gap-3 w-full`;
             t.innerHTML = `<div class="shrink-0">${iconSvg}</div> <span class="text-sm font-bold tracking-tight truncate">${message}</span>`;
-            
+
             t.style.opacity = '0';
             t.style.transform = 'translateY(-15px)';
             t.style.transition = 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
-            
-            c.appendChild(t); 
-            
+
+            c.appendChild(t);
+
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
                     t.style.opacity = '1';
                     t.style.transform = 'translateY(0)';
                 });
             });
-            
-            setTimeout(() => { 
-                t.style.opacity = '0'; 
-                t.style.transform = 'translateY(-15px)'; 
-                setTimeout(() => t.remove(), 300); 
+
+            setTimeout(() => {
+                t.style.opacity = '0';
+                t.style.transform = 'translateY(-15px)';
+                setTimeout(() => t.remove(), 300);
             }, 2500);
         },
         showConfirm: (title, message, callback) => {
@@ -952,21 +952,21 @@
         },
         closeConfirm: () => { AppUI.closeModal('modal-confirm'); AppState.confirmCallback = null; },
         openModal: (id) => { document.getElementById(id).classList.remove('hidden'); document.body.style.overflow = 'hidden'; },
-        closeModal: (id) => { 
-            document.getElementById(id).classList.add('hidden'); 
+        closeModal: (id) => {
+            document.getElementById(id).classList.add('hidden');
             document.body.style.overflow = '';
             if(id === 'modal-add-savings') { document.getElementById('input-add-savings').value = ''; document.querySelector('input[name="savings-source"][value="external"]').checked = true; }
         },
         switchTab: (tabId) => {
             const titles = { 'dashboard': 'Beranda', 'wallet': 'Dompet & Anggaran', 'recap': 'Rekap Bulanan', 'history': 'Riwayat Transaksi', 'add': 'Catat Transaksi', 'settings': 'Pengaturan', 'goals': 'Target Impian' };
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active')); 
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-            
+
             const viewTarget = document.getElementById(`view-${tabId}`);
-            if(viewTarget) viewTarget.classList.add('active'); 
-            
+            if(viewTarget) viewTarget.classList.add('active');
+
             if(document.getElementById('desktop-page-title')) document.getElementById('desktop-page-title').innerText = titles[tabId] || 'Beranda';
-            
+
             document.querySelectorAll(`.nav-btn-${tabId}`).forEach(el => { el.classList.add('active'); });
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -981,7 +981,7 @@
         },
         populateModal: (category) => {
             const limitInput = document.getElementById('input-budget-limit'); const delBtn = document.getElementById('btn-delete-budget');
-            if(AppState.budgets[category]) { limitInput.value = new Intl.NumberFormat('id-ID').format(AppState.budgets[category]); delBtn.classList.remove('hidden'); delBtn.classList.add('block'); } 
+            if(AppState.budgets[category]) { limitInput.value = new Intl.NumberFormat('id-ID').format(AppState.budgets[category]); delBtn.classList.remove('hidden'); delBtn.classList.add('block'); }
             else { limitInput.value = ''; delBtn.classList.add('hidden'); delBtn.classList.remove('block'); }
         },
         deleteCurrent: () => {
@@ -994,64 +994,84 @@
 
     const LocalDB = {
         saveTx: () => localStorage.setItem('keuanganku_tx', JSON.stringify(AppState.transactions)),
-        addTransaction: (txData) => { 
-            const newTx = { ...txData, id: Date.now() }; 
-            AppState.transactions.unshift(newTx); 
-            AppState.transactions.sort((a, b) => new Date(b.date) - new Date(a.date)); 
-            LocalDB.saveTx(); 
-            AppState.currentPage = 1; 
+        addTransaction: (txData) => {
+            const newTx = { ...txData, id: Date.now() };
+            AppState.transactions.unshift(newTx);
+            AppState.transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+            LocalDB.saveTx();
+            AppState.currentPage = 1;
             try { TransactionManager.renderAll(); } catch(err) { console.error("Error Render All", err); }
-            return true; 
+            return true;
         },
         hardReset: () => { AppUI.showConfirm("Reset Total Aplikasi?", "Seluruh data akan hilang selamanya.", () => { localStorage.clear(); location.reload(); }); }
     };
 
     const BackupManager = {
-        exportJSON: async () => { 
-            const data = { tx: AppState.transactions, goals: AppState.savingsGoals, bills: AppState.recurringBills, budgets: AppState.budgets }; 
+        exportJSON: async () => {
+            const data = { tx: AppState.transactions, goals: AppState.savingsGoals, bills: AppState.recurringBills, budgets: AppState.budgets };
             const jsonString = JSON.stringify(data);
-            const fileName = `Keuanganku_FullBackup_${Utils.getTodayDateStr()}.json`;
-            const blob = new Blob([jsonString], {type: "application/json"});
-            
-            if (navigator.canShare && navigator.canShare({ files: [new File([blob], fileName, { type: "application/json" })] })) {
+            const fileName = `Keuanganku_Backup_${Utils.getTodayDateStr()}.json`;
+
+            // Cek apakah aplikasi berjalan di Android (menggunakan Capacitor)
+            if (window.Capacitor && window.Capacitor.Plugins.Filesystem) {
                 try {
-                    const file = new File([blob], fileName, { type: "application/json" });
-                    await navigator.share({
-                        title: 'Backup Keuanganku',
-                        text: 'Simpan file cadangan data keuangan ini.',
-                        files: [file]
+                    const { Filesystem, Share } = window.Capacitor.Plugins;
+
+                    // 1. Tulis file secara native ke dalam Cache Android
+                    await Filesystem.writeFile({
+                        path: fileName,
+                        data: jsonString,
+                        directory: 'CACHE',
+                        encoding: 'utf8'
                     });
-                    AppUI.showToast("Berhasil membuka menu penyimpanan!");
-                    return;
-                } catch (err) {
-                    if (err.name !== 'AbortError') console.error("Share failed", err);
+
+                    // 2. Dapatkan lokasi (URI) file tersebut di dalam sistem Android
+                    const fileUri = await Filesystem.getUri({
+                        path: fileName,
+                        directory: 'CACHE'
+                    });
+
+                    // 3. Panggil popup "Share/Save" asli bawaan HP Android
+                    await Share.share({
+                        title: 'Simpan Backup Keuanganku',
+                        text: 'Pilih "Salin ke folder (File Manager)" atau simpan ke Google Drive.',
+                        url: fileUri.uri,
+                        dialogTitle: 'Simpan Data Keuanganku'
+                    });
+
+                    AppUI.showToast("Menu penyimpanan berhasil dibuka!");
+                } catch (error) {
+                    console.error("Gagal export native:", error);
+                    AppUI.showToast("Terjadi kesalahan sistem saat menyimpan.", "error");
                 }
+            } else {
+                // Fallback (berjalan jika Anda mengetesnya di browser laptop)
+                const blob = new Blob([jsonString], {type: "application/json"});
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = fileName;
+                document.body.appendChild(a); a.click(); document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                AppUI.showToast("JSON berhasil diunduh.");
             }
-            
-            const url = URL.createObjectURL(blob); 
-            const a = document.createElement('a'); 
-            a.href = url; a.download = fileName; 
-            document.body.appendChild(a); a.click(); document.body.removeChild(a); 
-            URL.revokeObjectURL(url);
-            AppUI.showToast("JSON berhasil diunduh."); 
         },
-        exportCSV: async () => { 
-            if(AppState.transactions.length === 0) return AppUI.showToast("Tidak ada data", "error"); 
-            const headers = ["Tanggal", "Tipe", "Kategori", "Dompet", "Nominal", "Deskripsi"]; 
-            const csvRows = [headers.join(",")]; 
-            AppState.transactions.forEach(tx => { 
-                if(!tx) return; 
-                const amt = tx.amount || 0; 
+        exportCSV: async () => {
+            if(AppState.transactions.length === 0) return AppUI.showToast("Tidak ada data", "error");
+            const headers = ["Tanggal", "Tipe", "Kategori", "Dompet", "Nominal", "Deskripsi"];
+            const csvRows = [headers.join(",")];
+            AppState.transactions.forEach(tx => {
+                if(!tx) return;
+                const amt = tx.amount || 0;
                 const typeText = tx.type === 'income' ? 'Pemasukan' : (tx.type === 'expense' ? 'Pengeluaran' : 'Transfer');
                 const dompetText = tx.type === 'transfer' ? `${tx.fromWallet} ke ${tx.toWallet}` : (tx.wallet === 'cash' ? 'Cash' : 'Rekening');
-                const row = [ tx.date, typeText, tx.category || 'Lainnya', dompetText, amt, `"${(tx.description || '').replace(/"/g, '""')}"` ]; 
-                csvRows.push(row.join(",")); 
-            }); 
-            
+                const row = [ tx.date, typeText, tx.category || 'Lainnya', dompetText, amt, `"${(tx.description || '').replace(/"/g, '""')}"` ];
+                csvRows.push(row.join(","));
+            });
+
             const csvString = csvRows.join("\n");
             const fileName = `Keuanganku_Riwayat_${Utils.getTodayDateStr()}.csv`;
             const blob = new Blob([csvString], {type: "text/csv;charset=utf-8;"});
-            
+
             if (navigator.canShare && navigator.canShare({ files: [new File([blob], fileName, { type: "text/csv" })] })) {
                 try {
                     const file = new File([blob], fileName, { type: "text/csv" });
@@ -1067,43 +1087,43 @@
                 }
             }
 
-            const url = URL.createObjectURL(blob); 
-            const a = document.createElement('a'); 
-            a.href = url; a.download = fileName; 
-            document.body.appendChild(a); a.click(); document.body.removeChild(a); 
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = fileName;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            AppUI.showToast("CSV berhasil diunduh."); 
+            AppUI.showToast("CSV berhasil diunduh.");
         },
         importJSON: (e) => { const file = e.target.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = (ev) => { try { const data = JSON.parse(ev.target.result); AppUI.showConfirm("Pulihkan Data?", "Data saat ini akan TERTEMPA oleh backup. Lanjutkan?", () => { if(data.tx) localStorage.setItem('keuanganku_tx', JSON.stringify(data.tx)); if(data.goals) localStorage.setItem('keuanganku_goals', JSON.stringify(data.goals)); if(data.bills) localStorage.setItem('keuanganku_bills', JSON.stringify(data.bills)); if(data.budgets) localStorage.setItem('keuanganku_budgets', JSON.stringify(data.budgets)); location.reload(); }); } catch(err) { AppUI.showToast("Gagal membaca file.", "error"); } }; reader.readAsText(file); e.target.value = ''; }
     };
 
     const TransactionManager = {
-        getBalances: () => { 
-            let cash = 0, bank = 0; 
-            AppState.transactions.forEach(tx => { 
-                if(!tx) return; 
-                const nominal = Number(tx.amount) || 0; 
-                if (tx.type === 'income') { 
-                    if (tx.wallet === 'cash') cash += nominal; else bank += nominal; 
-                } else if (tx.type === 'expense') { 
-                    if (tx.wallet === 'cash') cash -= nominal; else bank -= nominal; 
+        getBalances: () => {
+            let cash = 0, bank = 0;
+            AppState.transactions.forEach(tx => {
+                if(!tx) return;
+                const nominal = Number(tx.amount) || 0;
+                if (tx.type === 'income') {
+                    if (tx.wallet === 'cash') cash += nominal; else bank += nominal;
+                } else if (tx.type === 'expense') {
+                    if (tx.wallet === 'cash') cash -= nominal; else bank -= nominal;
                 } else if (tx.type === 'transfer') {
                     if (tx.fromWallet === 'cash') cash -= nominal; else bank -= nominal;
                     if (tx.toWallet === 'cash') cash += nominal; else bank += nominal;
                 }
-            }); 
-            return { cash, bank, total: cash + bank }; 
+            });
+            return { cash, bank, total: cash + bank };
         },
         changePage: (delta) => { const filteredData = TransactionManager.getFilteredHistory(); const totalPages = Math.ceil(filteredData.length / AppState.itemsPerPage) || 1; AppState.currentPage += delta; if(AppState.currentPage < 1) AppState.currentPage = 1; if(AppState.currentPage > totalPages) AppState.currentPage = totalPages; TransactionManager.renderHistory(); },
         renderAll: () => { TransactionManager.renderDashboard(); TransactionManager.renderWallet(); TransactionManager.renderRecap(); TransactionManager.renderHistory(); },
-        
+
         renderDashboard: () => {
             const balances = TransactionManager.getBalances();
-            
+
             const eyeOpen = document.getElementById('icon-eye-open');
             const eyeClosed = document.getElementById('icon-eye-closed');
             const balanceEl = document.getElementById('dash-balance');
-            
+
             if (AppState.isBalanceHidden) {
                 balanceEl.innerText = 'Rp ••••••••';
                 eyeOpen.classList.add('hidden');
@@ -1115,19 +1135,19 @@
             }
 
             const dashRecent = document.getElementById('dash-recent-list'); dashRecent.innerHTML = '';
-            if (AppState.transactions.length === 0) { document.getElementById('dash-empty').classList.remove('hidden'); document.getElementById('dash-empty').classList.add('flex'); } 
+            if (AppState.transactions.length === 0) { document.getElementById('dash-empty').classList.remove('hidden'); document.getElementById('dash-empty').classList.add('flex'); }
             else {
                 document.getElementById('dash-empty').classList.add('hidden'); document.getElementById('dash-empty').classList.remove('flex');
-                AppState.transactions.slice(0, 5).forEach((tx) => { 
+                AppState.transactions.slice(0, 5).forEach((tx) => {
                     if(!tx) return;
-                    const style = Utils.getCategoryStyle(tx.category || 'Lainnya'); 
-                    
+                    const style = Utils.getCategoryStyle(tx.category || 'Lainnya');
+
                     let sign = '', amountColor = '', walletBadge = '';
-                    if (tx.type === 'income') { sign = '+'; amountColor = 'text-emerald-600 dark:text-emerald-400'; walletBadge = `<span class="text-[9px] bg-brand-light dark:bg-blue-600/20 text-brand-dark dark:text-blue-400 font-bold px-1.5 py-0.5 rounded ml-1 tracking-wider shrink-0">${tx.wallet === 'bank' ? 'Rekening' : 'Cash'}</span>`; } 
-                    else if (tx.type === 'expense') { sign = '-'; amountColor = 'text-red-600 dark:text-red-400'; walletBadge = `<span class="text-[9px] bg-zinc-100 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-300 font-bold px-1.5 py-0.5 rounded ml-1 tracking-wider shrink-0">${tx.wallet === 'bank' ? 'Rekening' : 'Cash'}</span>`; } 
+                    if (tx.type === 'income') { sign = '+'; amountColor = 'text-emerald-600 dark:text-emerald-400'; walletBadge = `<span class="text-[9px] bg-brand-light dark:bg-blue-600/20 text-brand-dark dark:text-blue-400 font-bold px-1.5 py-0.5 rounded ml-1 tracking-wider shrink-0">${tx.wallet === 'bank' ? 'Rekening' : 'Cash'}</span>`; }
+                    else if (tx.type === 'expense') { sign = '-'; amountColor = 'text-red-600 dark:text-red-400'; walletBadge = `<span class="text-[9px] bg-zinc-100 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-300 font-bold px-1.5 py-0.5 rounded ml-1 tracking-wider shrink-0">${tx.wallet === 'bank' ? 'Rekening' : 'Cash'}</span>`; }
                     else if (tx.type === 'transfer') { sign = '⇄'; amountColor = 'text-blue-600 dark:text-blue-400'; const fromTxt = tx.fromWallet === 'bank' ? 'Rekening' : 'Cash'; const toTxt = tx.toWallet === 'bank' ? 'Rekening' : 'Cash'; walletBadge = `<span class="text-[9px] bg-blue-50 dark:bg-blue-600/20 text-blue-600 dark:text-blue-400 font-bold px-1.5 py-0.5 rounded ml-1 tracking-wider shrink-0">${fromTxt} ➝ ${toTxt}</span>`; }
 
-                    dashRecent.innerHTML += `<div onclick="AppUI.switchTab('history')" class="group bg-white dark:bg-zinc-900 p-3.5 rounded-xl shadow-sm border border-brand-border dark:border-zinc-800 flex items-center gap-3 cursor-pointer hover:border-zinc-300 transition-colors min-w-0"><div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">${style.svg}</div><div class="flex-grow min-w-0"><p class="text-sm font-bold text-zinc-800 dark:text-white truncate">${tx.description || (tx.type === 'transfer' ? 'Transfer Saldo' : '-')}</p><div class="flex items-center mt-1 min-w-0"><span class="text-[10px] font-medium text-zinc-400 truncate shrink-0">${Utils.formatDate(tx.date)}</span> ${walletBadge}</div></div><div class="text-right shrink-0 ml-1"><p class="text-sm font-bold tracking-tight ${amountColor}">${sign} ${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p></div></div>`; 
+                    dashRecent.innerHTML += `<div onclick="AppUI.switchTab('history')" class="group bg-white dark:bg-zinc-900 p-3.5 rounded-xl shadow-sm border border-brand-border dark:border-zinc-800 flex items-center gap-3 cursor-pointer hover:border-zinc-300 transition-colors min-w-0"><div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">${style.svg}</div><div class="flex-grow min-w-0"><p class="text-sm font-bold text-zinc-800 dark:text-white truncate">${tx.description || (tx.type === 'transfer' ? 'Transfer Saldo' : '-')}</p><div class="flex items-center mt-1 min-w-0"><span class="text-[10px] font-medium text-zinc-400 truncate shrink-0">${Utils.formatDate(tx.date)}</span> ${walletBadge}</div></div><div class="text-right shrink-0 ml-1"><p class="text-sm font-bold tracking-tight ${amountColor}">${sign} ${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p></div></div>`;
                 });
             }
         },
@@ -1137,28 +1157,28 @@
             document.getElementById('wallet-cash').innerText = Utils.formatIDR(balances.cash);
             document.getElementById('wallet-bank').innerText = Utils.formatIDR(balances.bank);
 
-            let currentMonthIncome = 0, currentMonthExpense = 0; 
-            const categoryData = {}; 
+            let currentMonthIncome = 0, currentMonthExpense = 0;
+            const categoryData = {};
             const currentMonthStr = Utils.getCurrentMonthStr();
-            
-            AppState.transactions.forEach(tx => { 
+
+            AppState.transactions.forEach(tx => {
                 if(!tx || !tx.date) return;
-                const nominal = Number(tx.amount) || 0; 
+                const nominal = Number(tx.amount) || 0;
                 const txMonthStr = tx.date.substring(0, 7);
 
-                if (txMonthStr === currentMonthStr) { 
-                    if (tx.type === 'income') currentMonthIncome += nominal; 
-                    if (tx.type === 'expense') { 
-                        currentMonthExpense += nominal; 
-                        const cat = tx.category || 'Lainnya'; 
-                        categoryData[cat] = (categoryData[cat] || 0) + nominal; 
-                    } 
-                } 
+                if (txMonthStr === currentMonthStr) {
+                    if (tx.type === 'income') currentMonthIncome += nominal;
+                    if (tx.type === 'expense') {
+                        currentMonthExpense += nominal;
+                        const cat = tx.category || 'Lainnya';
+                        categoryData[cat] = (categoryData[cat] || 0) + nominal;
+                    }
+                }
             });
 
             document.getElementById('wallet-income').innerText = Utils.formatIDR(currentMonthIncome);
             document.getElementById('wallet-expense').innerText = Utils.formatIDR(currentMonthExpense);
-            
+
             const cashflow = currentMonthIncome - currentMonthExpense;
             const cfEl = document.getElementById('wallet-cashflow');
             cfEl.innerText = Utils.formatIDR(cashflow);
@@ -1166,8 +1186,8 @@
 
             const budgetListEl = document.getElementById('dashboard-budgets-list'); budgetListEl.innerHTML = '';
             const budgetsSafe = AppState.budgets || {};
-            if(Object.keys(budgetsSafe).length === 0) { 
-                budgetListEl.innerHTML = `<div class="flex flex-col items-center justify-center py-4 rounded-xl bg-zinc-50 dark:bg-zinc-800/50 min-w-0 border border-brand-border dark:border-zinc-800"><p class="text-xs text-zinc-400 font-semibold">Belum ada anggaran.</p></div>`; 
+            if(Object.keys(budgetsSafe).length === 0) {
+                budgetListEl.innerHTML = `<div class="flex flex-col items-center justify-center py-4 rounded-xl bg-zinc-50 dark:bg-zinc-800/50 min-w-0 border border-brand-border dark:border-zinc-800"><p class="text-xs text-zinc-400 font-semibold">Belum ada anggaran.</p></div>`;
             } else {
                 Object.keys(budgetsSafe).forEach(cat => {
                     const limit = budgetsSafe[cat]; const spent = categoryData[cat] || 0; const persen = Math.min((spent / limit) * 100, 100);
@@ -1182,22 +1202,22 @@
         renderRecap: () => {
             const recapList = document.getElementById('recap-list'); recapList.innerHTML = '';
             const analysisEl = document.getElementById('recap-analysis');
-            
-            if (AppState.transactions.length === 0) { 
+
+            if (AppState.transactions.length === 0) {
                 analysisEl.innerHTML = '';
-                recapList.innerHTML = `<div class="text-center py-8 bg-white dark:bg-zinc-900 rounded-2xl border border-brand-border dark:border-zinc-800 min-w-0"><p class="text-sm font-medium text-zinc-500">Belum ada data rekap bulanan.</p></div>`; 
+                recapList.innerHTML = `<div class="text-center py-8 bg-white dark:bg-zinc-900 rounded-2xl border border-brand-border dark:border-zinc-800 min-w-0"><p class="text-sm font-medium text-zinc-500">Belum ada data rekap bulanan.</p></div>`;
                 return;
             }
 
             const monthlyData = {}; const categoryDataPerMonth = {};
-            AppState.transactions.forEach(tx => { 
-                if(!tx || !tx.date) return; const monthYear = tx.date.substring(0, 7); 
-                if (!monthlyData[monthYear]) monthlyData[monthYear] = { monthYear: monthYear, label: new Date(tx.date).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }), income: 0, expense: 0, count: 0 }; 
+            AppState.transactions.forEach(tx => {
+                if(!tx || !tx.date) return; const monthYear = tx.date.substring(0, 7);
+                if (!monthlyData[monthYear]) monthlyData[monthYear] = { monthYear: monthYear, label: new Date(tx.date).toLocaleDateString('id-ID', { month: 'long', year: 'numeric' }), income: 0, expense: 0, count: 0 };
                 if (!categoryDataPerMonth[monthYear]) categoryDataPerMonth[monthYear] = {};
-                const nominal = Number(tx.amount) || 0; 
-                if (tx.type === 'income') monthlyData[monthYear].income += nominal; 
+                const nominal = Number(tx.amount) || 0;
+                if (tx.type === 'income') monthlyData[monthYear].income += nominal;
                 if (tx.type === 'expense') { monthlyData[monthYear].expense += nominal; const cat = tx.category || 'Lainnya'; categoryDataPerMonth[monthYear][cat] = (categoryDataPerMonth[monthYear][cat] || 0) + nominal; }
-                if (tx.type !== 'transfer') monthlyData[monthYear].count += 1; 
+                if (tx.type !== 'transfer') monthlyData[monthYear].count += 1;
             });
 
             let runningBalance = 0;
@@ -1215,17 +1235,17 @@
                 const expPercent = monthlyData[prev].expense > 0 ? (expDiff / monthlyData[prev].expense) * 100 : (expDiff > 0 ? 100 : 0);
                 const incHtml = incDiff >= 0 ? `<span class="text-emerald-600 dark:text-emerald-400 font-bold tracking-tight">▲ ${Math.abs(incPercent).toFixed(0)}%</span>` : `<span class="text-red-600 dark:text-red-400 font-bold tracking-tight">▼ ${Math.abs(incPercent).toFixed(0)}%</span>`;
                 const expHtml = expDiff >= 0 ? `<span class="text-red-600 dark:text-red-400 font-bold tracking-tight">▲ ${Math.abs(expPercent).toFixed(0)}%</span>` : `<span class="text-emerald-600 dark:text-emerald-400 font-bold tracking-tight">▼ ${Math.abs(expPercent).toFixed(0)}%</span>`;
-                
+
                 analysisEl.innerHTML = `<div class="bg-white dark:bg-zinc-900 border border-brand-border dark:border-zinc-800 p-4 rounded-2xl shadow-sm mb-2 min-w-0"><h4 class="font-bold text-sm mb-3 text-zinc-900 dark:text-white truncate">Bulan Ini vs Lalu</h4><div class="grid grid-cols-2 gap-3"><div class="bg-zinc-50 dark:bg-zinc-800 rounded-xl p-3 min-w-0 border border-brand-border dark:border-zinc-700"><p class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold truncate">Masuk</p><p class="text-sm truncate font-extrabold mt-1">${incHtml}</p></div><div class="bg-zinc-50 dark:bg-zinc-800 rounded-xl p-3 min-w-0 border border-brand-border dark:border-zinc-700"><p class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold truncate">Keluar</p><p class="text-sm truncate font-extrabold mt-1">${expHtml}</p></div></div></div>`;
             } else { analysisEl.innerHTML = ''; }
 
             const sortedMonthsDesc = sortedMonthsAsc.reverse();
             sortedMonthsDesc.forEach(my => {
-                const data = monthlyData[my]; 
+                const data = monthlyData[my];
                 if (data.count === 0 && data.income === 0 && data.expense === 0) return;
-                
+
                 const balanceColor = data.cumulativeBalance >= 0 ? 'text-brand-dark dark:text-blue-400' : 'text-red-600 dark:text-red-400';
-                
+
                 recapList.innerHTML += `<div class="bg-white dark:bg-zinc-900 p-4 rounded-2xl shadow-sm border border-brand-border dark:border-zinc-800 min-w-0">
                     <div class="flex justify-between items-center mb-3 border-b border-brand-border dark:border-zinc-800 pb-3 min-w-0">
                         <div class="flex items-center min-w-0 flex-1 pr-2"><h3 class="font-extrabold text-zinc-800 dark:text-white text-sm tracking-tight truncate">${data.label}</h3></div>
@@ -1248,7 +1268,7 @@
             const period = document.getElementById('filter-period-value').value;
             const type = document.getElementById('filter-type-value').value;
             const category = document.getElementById('filter-category-value').value;
-            
+
             const currentMonthStr = Utils.getCurrentMonthStr();
             const lastMonthStr = Utils.getPreviousMonthStr();
 
@@ -1258,12 +1278,12 @@
                 const matchSearch = (tx.description || '').toLowerCase().includes(search) || (tx.category || '').toLowerCase().includes(search) || amtString.includes(search);
                 const matchType = type === 'all' || tx.type === type;
                 const matchCategory = category === 'all' || tx.category === category;
-                
-                let matchDate = true; 
+
+                let matchDate = true;
                 const txDate = tx.date || '';
-                if(period === 'this_month') matchDate = txDate.startsWith(currentMonthStr); 
+                if(period === 'this_month') matchDate = txDate.startsWith(currentMonthStr);
                 else if(period === 'last_month') matchDate = txDate.startsWith(lastMonthStr);
-                
+
                 return matchSearch && matchType && matchCategory && matchDate;
             });
             filtered.sort((a,b) => new Date(b.date) - new Date(a.date));
@@ -1280,13 +1300,13 @@
             if (filteredData.length > AppState.itemsPerPage) { pagination.classList.remove('hidden'); pagination.classList.add('flex'); document.getElementById('page-info').innerText = `Hal ${AppState.currentPage}/${totalPages}`; document.getElementById('btn-prev').disabled = AppState.currentPage === 1; document.getElementById('btn-next').disabled = AppState.currentPage === totalPages; } else { pagination.classList.add('hidden'); pagination.classList.remove('flex'); }
 
             const paginated = filteredData.slice((AppState.currentPage - 1) * AppState.itemsPerPage, ((AppState.currentPage - 1) * AppState.itemsPerPage) + AppState.itemsPerPage);
-            paginated.forEach((tx) => { 
+            paginated.forEach((tx) => {
                 if(!tx) return;
-                const style = Utils.getCategoryStyle(tx.category || 'Lainnya'); 
-                
+                const style = Utils.getCategoryStyle(tx.category || 'Lainnya');
+
                 let sign = '', amountColor = '', walletBadge = '';
-                if (tx.type === 'income') { sign = '+'; amountColor = 'text-emerald-600 dark:text-emerald-400'; walletBadge = `<span class="text-[9px] font-bold bg-brand-light dark:bg-blue-600/20 text-brand-dark dark:text-blue-400 px-1.5 py-0.5 rounded tracking-widest uppercase shrink-0">${tx.wallet === 'bank' ? 'Rekening' : 'Cash'}</span>`; } 
-                else if (tx.type === 'expense') { sign = '-'; amountColor = 'text-red-600 dark:text-red-400'; walletBadge = `<span class="text-[9px] font-bold bg-zinc-100 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-300 px-1.5 py-0.5 rounded tracking-widest uppercase shrink-0">${tx.wallet === 'bank' ? 'Rekening' : 'Cash'}</span>`; } 
+                if (tx.type === 'income') { sign = '+'; amountColor = 'text-emerald-600 dark:text-emerald-400'; walletBadge = `<span class="text-[9px] font-bold bg-brand-light dark:bg-blue-600/20 text-brand-dark dark:text-blue-400 px-1.5 py-0.5 rounded tracking-widest uppercase shrink-0">${tx.wallet === 'bank' ? 'Rekening' : 'Cash'}</span>`; }
+                else if (tx.type === 'expense') { sign = '-'; amountColor = 'text-red-600 dark:text-red-400'; walletBadge = `<span class="text-[9px] font-bold bg-zinc-100 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-300 px-1.5 py-0.5 rounded tracking-widest uppercase shrink-0">${tx.wallet === 'bank' ? 'Rekening' : 'Cash'}</span>`; }
                 else if (tx.type === 'transfer') { sign = '⇄'; amountColor = 'text-blue-600 dark:text-blue-400'; const fromTxt = tx.fromWallet === 'bank' ? 'Rekening' : 'Cash'; const toTxt = tx.toWallet === 'bank' ? 'Rekening' : 'Cash'; walletBadge = `<span class="text-[9px] font-bold bg-blue-50 dark:bg-blue-600/20 text-blue-600 dark:text-blue-400 px-1.5 py-0.5 rounded tracking-widest uppercase shrink-0">${fromTxt} ➝ ${toTxt}</span>`; }
 
                 historyList.innerHTML += `<li class="flex items-center gap-3 py-3.5 px-4 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors min-w-0"><div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">${style.svg}</div><div class="flex-grow min-w-0"><p class="text-sm font-bold text-zinc-800 dark:text-white truncate">${tx.description || (tx.type === 'transfer' ? 'Transfer Saldo' : '-')}</p><div class="flex items-center gap-1.5 mt-1 min-w-0 overflow-hidden"><span class="text-[9px] font-bold bg-zinc-100 dark:bg-zinc-700 text-zinc-500 dark:text-zinc-300 px-1.5 py-0.5 rounded tracking-widest uppercase shrink-0">${tx.category || 'Lainnya'}</span>${walletBadge}</div></div><div class="text-right shrink-0 ml-1"><p class="text-sm font-bold tracking-tight ${amountColor}">${sign} ${Utils.formatIDR(tx.amount).replace('Rp','').trim()}</p><p class="text-[10px] font-medium text-zinc-400 mt-1">${Utils.formatDate(tx.date)}</p></div></li>`;
@@ -1305,7 +1325,7 @@
                 AppState.savingsGoals.forEach((goal, idx) => {
                     totalSaved += goal.saved; let persen = Math.min((goal.saved / goal.target) * 100, 100);
                     if(idx < 2) summaryEl.innerHTML += `<div class="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-800/50 border border-brand-border dark:border-zinc-800 min-w-0"><div class="flex justify-between items-center mb-1.5 gap-2 min-w-0"><p class="text-xs font-bold text-zinc-800 dark:text-white tracking-tight truncate">${goal.name}</p><span class="text-[9px] font-bold text-brand-dark dark:text-blue-400 bg-brand-light dark:bg-blue-600/20 px-1.5 py-0.5 rounded uppercase shrink-0">${Math.round(persen)}%</span></div><div class="w-full bg-zinc-200 dark:bg-zinc-700 rounded-full h-2 mb-1.5 overflow-hidden"><div class="bg-brand-dark dark:bg-blue-500 h-2 rounded-full" style="width: ${persen}%"></div></div><div class="flex justify-between text-[9px] font-bold tracking-widest gap-2 min-w-0"><span class="text-zinc-900 dark:text-white truncate text-left">${Utils.formatIDR(goal.saved)}</span><span class="text-zinc-400 truncate text-right">/ ${Utils.formatIDR(goal.target)}</span></div></div>`;
-                    
+
                     listEl.innerHTML += `<div class="bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-brand-border dark:border-zinc-800 shadow-sm flex flex-col justify-between h-full min-w-0"><div><div class="flex justify-between items-start mb-3.5 gap-2 min-w-0"><h3 class="font-extrabold text-zinc-900 dark:text-white text-sm tracking-tight truncate flex-grow">${goal.name}</h3><button onclick="GoalManager.deleteGoal(${goal.id})" class="shrink-0 w-8 h-8 rounded-lg bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-red-500 transition-colors"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div><div class="w-full bg-zinc-100 dark:bg-zinc-800 rounded-full h-2 mb-2.5 overflow-hidden"><div class="bg-brand-dark dark:bg-blue-500 h-2 rounded-full" style="width: ${persen}%"></div></div><div class="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest gap-2 min-w-0"><span class="text-zinc-900 dark:text-white text-sm truncate tracking-tight">${Utils.formatIDR(goal.saved)}</span><span class="text-zinc-400 truncate text-right">/ ${Utils.formatIDR(goal.target)}</span></div></div><button onclick="GoalManager.openAddModal(${goal.id}, '${goal.name}')" class="w-full bg-brand-light dark:bg-blue-600/20 text-brand-dark dark:text-blue-400 font-bold rounded-xl py-2.5 mt-4 hover:opacity-80 transition-opacity text-xs shrink-0">Isi Tabungan</button></div>`;
                 });
             }
@@ -1314,21 +1334,21 @@
         addGoal: (name, target) => { AppState.savingsGoals.push({ id: Date.now(), name, target, saved: 0 }); GoalManager.saveState(); GoalManager.render(); AppUI.showToast("Target impian dibuat!"); },
         deleteGoal: (id) => { AppUI.showConfirm("Hapus Target?", "Target ini akan dihapus dari sistem.", () => { AppState.savingsGoals = AppState.savingsGoals.filter(g => g.id !== id); GoalManager.saveState(); GoalManager.render(); }); },
         openAddModal: (id, name) => { document.getElementById('input-savings-id').value = id; document.getElementById('modal-add-savings-title').innerText = `${name}`; AppUI.openModal('modal-add-savings'); },
-        addSavings: (id, amount, source, wallet) => { 
-            const goal = AppState.savingsGoals.find(g => g.id == id); 
-            if(goal) { 
+        addSavings: (id, amount, source, wallet) => {
+            const goal = AppState.savingsGoals.find(g => g.id == id);
+            if(goal) {
                 if (source === 'balance') {
                     const balances = TransactionManager.getBalances(); const currentBal = wallet === 'cash' ? balances.cash : balances.bank;
                     if (amount > currentBal) { return AppUI.showToast(`Saldo ${wallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup!`, "error"); }
-                    LocalDB.addTransaction({ type: 'expense', wallet: wallet, amount: amount, category: 'Lainnya', date: Utils.getTodayDateStr(), description: `[Tabungan] ${goal.name}` }); 
+                    LocalDB.addTransaction({ type: 'expense', wallet: wallet, amount: amount, category: 'Lainnya', date: Utils.getTodayDateStr(), description: `[Tabungan] ${goal.name}` });
                 }
-                goal.saved += amount; GoalManager.saveState(); GoalManager.render(); 
-                
+                goal.saved += amount; GoalManager.saveState(); GoalManager.render();
+
                 try { TransactionManager.renderAll(); } catch(e) {}
 
                 AppUI.closeModal('modal-add-savings');
-                AppUI.showToast(goal.saved >= goal.target ? "Wah, Target tercapai! 🎉" : "Berhasil menabung!"); 
-            } 
+                AppUI.showToast(goal.saved >= goal.target ? "Wah, Target tercapai! 🎉" : "Berhasil menabung!");
+            }
         }
     };
 
@@ -1359,8 +1379,8 @@
             AppState.recurringBills.forEach(bill => {
                 const isPaidThisMonth = bill.lastPaidMonth === currentMonthStr; const isDue = currentDay >= bill.date;
                 let statusHtml, btnHtml;
-                if (isPaidThisMonth) { statusHtml = `<span class="text-[9px] text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 px-2 py-1 rounded font-bold uppercase tracking-widest shrink-0">Lunas Bulan Ini</span>`; btnHtml = `<button onclick="BillManager.deleteBill('${bill.id}')" class="w-9 h-9 rounded-lg bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-red-500 transition-colors shrink-0"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>`; } 
-                else if (isDue) { statusHtml = `<span class="text-[9px] text-red-600 bg-red-50 dark:bg-red-500/10 border border-red-100 dark:border-red-500/20 px-2 py-1 rounded font-bold uppercase tracking-widest shrink-0">Bayar Sekarang</span>`; btnHtml = `<div class="flex gap-1.5 shrink-0"><button onclick="BillManager.openPayModal('${bill.id}')" class="bg-red-600 text-white font-bold text-[11px] px-3.5 py-2 rounded-lg hover:opacity-90 transition-opacity shrink-0">Bayar</button><button onclick="BillManager.deleteBill('${bill.id}')" class="w-9 h-9 rounded-lg bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-red-500 transition-colors shrink-0"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div>`; } 
+                if (isPaidThisMonth) { statusHtml = `<span class="text-[9px] text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-100 dark:border-emerald-500/20 px-2 py-1 rounded font-bold uppercase tracking-widest shrink-0">Lunas Bulan Ini</span>`; btnHtml = `<button onclick="BillManager.deleteBill('${bill.id}')" class="w-9 h-9 rounded-lg bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-red-500 transition-colors shrink-0"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>`; }
+                else if (isDue) { statusHtml = `<span class="text-[9px] text-red-600 bg-red-50 dark:bg-red-500/10 border border-red-100 dark:border-red-500/20 px-2 py-1 rounded font-bold uppercase tracking-widest shrink-0">Bayar Sekarang</span>`; btnHtml = `<div class="flex gap-1.5 shrink-0"><button onclick="BillManager.openPayModal('${bill.id}')" class="bg-red-600 text-white font-bold text-[11px] px-3.5 py-2 rounded-lg hover:opacity-90 transition-opacity shrink-0">Bayar</button><button onclick="BillManager.deleteBill('${bill.id}')" class="w-9 h-9 rounded-lg bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-red-500 transition-colors shrink-0"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button></div>`; }
                 else { statusHtml = `<span class="text-[9px] text-zinc-500 bg-zinc-100 dark:bg-zinc-800 border border-brand-border dark:border-zinc-700 px-2 py-1 rounded font-bold uppercase tracking-widest shrink-0">Tgl ${bill.date}</span>`; btnHtml = `<button onclick="BillManager.deleteBill('${bill.id}')" class="w-9 h-9 rounded-lg bg-zinc-50 dark:bg-zinc-800 flex items-center justify-center text-zinc-400 hover:text-red-500 transition-colors shrink-0"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>`; }
                 const style = Utils.getCategoryStyle(bill.category);
                 container.innerHTML += `<div class="flex items-center justify-between gap-3 p-4 bg-white dark:bg-zinc-900 border border-brand-border dark:border-zinc-800 shadow-sm rounded-2xl min-w-0"><div class="flex items-center gap-3 flex-grow min-w-0"><div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.bg} ${style.text}">${style.svg}</div><div class="min-w-0 flex-grow"><h4 class="font-bold text-sm text-zinc-900 dark:text-white truncate tracking-tight">${bill.name}</h4><p class="text-xs mt-0.5 truncate"><span class="font-extrabold text-zinc-700 dark:text-zinc-300 tracking-tight">${Utils.formatIDR(bill.amount)}</span></p><div class="mt-1.5 flex">${statusHtml}</div></div></div><div class="flex items-center justify-end gap-1.5 shrink-0">${btnHtml}</div></div>`;
@@ -1370,15 +1390,15 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('input-date').value = Utils.getTodayDateStr(); document.getElementById('display-date').innerText = Utils.formatDate(Utils.getTodayDateStr()); document.getElementById('display-date').classList.add('text-zinc-900', 'dark:text-white', 'font-bold');
-        document.querySelectorAll('.currency-input').forEach(el => el.addEventListener('input', Utils.formatCurrencyInputEvent)); 
+        document.querySelectorAll('.currency-input').forEach(el => el.addEventListener('input', Utils.formatCurrencyInputEvent));
         Utils.setupCustomSelects();
 
-        document.querySelectorAll('input[name="tx-type"]').forEach(radio => { 
-            radio.addEventListener('change', (e) => { 
+        document.querySelectorAll('input[name="tx-type"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
                 const val = e.target.value;
                 const normalGroup = document.getElementById('normal-group');
                 const transferGroup = document.getElementById('transfer-group');
-                
+
                 if (val === 'transfer') {
                     normalGroup.classList.add('hidden');
                     normalGroup.classList.remove('grid');
@@ -1389,10 +1409,10 @@
                     normalGroup.classList.add('grid');
                     transferGroup.classList.add('hidden');
                     transferGroup.classList.remove('grid');
-                    Utils.renderTxCategories(val, 'tx-category-select'); 
+                    Utils.renderTxCategories(val, 'tx-category-select');
                     document.getElementById('wallet-label').innerText = val === 'income' ? 'Simpan Ke' : 'Sumber Dana';
                 }
-            }); 
+            });
         });
 
         document.querySelectorAll('input[name="tf-from"]').forEach(el => {
@@ -1409,7 +1429,7 @@
         });
 
         document.getElementById('filter-search').addEventListener('input', () => { AppState.currentPage = 1; TransactionManager.renderHistory(); });
-        
+
         document.getElementById('btn-confirm-action').addEventListener('click', () => { if (AppState.confirmCallback) AppState.confirmCallback(); AppUI.closeConfirm(); });
 
         document.getElementById('form-set-budget').addEventListener('submit', (e) => { e.preventDefault(); const limit = Utils.parseRawCurrency(document.getElementById('input-budget-limit').value); const category = document.getElementById('input-budget-category').value; BudgetManager.setBudget(category, limit); document.getElementById('input-budget-limit').value = ''; });
@@ -1418,41 +1438,41 @@
         document.getElementById('form-add-savings').addEventListener('submit', (e) => { e.preventDefault(); const added = Utils.parseRawCurrency(document.getElementById('input-add-savings').value); if(added <= 0) return AppUI.showToast("Nominal tidak valid", "error"); const source = document.querySelector('input[name="savings-source"]:checked').value; const wallet = document.querySelector('input[name="savings-wallet"]:checked').value; GoalManager.addSavings(document.getElementById('input-savings-id').value, added, source, wallet); });
 
         document.getElementById('add-form').addEventListener('submit', (e) => {
-            e.preventDefault(); 
-            const amount = Utils.parseRawCurrency(document.getElementById('input-amount').value); 
+            e.preventDefault();
+            const amount = Utils.parseRawCurrency(document.getElementById('input-amount').value);
             if (amount <= 0) return AppUI.showToast("Masukkan nominal!", "error");
-            
-            const type = document.querySelector('input[name="tx-type"]:checked').value; 
+
+            const type = document.querySelector('input[name="tx-type"]:checked').value;
             let wallet, fromWallet, toWallet, category;
-            const balances = TransactionManager.getBalances(); 
+            const balances = TransactionManager.getBalances();
 
             if (type === 'transfer') {
                 fromWallet = document.querySelector('input[name="tf-from"]:checked').value;
                 toWallet = document.querySelector('input[name="tf-to"]:checked').value;
-                
+
                 if (fromWallet === toWallet) return AppUI.showToast("Pilih dompet tujuan yang berbeda!", "error");
-                
-                const currentBal = fromWallet === 'cash' ? balances.cash : balances.bank; 
+
+                const currentBal = fromWallet === 'cash' ? balances.cash : balances.bank;
                 if (amount > currentBal) return AppUI.showToast(`Saldo ${fromWallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup!`, "error");
-                
+
                 wallet = fromWallet;
                 category = 'Transfer';
             } else {
                 wallet = document.querySelector('input[name="tx-wallet"]:checked').value;
                 category = document.getElementById('input-category').value;
-                
-                if (type === 'expense') { 
-                    const currentBal = wallet === 'cash' ? balances.cash : balances.bank; 
-                    if (amount > currentBal) return AppUI.showToast(`Saldo ${wallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup!`, "error"); 
+
+                if (type === 'expense') {
+                    const currentBal = wallet === 'cash' ? balances.cash : balances.bank;
+                    if (amount > currentBal) return AppUI.showToast(`Saldo ${wallet === 'cash' ? 'Cash' : 'Rekening'} tidak cukup!`, "error");
                 }
             }
 
             const typeLabel = type === 'expense' ? 'Pengeluaran' : (type === 'income' ? 'Pemasukan' : 'Transfer Saldo');
 
             AppUI.showConfirm("Simpan Transaksi?", `Mencatat ${typeLabel} ${Utils.formatIDR(amount)}?`, () => {
-                const date = document.getElementById('input-date').value; 
+                const date = document.getElementById('input-date').value;
                 const description = document.getElementById('input-desc').value;
-                
+
                 const payload = { type, wallet, amount, category, date, description };
                 if (type === 'transfer') {
                     payload.fromWallet = fromWallet;
@@ -1461,17 +1481,17 @@
 
                 if(LocalDB.addTransaction(payload)) {
                     document.getElementById('input-amount').value = ''; document.getElementById('input-desc').value = '';
-                    
-                    document.querySelector('input[name="tx-type"][value="expense"]').checked = true; 
+
+                    document.querySelector('input[name="tx-type"][value="expense"]').checked = true;
                     document.getElementById('normal-group').classList.remove('hidden');
                     document.getElementById('normal-group').classList.add('grid');
                     document.getElementById('transfer-group').classList.add('hidden');
                     document.getElementById('transfer-group').classList.remove('grid');
-                    Utils.renderTxCategories('expense', 'tx-category-select'); 
-                    document.querySelector('input[name="tx-wallet"][value="cash"]').checked = true; 
+                    Utils.renderTxCategories('expense', 'tx-category-select');
+                    document.querySelector('input[name="tx-wallet"][value="cash"]').checked = true;
                     document.getElementById('wallet-label').innerText = 'Sumber Dana';
-                    
-                    document.getElementById('input-date').value = Utils.getTodayDateStr(); 
+
+                    document.getElementById('input-date').value = Utils.getTodayDateStr();
                     document.getElementById('display-date').innerText = Utils.formatDate(Utils.getTodayDateStr());
                     AppUI.showToast("Transaksi disimpan!"); AppUI.switchTab('dashboard');
                 }
@@ -1481,7 +1501,7 @@
         document.getElementById('add-bill-form').addEventListener('submit', (e) => { e.preventDefault(); const amount = Utils.parseRawCurrency(document.getElementById('bill-amount').value); if(amount <= 0) return AppUI.showToast("Nominal tidak valid", 'error'); BillManager.addBill(document.getElementById('bill-name').value, amount, document.getElementById('bill-category-value').value, document.getElementById('bill-date').value); document.getElementById('add-bill-form').reset(); });
         document.getElementById('btn-confirm-pay').addEventListener('click', BillManager.confirmPayBill);
 
-        TransactionManager.renderAll(); GoalManager.render(); BillManager.render(); BillManager.checkDueBills(); 
+        TransactionManager.renderAll(); GoalManager.render(); BillManager.render(); BillManager.checkDueBills();
         CardManager.init();
         AppUI.switchTab('dashboard');
     });
